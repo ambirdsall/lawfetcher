@@ -10,7 +10,7 @@ function buildLink(aTag, linkAddress) {
 // and provide no useful information, so only indeces 3+ are saved
 var query = window.location.search.slice(3),
     title = document.getElementById("title"),
-    westlaw = new Source("http://a.next.westlaw.com/AnchorTag/Document/FullText?findType=Y&cite="),
+    westlaw = new Source("http://a.next.westlaw.com/Link/Document/FullText?findType=Y&cite="),
     westlawLink = westlaw.generateUrl(query),
     westlawAnchorTag = document.getElementById("link--westlaw__a"),
     lexis = new Source("http://advance.lexis.com/laapi/search?q="),
