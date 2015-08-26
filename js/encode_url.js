@@ -1,4 +1,4 @@
-var url = "https://birdsall.xyz/search",
+var url = "https://birdsall.xyz/linkresolver/search",
     submit = document.getElementById("submit"),
     results = document.getElementById("results");
 

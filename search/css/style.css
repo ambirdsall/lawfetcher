@@ -1,0 +1,11 @@
+body { text-align: center; }
+
+/* .link { width: 50%; } */
+  .link--westlaw {
+    /* background-color: #1961a7; */
+    /* color: #fff; */
+  }
+    .link--westlaw > a { color: #fc8c1e; }
+  .link--lexis {
+  }
+    .link--lexis > a { color: #dd2108; }
