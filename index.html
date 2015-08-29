@@ -3,29 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="container-fluid">
     <div class="row">
-      <h1 class="text-center  col-xs-12">Link Resolver</h1>
-      <p class="lead  col-xs-8  col-xs-offset-2">Create one disambiguation link for a legal citation</p>
-      <p class="lead  col-xs-8  col-xs-offset-2">Readers will find direct links to the full source in various popular subscription services</p>
-    </div>
-    <div class="row">
-      <hr class="col-xs-8 col-xs-offset-2">
-      <h2 class="col-xs-12  text-center">Create a Link</h2>
-      <div class="input-group  col-xs-8  col-xs-offset-2">
-        <label class="sr-only" for="citation">Citation</label>
-        <input id="url-encoder__input" class="form-control" type="text" name="citation" value="17 U.S.C. § 107">
-        <span class="input-group-btn"><button id="submit" class="[ btn  btn-primary ]">Generate URL</button></span>
+      <div class="center-column col-xs-8 col-xs-offset-2">
+        <div class="row">
+          <h1 class="text-center  col-xs-12">Link Resolver</h1>
+          <p class="lead  col-xs-8  col-xs-offset-2">Create one disambiguation link for a legal citation</p>
+          <p class="lead  col-xs-8  col-xs-offset-2">Readers will find direct links to the full source in various popular subscription services</p>
+        </div>
+        <div class="row">
+          <hr class="col-xs-8 col-xs-offset-2">
+          <h2 class="col-xs-12  text-center">Create a Link</h2>
+          <div class="input-group  col-xs-8  col-xs-offset-2">
+            <label class="sr-only" for="citation">Citation</label>
+            <input id="url-encoder__input" class="form-control" type="text" name="citation" value="17 U.S.C. § 107">
+            <span class="input-group-btn"><button id="submit" class="[ btn  btn-primary ]">Generate URL</button></span>
+          </div>
+        </div>
+        <div class="row">
+          <p class="results" id="results"></p>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <p class="results" id="results"></p>
-    </div>
   </div>
+  <script type="text/javascript" src="js/localforage/dist/localforage.js"></script>
+  <script type="text/javascript" src="js/jquery/dist/jquery.js"></script>
+  <script type="text/javascript" src="js/bootstrap/bootstrap.js"></script>
   <script type="text/javascript" src="js/encode_url.js"></script>
+  <script type="text/javascript" src="js/autoforward.js"></script>
 </body>
 </html>

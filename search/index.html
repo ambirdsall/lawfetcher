@@ -3,32 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-8 col-xs-offset-2">
+      <div class="col-xs-12 col-md-8 col-md-offset-2">
+        <h1 id="title" class="primary-title"></h1>
+      </div>
+      <div class="col-xs-12 col-md-8 col-md-offset-2">
         <div class="row">
-          <h1 id="title" class=""></h1>
-        </div>
-        <div class="list-group">
-          <div class="[ link link--westlaw ]">
-            <a id="link--westlaw__a" class="list-group-item" href="">
-              <h4>WestlawNext</h4>
-            </a>
-          </div>
-          <div class="[ link link--lexis ]">
-            <a id="link--lexis__a" class="list-group-item" href="">
-              <h4>Lexis Advance</h4>
-            </a>
+          <div class="list-group">
+            <div class="[ link link--lexis ] input-group">
+              <a id="link--lexis__a" class="link__a form-control" href="">
+                <h3 class="link--lexis__title">Lexis Advance</h4>
+              </a>
+              <span class="input-group-addon">
+                <label for="lexis-autoforward">Auto-<br>redirect?</label><br>
+                <input id="lexis-autoforward" name="autoforwarding" value="lexis" type="radio">
+              </span>
+            </div>
+            <div class="[ link link--westlaw ] input-group">
+              <a id="link--westlaw__a" class="form-control" href="">
+                <h3 class="link--westlaw__title">WestlawNext</h4>
+              </a>
+              <span class="input-group-addon">
+                <label for="westlaw-autoforward">Auto-<br>redirect?</label><br>
+                <input id="westlaw-autoforward" name="autoforwarding" value="westlaw" type="radio">
+              </span>
+            </div>
+            <div class="[ link link--ravel ] input-group">
+              <a id="link--ravel__a" class="form-control" href="">
+                <h3 class="link--ravel__title">Ravel Law</h4>
+              </a>
+              <span class="input-group-addon">
+                <label for="ravel-autoforward">Auto-<br>redirect?</label><br>
+                <input id="ravel-autoforward" name="autoforwarding" value="ravel" type="radio">
+              </span>
+            </div>
+            <div class="[ link link--google-scholar ] input-group">
+              <a id="link--google-scholar__a" class="form-control" href="">
+                <h3 class="link--google-scholar__title">Google Scholar</h4>
+              </a>
+              <span class="input-group-addon">
+                <label for="google-scholar-autoforward">Auto-<br>redirect?</label><br>
+                <input id="google-scholar-autoforward" name="autoforwarding" value="google-scholar" type="radio">
+              </span>
+            </div>
+            <div class="[ link link--google ] input-group">
+              <a id="link--google__a" class="form-control" href="">
+                <h3 class="link--google__title">Google Search</h4>
+              </a>
+              <span class="input-group-addon">
+                <label for="google-autoforward">Auto-<br>redirect?</label><br>
+                <input id="google-autoforward" name="autoforwarding" value="google" type="radio">
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script type="text/javascript" src="../js/localforage/dist/localforage.js"></script>
+  <script type="text/javascript" src="../js/jquery/dist/jquery.js"></script>
+  <script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
   <script type="text/javascript" src="js/source.js"></script>
   <script type="text/javascript" src="js/parse_url.js"></script>
+  <script type="text/javascript" src="js/autoforward.js"></script>
 </body>
 </html>
