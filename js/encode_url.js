@@ -1,5 +1,5 @@
 $(function() {
-  var url = "http://birdsall.xyz/search/",
+  var url = "http://localhost:1234/search/",
       submit      = $("#submit"),
       results     = $("#results"),
       copyButton = $("#copy-button");
