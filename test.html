@@ -14,10 +14,12 @@
   </h5>
   <ol>
     <li class="test-1">Contains 'U.S. Const'</li>
-    <li class="test-2">Contains 'Const'</li>
-    <li class="test-3">Contains 'C.F.R.' OR 'U.S.C.'</li>
-    <li class="test-4">Contains 'law' OR 'laws' OR 'stat.' OR 'code' OR 'regs.' OR 'rule'</li>
-    <li>All others</li>
+    <li class="test-2">Contains 'C.F.R.' OR 'U.S.C.'</li>
+    <li class="test-3">Begins with 'F' AND ('ed. ' OR 'ederal ') OR optional '.'; 'R' AND ('ule' OR 'ules') OR optional '.'</li>
+    <li class="test-4">Contains 'U.S.' OR 'S. Ct.' OR 'F.' optional ' Supp.' optional '{digit}d'</li>
+    <li class="test-5">Contains 'Const'</li>
+    <li class="test-6">Contains 'law' OR 'laws' OR 'stat.' OR 'code' OR 'regs.' OR 'rule'</li>
+    <li class="test-7">All others</li>
   </ol>
   <h3>TEST NEW CITATIONS</h3>
   <form>
@@ -28,6 +30,16 @@
   <h3>EXAMPLES</h3>
   <hr>
   <div class="test-list">
+    <div class="test-case"><p class="citation">361 F. 3d 113, 122 (2d Cir. 2004)</p></div>
+    <div class="test-case"><p class="citation">477 U.S. 242, 248 (1986)</p></div>
+    <div class="test-case"><p class="citation">604 F. 3d 110, 119</p></div>
+    <div class="test-case"><p class="citation">129 S. Ct. 1937, 1949-50</p></div>
+    <div class="test-case"><p class="citation">819 F. Supp. 2d 119</p></div>
+    <div class="test-case"><p class="citation">Fed. R. Civ. P. 12(b)(6)</p></div>
+    <div class="test-case"><p class="citation">F.R.C.P. 12(b)(6)</p></div>
+    <div class="test-case"><p class="citation">F.R.A.P. 38</p></div>
+    <div class="test-case"><p class="citation">Federal Rule of Evidence</p></div>
+    <div class="test-case"><p class="citation">F.R. Evid. 702</p></div>
     <div class="test-case"><p class="citation">487 U.S. 552, 565</p></div>
     <div class="test-case"><p class="citation">903 F. Supp. 2d 1200</p></div>
     <div class="test-case"><p class="citation">486 F.3d 1149, 1152-53</p></div>

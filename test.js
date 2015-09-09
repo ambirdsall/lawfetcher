@@ -13,15 +13,86 @@ $.fn.filterOutAndClassify = function(regex, cssClass) {
   })
 }
 
-function determineCitationType($set) {
-  $set.filterOutAndClassify(/U\.?S\.? Const/i, "test-1")
-      .filterOutAndClassify(/Const/i, "test-2")
-      .filterOutAndClassify(/(?:C\.? ?F\.? ?R\.?)|(?:U\.? ?S\.? ?C\.?)/i, "test-3")
-      .filterOutAndClassify(/(?:laws?)|(?:stat\.?)|(?:code)|(?:regs\.?)|(?:rule)/i, "test-4")
-      // .addClass("test-5")
+// a generic filter, taking a jQuery obj and allowing chaining on the remainder
+//
+// fnArgs is an array or array-like structure
+$.fn.filterOutAndTreat = function(regex, fn, fnArgs) {
+  var filtered,
+      theRest;
+  
+  // filter out group for treatment
+  filtered = this.filter(function() {
+    return $(this).text().match(regex);
+  })
+  theRest = this.filter(function() {
+    return !($(this).text().match(regex));
+  })
+
+  // apply treatment
+  fn.apply(filtered, fnArgs);
+  // and return the rest
+  return theRest;
 }
 
-var testCases = $(".test-case"),
+function highlightMainCitation(cssClass, jumpCiteRegex) {
+  // deal with a filtered out citation type
+  var matchData,
+      mainCite,
+      jumpCite,
+      fullText;
+
+  // outer `this` is the set of jQuery objects
+  // inner `this` is the DOM elements contained in one such object
+  this.each(function(i, value) {
+    fullText = $(this).html();
+    if (fullText.match(jumpCiteRegex)) {
+      // matchData[0] is the full match;
+      // matchData[1] is the capture group, in this case everything which
+      // comes before the ', cl.', i.e. citation less jump cite
+      matchData = fullText.match(jumpCiteRegex);
+      // the final check against two patterns will have one string and one
+      // undefined as matchData[1] and matchData[2], arbitrarily ordered
+      mainCite = matchData[1] || matchData[2];
+      console.log(fullText)
+      console.log(mainCite)
+      console.log()
+      jumpCite = fullText.slice(mainCite.length);
+
+      $(this).html("<span class='" + cssClass + "'>" + mainCite + "</span>" + jumpCite);
+    } else {
+      $(this).html("<span class='" + cssClass + "'>" + fullText + "</span>");
+    }
+  });
+}
+
+$.fn.highlightMainCitation = highlightMainCitation;
+
+function determineCitationType($set) {
+       // US Const
+  $set.filterOutAndTreat(/U\.?S\.? Const/i,
+        highlightMainCitation , ["test-1", /(.+), cl\./])
+       // C.F.R. || U.S.C.
+      .filterOutAndTreat(/(?:C\.? ?F\.? ?R\.?)|(?:U\.? ?S\.? ?C\.?)/i,
+        highlightMainCitation, ["test-2", /([^\(]+)(?:\s*\(.\))+/])
+       // F(ed(eral)) R(ule(s))
+      .filterOutAndTreat(/^F(?:(?:ed(?:\.|eral) )|\. ?)?R(?:(?:ules?)|\.?)/,
+          highlightMainCitation, ["test-3", /([^\(]+)(?:\s*\(.\))+/])
+       // federal case law
+      .filterOutAndTreat(/\d{1,5} (?:U\.? ?S\.?|S\. ?Ct\.|F\.(?:Supp\.?)?(?:\dd)?) d{1,5}/i,
+          // some federal case citations have, e.g. '(2006)' following jump cite
+          // (if present)
+          highlightMainCitation, ["test-4", /(.+\d{1,5})(?:, ?\d{1,5})/])
+       // State Consts
+      .filterOutAndTreat(/Const/i,
+          highlightMainCitation, ["test-5", /(.*(?:section|\u00a7) ?[\d\.]+).+/i])
+       // Laws || Stat. || Code || Regs || Rule
+      .filterOutAndTreat(/(?:laws?)|(?:stat\.?)|(?:code)|(?:regs\.?)|(?:rule)/i,
+          highlightMainCitation, ["test-6", /([^\(]+)(?:\s*\(.\))+/])
+       // default
+      .highlightMainCitation("test-7", /(?:(.+\d+)(?:, ?\d+))|(?:([^\(]+)(?:\s*\(.\))+)/)
+}
+
+var testCases = $(".citation"),
     results,
     newTestButton;
 
@@ -38,29 +109,19 @@ newTestButton.click(function(e) {
   userInput.val("");
   results.append($("<p></p>")
       .text(currentCitation)
-      .addClass("result-citation"))
+      .addClass("result-citation  citation"))
 
   determineCitationType($(".result-citation"))
 })
 
-
-
-  // testCases.filter(function(i) {
-  //   return $(this).text().match(/U\.?S\.? Const/i);
-  // }).addClass("test-1");
-
-  // testCases.filter(function(i) {
-  //   return $(this).text().search(/U\.?S\.?/i) === -1
-  // })
-  //   .filter(function(i) {
-  //     return $(this).text().match(/const\.?/i);
-  //   }).addClass("test-2");
-
-  // $(citations).each(function(i,c){
-  //   console.log(i+1 + ": " + c);
-
-  //   var matchData = c.match(/\d+ ([\w. ]+) \d+(?:, (\d+(?:-(\d+))?))?/);
-
-  //   console.log(matchData);
-  // })
-// })
+// var sources = {
+//   westlaw: {
+//     usConst: (function(){
+//       var cite = noJumpCite.usConst;
+//
+//       return function() {
+//         console.log("the westlaw citation url is " + cite);
+//       }
+//     })()
+//   }
+// }
