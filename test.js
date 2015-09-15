@@ -45,17 +45,16 @@ function highlightMainCitation(cssClass, jumpCiteRegex) {
   // inner `this` is the DOM elements contained in one such object
   this.each(function(i, value) {
     fullText = $(this).html();
-    if (fullText.match(jumpCiteRegex)) {
       // matchData[0] is the full match;
       // matchData[1] is the capture group, in this case everything which
       // comes before the ', cl.', i.e. citation less jump cite
-      matchData = fullText.match(jumpCiteRegex);
+    if (matchData = fullText.match(jumpCiteRegex)) {
       // the final check against two patterns will have one string and one
       // undefined as matchData[1] and matchData[2], arbitrarily ordered
       mainCite = matchData[1] || matchData[2];
-      console.log(fullText)
-      console.log(mainCite)
-      console.log()
+      // console.log(fullText)
+      // console.log(mainCite)
+      // console.log()
       jumpCite = fullText.slice(mainCite.length);
 
       $(this).html("<span class='" + cssClass + "'>" + mainCite + "</span>" + jumpCite);

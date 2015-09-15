@@ -56,7 +56,7 @@ var Citation = function(citationText, type) {
 
   $.extend(this, {
     type: type.name,
-    mainCite: mainCite,
+    mainCite: $.trim(mainCite),
     jumpCite: jumpCite,
     fullCite: citationText
   });
