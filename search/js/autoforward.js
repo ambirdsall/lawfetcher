@@ -23,13 +23,14 @@ $(".link a").click(function(e) {
         linkId.match(/lexis/)          ||
         linkId.match(/westlaw/)        ||
         linkId.match(/ravel/)          ||
+        linkId.match(/lii/)            ||
         linkId.match(/google-scholar/) ||
         linkId.match(/google/) // /google/ must ALWAYS follow /google-scholar/
     )[0]
 
     localforage.setItem('autoforward', service, function(err, value){
       if (err) {
-        console.log("dang it, there was an error");
+        console.log(err);
       } else {
         console.log(value)
       }
