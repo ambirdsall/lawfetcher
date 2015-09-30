@@ -1,23 +1,47 @@
 var urlEncode = window.encodeURIComponent,
-    present = $.inArray;
+    present   = $.inArray,
+    extend    = $.extend,
+    each      = $.each,
+    __slice   = Array.prototype.slice;
+
+function escapeRegExp(string){
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Define a new function from fn1 and fn2 equivalent to fn2(fn1)
+//
+// An optional thisArg is provided in case the new function is being defined on
+// an object and needs to be able to reference its properties with `this`:
+// without such an argument, `this` will refer to the global object.
+function after(fn1, fn2, thisArg) {
+  thisArg = thisArg || this;
+
+  return function() {
+    return fn2.call(thisArg, fn1.apply(thisArg, arguments));
+  }
+}
 
 // Before they are used, Sources may be extended with one or more methods
 // corresponding to a citation type name. These methods MUST take, in order:
 //    the source's baseUrl
 //    the url-encoded citation
 var Source = function(config) {
-  $.extend(this, {
-    name: config.name,
-    baseUrl: config.baseUrl,
+  extend(this, {
+    name:        config.name,
+    baseUrl:     config.baseUrl,
     canDeepLink: config.canDeepLink,
-    anchor: config.anchor,
-    cannot: config.cannot
+    anchor:      config.anchor,
+    cannot:      config.cannot
+    // By convention, typeSpecificTreatments is an object, each of whose methods
+    // is stored under a key that shares its name with a type. If a source is
+    // extended with such a method, it uses it to handle that type over the
+    // function defined at `Source.prototype.url.urlGetter`.
   }, config.typeSpecificTreatments || {})
 }
 
-$.extend(Source.prototype, {
+extend(Source.prototype, {
   url: function(citation) {
-    var urlGetter = this[citation.type] || function(cite) { // default behavior
+    var urlGetter = this[citation.type] || function(cite) {
       var properCitation = (this.canDeepLink
                             ? cite.fullCite
                             : cite.mainCite);
@@ -41,7 +65,7 @@ var Citation = function(citationText, type) {
       jumpCite,
       matchData;
 
-  // mainCitePatterns match, perhaps counter-intuitively, against the given
+  // mainCitePatterns find matches, perhaps counter-intuitively, against the given
   // type's jump cite; everything before the jump cite is put in a capture group
   // so that the jump cite can be optionally stripped by Sources
   if ( matchData = citationText.match(type.mainCitePattern) ) {
@@ -54,7 +78,7 @@ var Citation = function(citationText, type) {
     jumpCite = "";
   }
 
-  $.extend(this, {
+  extend(this, {
     type: type.name,
     mainCite: $.trim(mainCite),
     jumpCite: jumpCite,
@@ -111,7 +135,7 @@ sources = [
     baseUrl: "http://advance.lexis.com/laapi/search?q=",
     anchor: $("#link--lexis__a"),
     canDeepLink: true,
-    cannot: []
+    cannot: ["federal_rule"]
   },
   {
     name: "Ravel",
@@ -125,7 +149,8 @@ sources = [
     baseUrl: "https://www.law.cornell.edu",
     anchor: $("#link--lii__a"),
     canDeepLink: true,
-    cannot: ["federal_rule", "federal_case", "state_constitution", "law_statute_code_rule", "default"],
+    // can make fed*+_rule
+    cannot: ["federal_case", "state_constitution", "law_statute_code_rule", "default"],
     typeSpecificTreatments: {
       us_constitution: function(cite) {
         var text = cite.mainCite,
@@ -168,8 +193,8 @@ sources = [
             sectionMatch,
             jumpCiteMatch;
 
-        if ( titleMatch = text.match(/(\d+)/) ) {
-          path += "/" + titleMatch[1];
+        if ( titleMatch = text.match(/\d+/) ) {
+          path += "/" + titleMatch[0];
         }
         if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([0-9\.]+)/i) ) {
           path += "/" + sectionMatch[1];
@@ -179,16 +204,77 @@ sources = [
         }
 
         return this.baseUrl + "/uscode/text" + path;
+      },
+      federal_rule: function(cite) {
+        var text = cite.fullCite,
+            subtypes,
+            subtypedCite,
+            path = "",
+            ruleNumberMatch,
+            rule,
+            jumpCiteMatch;
+
+        subtypes = [
+          {
+            name: "frap",
+            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:app||appellate)/i,
+            mainCitePattern: /([^(]+)(?:s*(.))+/
+          },
+          {
+            name: "frcp",
+            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:c||civ||civil)/i,
+            mainCitePattern: /([^(]+)(?:s*(.))+/
+          },
+          {
+            name: "frcrmp",
+            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:cr||crim||criminal)/i,
+            mainCitePattern: /([^(]+)(?:s*(.))+/
+          },
+          {
+            name: "fre",
+            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:e||evid||evidence)/i,
+            mainCitePattern: /([^(]+)(?:s*(.))+/
+          },
+          {
+            name: "frbp",
+            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:bankr||bkrtcy||bankruptcy)/i,
+            mainCitePattern: /([^(]+)(?:s*(.))+/
+          }
+        ]
+        // subtypedCite serves an identical role to that of `cite` in other types
+        subtypedCite = detectType(subtypes, text);
+
+        if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
+          rule = "/rule_" + ruleNumberMatch[0];
+          path += rule;
+        }
+        if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
+          path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
+        }
+
+        return this.baseUrl + "/rules/" + subtypedCite.type + path;
       }
-      // no others, I believe
     }
   },
   {
     name: "Google Scholar",
-    baseUrl: "https://scholar.google.com/scholar?as_sdt=2006&hl=en&q=",
+    baseUrl: 'https://scholar.google.com/scholar?as_sdt=2006&hl=en&q=',
     anchor: $("#link--google-scholar__a"),
     canDeepLink: false,
-    cannot: []
+    cannot: [],
+    url: function(defaultUrl) {
+      // Uses RegExp constructor to separate out the baseUrl and the citation
+      // to allow the baseUrl to be updated without breaking the quotation-mark-
+      // wrapping functionality.
+      var citeMatcher = new RegExp(escapeRegExp(this.baseUrl) + "(.+)"),
+          citationFromDefaultUrl;
+
+      // the terminal [1] selects the capture group (i.e. everything that
+      // follows the baseUrl) from the match array.
+      citationFromDefaultUrl = defaultUrl.match(citeMatcher)[1]
+
+      return this.baseUrl + '"' + citationFromDefaultUrl + '"';
+    }
   },
   {
     name: "Google Search",
@@ -250,9 +336,14 @@ types = [
   },
 ]
 
-$.each(sources, function(index, source) {
+each(sources, function(index, source) {
   var currentSource = new Source(source);
   var parson = detectType(types, originalCitation);
+
+  // allow alteration of url's return value on a Source-by-Source basis
+  if (source.hasOwnProperty('url')) {
+    currentSource.url = after(currentSource.url, source.url, currentSource);
+  }
 
   if ( currentSource.canHandle(parson.type) ) {
     // update the link if the source can handle it
