@@ -1,2 +1,11 @@
 .results { margin-top: 2em; }
-.debugging-link { margin-top: 2em; }
+
+/* 
+The id version is a specificity hack to set initial state for
+reveal/hide behavior in ../js/encode_url.js.
+ */
+#submit--input-validator-text { display: none; }
+
+.submit--help-text {
+  margin-top: 1.5em;
+}

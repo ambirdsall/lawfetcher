@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>Linkresolver • Legal Citations For Everybody</title>
   <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -10,22 +10,52 @@
   <div class="container-fluid">
     <div class="row">
       <div class="center-column col-xs-8 col-xs-offset-2">
+
         <div class="row">
           <h1 class="text-center  col-xs-12">Link Resolver</h1>
           <p class="lead  col-xs-8  col-xs-offset-2">Create one disambiguation link for a legal citation</p>
-          <p class="lead  col-xs-8  col-xs-offset-2">Readers will find direct links to the full source in various popular subscription services</p>
+          <p class="lead  col-xs-8  col-xs-offset-2">Readers will find direct links to the full source in various services, both free and subscription</p>
         </div>
+
         <div class="row">
-          <hr class="col-xs-8 col-xs-offset-2">
+          <hr class="[ col-xs-8 col-xs-offset-2 ]">
           <h2 class="col-xs-12  text-center">Create a Link</h2>
-          <div class="input-group  col-xs-8  col-xs-offset-2">
-            <label class="sr-only" for="citation">Citation</label>
-            <input id="url-encoder__input" class="form-control" type="text" name="citation" value="17 U.S.C. § 107 (3)">
-            <span class="input-group-btn"><button id="submit" class="[ btn  btn-primary ]">Generate URL</button></span>
+          <form id="url-encoder__form">
+            <div class="form-group">
+              <div class="[ col-xs-8  col-xs-offset-2 ]">
+                <div class="input-group">
+                  <label class="sr-only" for="citation">Citation</label>
+                  <input id="url-encoder__input" class="form-control" type="text" name="citation">
+                  <span class="input-group-btn">
+                    <button id="submit" class="[ btn  btn-primary ]" type="button">Generate URL</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- This div remains hidden until there is a validation error -->
+          <div id="submit--input-validator-text" class="submit--help-text [ alert  alert-danger ]  [ col-xs-8 col-xs-offset-2 ]  text-center">
+            Citations may only contain letters, numbers, and ( ) - , . : / § ¶
           </div>
+
         </div>
+
         <div class="row">
-          <p class="results" id="results"></p>
+          <div class="[ col-xs-8 col-xs-offset-2 ]">
+            <form>
+              <div class="results form-group " id="results">
+                <div class="form-group">
+                  <label for="results--a-tag">HTML tag</label>
+                  <textarea id="results--a-tag" class="[ form-control  input-group input-group-lg ] js-results--display" type="textarea" rows="3" name="results--a-tag"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="results--raw-url">URL</label>
+                  <textarea id="results--raw-url" class="[ form-control  input-group input-group-lg ] js-results--display" type="textarea" rows="3" name="results--raw-url"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

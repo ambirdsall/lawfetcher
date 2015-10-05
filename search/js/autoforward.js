@@ -1,39 +1,151 @@
-// If 'autoforward' has a truthy value, forward window appropriately
-localforage.getItem('autoforward', function(err, value) {
-  if (err) {
+  /*\
+  |*|  CONTENTS
+  |*|
+  |*|  1) Variable and function definitions
+  |*|  2) Check for valid autoforwarding preference
+  |*|  3) Autoforwarding logic for valid preferences
+  |*|  4) Logic for invalid (i.e. expired) preferences:
+  |*|       * substitute the appropriate source name for '{{source}}'
+  |*|       * reveal reconfirm/dismiss alert box
+  |*|  5) Add event handlers to buttons
+  \*/
+
+
+
+
+/**********************************************************************\
+   1) Variable and function definitions
+\**********************************************************************/
+
+// 2,600,000,000 ms === 30.0926 days. Not actually a month, but close enough
+// for government work, as they say.
+var ONE_MONTH_MILLISECONDS = 2600000000;
+var buttonText = {
+  notSet: 'Always use<br>this source?',
+  isSet: 'Disable<br>Autoforward'
+}
+// `isValid()` is a method of the `preferenceSetting` object. However, defining
+// it as a property of `preferenceSetting` can cause errors when cloning the
+// object for browser storage. Instead, its context is set by calling it with
+// `isValid.call(preferenceSetting)`
+var isValid = function isValid() {
+  // `timeSet` is, unsurprisingly, a time object set when the preference is
+  // created, and remains a reference to that moment; `now` is (re)created
+  // anew upon page loads with the retrieval of an existing preferenceSetting.
+  var now = new Date(),
+  timeDifference = now.getTime() - this.timeSet.getTime();
+
+  return timeDifference < ONE_MONTH_MILLISECONDS;
+}
+var setPreference = function setPreference($button) {
+  var sourceName,
+      linkId,
+      preferenceSetting;
+
+  linkId = $button.attr('id');
+  // the terminal [0] accesses the matching string, setting `sourceName` to the
+  // actual matching service identifier, rather than the match array holding it.
+  sourceName = ( linkId.match(/lexis/) || linkId.match(/westlaw/) )[0];
+  preferenceSetting = {
+    sourceName: sourceName,
+    // "Set" the past participle
+    timeSet: new Date()
+  }
+
+  localforage.setItem('autoforward', preferenceSetting, function(err, preference){
+    if ( err ) {
+      console.log(err);
+    } else {
+      $button.html(buttonText.isSet)
+             .addClass('btn-warning  js-isPreference')
+             .removeClass('btn-default')
+    }
+  })
+}
+var unsetPreference = function unsetPreference($button) {
+  localforage.removeItem('autoforward', function(err) {
+    if ( err ) {
+      console.log(err)
+    } else {
+      $button.html(buttonText.notSet)
+             .removeClass('js-isPreference  btn-warning')
+             .addClass('btn-default');
+    }
+  })
+}
+var displayAlert = function displayAlert($button) {
+  var $alert = $('<div class="autoforward__alert alert alert-warning alert-dismissible" role="alert">' +
+      '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+        'The next time you navigate to a Linkresolver page, you will be ' +
+        'automatically forwarded to this service. Even refreshing this page. ' +
+        'If you decide to undo this setting at a later date, simply visit ' +
+        '<a href="http://www.birdsall.xyz/linkresolver">www.birdsall.xyz/linkresolver</a>.' +
+        '</div>');
+
+  $button.parent().parent().after($alert);
+}
+var removeAlert = function removeAlert() {
+  $('.alert').remove();
+}
+
+
+/**********************************************************************\
+   2) Check for valid autoforward preference
+\**********************************************************************/
+localforage.getItem('autoforward', function(err, preference) {
+  var linkToPreferredService,
+      $linkTitle,
+      serviceName,
+      $reconfirmTemplate;
+
+  if ( err ) {
     console.log(err);
-  } else if (value) {
-    var linkToPreferredService = $("#link--" + value + "__a");
-    window.location.href = linkToPreferredService.attr("href");
-  }
-});
 
-// set 'autoforward' to preferred service if the corresponding radio button is
-// checked
-$(".link a").click(function(e) {
-  var checked = $(this).siblings().find("input").is(":checked");
+  /**********************************************************************\
+      3) Autoforwarding logic for valid preferences
+  \**********************************************************************/
+  } else if ( preference && isValid.call(preference) ) {
+    linkToPreferredService = $('#link--' + preference.sourceName + '__a');
+    window.location.href = linkToPreferredService.attr('href');
 
-  if (checked) {
-    var linkId = $(this).attr('id'),
-        service;
+  /**********************************************************************\
+      4) Logic for invalid (i.e. expired) preferences
+  \**********************************************************************/
+  } else if ( preference ) {
 
-    // the terminal [0] accesses the matching string, setting `service` to the
-    // actual matching service identifier, rather than its surrounding array
-    service = (
-        linkId.match(/lexis/)          ||
-        linkId.match(/westlaw/)        ||
-        linkId.match(/ravel/)          ||
-        linkId.match(/lii/)            ||
-        linkId.match(/google-scholar/) ||
-        linkId.match(/google/) // /google/ must ALWAYS follow /google-scholar/
-    )[0]
+    /********************************************************************\
+        * substitute the appropriate source name for '{{source}}'
+    \********************************************************************/
+    $linkTitle = $('#link--' + preference.sourceName + '__title');
+    serviceName = $linkTitle.text();
+    $reconfirmTemplate = $('.js-reconfirm__template');
 
-    localforage.setItem('autoforward', service, function(err, value){
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(value)
-      }
+    $reconfirmTemplate.each(function() {
+      var $this = $(this);
+
+      $this.text($this.text().replace(/\{\{source\}\}/g, serviceName))
     })
+
+    /********************************************************************\
+        * reveal reconfirm/dismiss alert box
+    \********************************************************************/
+    $('#reconfirm-expired-autoforward').show();
   }
 });
+
+
+/**********************************************************************\
+   5) Add event handlers to buttons
+\**********************************************************************/
+$('.autoforward__btn').click(function(e) {
+  var $this = $(this)
+
+  if ( $this.hasClass('js-isPreference') ) {
+    unsetPreference($this);
+    removeAlert();
+  } else {
+    setPreference($this);
+    displayAlert($this);
+  }
+});
+

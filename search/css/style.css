@@ -5,6 +5,8 @@ p { font-size: 0.8em; }
   height: 7em;
   word-wrap: break-word;
 }
+  .link { width: 100%; }
+
   .link--westlaw {}
     .link--westlaw__title { color: #fc8c1e; }
   .link--lexis {}
@@ -19,3 +21,18 @@ p { font-size: 0.8em; }
   margin-top: 1em;
   margin-bottom: 1em;
 }
+
+.source-list__title { margin-bottom: 1em; }
+  .source-list--subscription__title { margin-top: 1em; }
+
+.reconfirm-autoforward__btn {
+  margin: 0 1em;
+}
+
+.autoforward__btn {
+  background-color: #ddd;
+}
+
+/* Using the id is a specificity hack to set the initial state of a conditionally- */
+/* revealed element */
+#reconfirm-expired-autoforward { display: none; }

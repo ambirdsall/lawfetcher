@@ -109,13 +109,15 @@ function formatUrl(source, parsedCitation) {
 }
 
 // window.location.search returns the query string verbatim, including the
-// delimiting '?'. Indeces 0-2 of the query string ('?q=') are boilerplate
+// delimiting '?'. Indeces 0-2 of the query string ('?citation=') are boilerplate
 // and provide no useful information, so only indeces 3+ are saved
-var encodedQuery = window.location.search.slice(3),
+var encodedQuery = window.location.search.slice(10),
     originalCitation = window.decodeURIComponent(encodedQuery),
     title = $("#title"),
     sources,
     types;
+
+title.text(originalCitation);
 
 // SOURCES: [ Westlaw, Lexis, Ravel, Google Scholar, Google Search, LII ]
 // For each source, provide an object with three properties:
@@ -340,7 +342,7 @@ each(sources, function(index, source) {
   var currentSource = new Source(source);
   var parson = detectType(types, originalCitation);
 
-  // allow alteration of url's return value on a Source-by-Source basis
+  // allow config objects to apply individual treatments to the return value of url()
   if (source.hasOwnProperty('url')) {
     currentSource.url = after(currentSource.url, source.url, currentSource);
   }
@@ -353,7 +355,4 @@ each(sources, function(index, source) {
     source.anchor.parent().remove();
   }
 });
-
-// Put citation text in h1
-title.html(originalCitation); // title.text(originalCitation) ??????
 

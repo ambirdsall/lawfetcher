@@ -13,61 +13,63 @@
       <div class="col-xs-12 col-md-8 col-md-offset-2">
         <h1 id="title" class="primary-title"></h1>
       </div>
-      <div class="col-xs-12 col-md-8 col-md-offset-2">
+      <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <!-- This div is hidden unless there is an existing but expired preference stored -->
+        <div id="reconfirm-expired-autoforward" class="row">
+          <div class="[ alert alert-warning ]" role="alert">
+            <h3 class="js-reconfirm__template">Would you like to continue automatically</h3>
+            <h3 class="js-reconfirm__template">forwarding all citations to {{source}}?</h3>
+
+            <div class="control-panel">
+              <button id="js-reconfirm-autoforward" class="reconfirm-autoforward__btn  [ btn btn-success ]">I would</button>
+              <button id="js-delete-autoforward"    class="reconfirm-autoforward__btn  [ btn btn-warning ]">Delete Preference</button>
+            </div>
+          </div>
+        </div>
+
+        <!--  SOURCES  -->
         <div class="row">
+          <h2 class="source-list__title">Free & Open Sources</h2>
+          <div class="list-group">
+            <div class="[ link link--lii ]">
+              <a id="link--lii__a" class="form-control" href="">
+                <h3 class="link--lii__title">Cornell LII</h4>
+              </a>
+            </div>
+            <div class="[ link link--ravel ]">
+              <a id="link--ravel__a" class="form-control" href="">
+                <h3 class="link--ravel__title">Ravel Law</h4>
+              </a>
+            </div>
+            <div class="[ link link--google-scholar ]">
+              <a id="link--google-scholar__a" class="form-control" href="">
+                <h3 class="link--google-scholar__title">Google Scholar</h4>
+              </a>
+            </div>
+            <div class="[ link link--google ]">
+              <a id="link--google__a" class="form-control" href="">
+                <h3 class="link--google__title">Google Search</h4>
+              </a>
+            </div>
+          </div>
+
+
+          <h2 class="source-list__title source-list--subscription__title">Comprehensive Fee-Based Services</h2>
           <div class="list-group">
             <div class="[ link link--lexis ] input-group">
               <a id="link--lexis__a" class="link__a form-control" href="">
-                <h3 class="link--lexis__title">Lexis Advance</h4>
+                <h3 id="link--lexis__title" class="link--lexis__title">Lexis Advance</h4>
               </a>
               <span class="input-group-addon">
-                <label for="lexis-autoforward">Auto-<br>redirect?</label><br>
-                <input id="lexis-autoforward" name="autoforwarding" value="lexis" type="radio">
+                <button class="btn  btn-default  autoforward__btn" id="autoforward--lexis">Always use<br>this source?</button>
               </span>
             </div>
             <div class="[ link link--westlaw ] input-group">
               <a id="link--westlaw__a" class="form-control" href="">
-                <h3 class="link--westlaw__title">WestlawNext</h4>
+                <h3 id="link--westlaw__title" class="link--westlaw__title">WestlawNext</h4>
               </a>
               <span class="input-group-addon">
-                <label for="westlaw-autoforward">Auto-<br>redirect?</label><br>
-                <input id="westlaw-autoforward" name="autoforwarding" value="westlaw" type="radio">
-              </span>
-            </div>
-            <div class="[ link link--ravel ] input-group">
-              <a id="link--ravel__a" class="form-control" href="">
-                <h3 class="link--ravel__title">Ravel Law</h4>
-              </a>
-              <span class="input-group-addon">
-                <label for="ravel-autoforward">Auto-<br>redirect?</label><br>
-                <input id="ravel-autoforward" name="autoforwarding" value="ravel" type="radio">
-              </span>
-            </div>
-            <div class="[ link link--lii ] input-group">
-              <a id="link--lii__a" class="form-control" href="">
-                <h3 class="link--lii__title">Cornell LII</h4>
-              </a>
-              <span class="input-group-addon">
-                <label for="lii-autoforward">Auto-<br>redirect?</label><br>
-                <input id="lii-autoforward" name="autoforwarding" value="lii" type="radio">
-              </span>
-            </div>
-            <div class="[ link link--google-scholar ] input-group">
-              <a id="link--google-scholar__a" class="form-control" href="">
-                <h3 class="link--google-scholar__title">Google Scholar</h4>
-              </a>
-              <span class="input-group-addon">
-                <label for="google-scholar-autoforward">Auto-<br>redirect?</label><br>
-                <input id="google-scholar-autoforward" name="autoforwarding" value="google-scholar" type="radio">
-              </span>
-            </div>
-            <div class="[ link link--google ] input-group">
-              <a id="link--google__a" class="form-control" href="">
-                <h3 class="link--google__title">Google Search</h4>
-              </a>
-              <span class="input-group-addon">
-                <label for="google-autoforward">Auto-<br>redirect?</label><br>
-                <input id="google-autoforward" name="autoforwarding" value="google" type="radio">
+                <button class="btn  btn-default  autoforward__btn" id="autoforward--westlaw">Always use<br>this source?</button>
               </span>
             </div>
           </div>
