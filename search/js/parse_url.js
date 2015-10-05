@@ -82,7 +82,8 @@ var Citation = function(citationText, type) {
     type: type.name,
     mainCite: $.trim(mainCite),
     jumpCite: jumpCite,
-    fullCite: citationText
+    fullCite: citationText,
+    subtypes: type.subtypes || null
   });
 }
 
@@ -209,47 +210,20 @@ sources = [
       },
       federal_rule: function(cite) {
         var text = cite.fullCite,
-            subtypes,
             subtypedCite,
             path = "",
             ruleNumberMatch,
             rule,
             jumpCiteMatch;
 
-        subtypes = [
-          {
-            name: "frap",
-            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:app||appellate)/i,
-            mainCitePattern: /([^(]+)(?:s*(.))+/
-          },
-          {
-            name: "frcp",
-            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:c||civ||civil)/i,
-            mainCitePattern: /([^(]+)(?:s*(.))+/
-          },
-          {
-            name: "frcrmp",
-            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:cr||crim||criminal)/i,
-            mainCitePattern: /([^(]+)(?:s*(.))+/
-          },
-          {
-            name: "fre",
-            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:e||evid||evidence)/i,
-            mainCitePattern: /([^(]+)(?:s*(.))+/
-          },
-          {
-            name: "frbp",
-            idPattern: /(?:(?:f||fed||federal)\.? ?(?:r||rules?)\.? ?)(?:of )?(?:bankr||bkrtcy||bankruptcy)/i,
-            mainCitePattern: /([^(]+)(?:s*(.))+/
-          }
-        ]
-        // subtypedCite serves an identical role to that of `cite` in other types
-        subtypedCite = detectType(subtypes, text);
+        subtypedCite = detectType(cite.subtypes, text);
 
+        // Build link to the proper rule number
         if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
           rule = "/rule_" + ruleNumberMatch[0];
           path += rule;
         }
+        // And to the proper jump cite, if present
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
           path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
         }
@@ -312,7 +286,34 @@ types = [
   {
     name:            "federal_rule",
     idPattern:       /^F(?:(?:ed(?:\.|eral) )|\. ?)?R(?:(?:ules?)|\.?)/,
-    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/
+    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/,
+    subtypes: [
+      {
+        name: "frap",
+        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:appellate|app|a)/i,
+        mainCitePattern: /([^(]+)(?:s*(.))+/
+      },
+      {
+        name: "frcrmp",
+        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:criminal|crim|cr)/i,
+        mainCitePattern: /([^(]+)(?:s*(.))+/
+      },
+      {
+        name: "frcp",
+        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:civil|civ|c)/i,
+        mainCitePattern: /([^(]+)(?:s*(.))+/
+      },
+      {
+        name: "fre",
+        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:evidence|evid|e)/i,
+        mainCitePattern: /([^(]+)(?:s*(.))+/
+      },
+      {
+        name: "frbp",
+        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:bankruptcy|bankr|bkrtcy)/i,
+        mainCitePattern: /([^(]+)(?:s*(.))+/
+      }
+    ]
   },
   {
     name:            "federal_case",
@@ -340,16 +341,16 @@ types = [
 
 each(sources, function(index, source) {
   var currentSource = new Source(source);
-  var parson = detectType(types, originalCitation);
+  var typedCite = detectType(types, originalCitation);
 
   // allow config objects to apply individual treatments to the return value of url()
   if (source.hasOwnProperty('url')) {
     currentSource.url = after(currentSource.url, source.url, currentSource);
   }
 
-  if ( currentSource.canHandle(parson.type) ) {
+  if ( currentSource.canHandle(typedCite.type) ) {
     // update the link if the source can handle it
-    formatUrl(currentSource, parson);
+    formatUrl(currentSource, typedCite);
   } else {
     // if not, remove the <div> containing the link
     source.anchor.parent().remove();
