@@ -24,6 +24,8 @@ var buttonText = {
   notSet: 'Always use<br>this source?',
   isSet: 'Disable<br>Autoforward'
 }
+var $reconfirmDialogue = $('#reconfirm-expired-autoforward');
+
 // `isValid()` is a method of the `preferenceSetting` object. However, defining
 // it as a property of `preferenceSetting` can cause errors when cloning the
 // object for browser storage. Instead, its context is set by calling it with
@@ -129,7 +131,7 @@ localforage.getItem('autoforward', function(err, preference) {
     /********************************************************************\
         * reveal reconfirm/dismiss alert box
     \********************************************************************/
-    $('#reconfirm-expired-autoforward').show();
+    $reconfirmDialogue.show();
   }
 });
 
@@ -149,3 +151,28 @@ $('.autoforward__btn').click(function(e) {
   }
 });
 
+$('#js-reconfirm-autoforward').click(function(e) {
+  var $this = $(this);
+
+  localforage.getItem('autoforward', function(err, preference) {
+    if ( err ) {
+      console.log(err);
+    } else {
+      preference.timeSet = new Date();
+      localforage.setItem('autoforward', preference, function(err, preference) {
+        $reconfirmDialogue.hide();
+      });
+    }
+  });
+  // at least visibly, setPreference on the other one
+  $('#reconfirm-expired-autoforward').hide();
+});
+
+$('#js-delete-autoforward').click(function(e) {
+  console.log("DELETE YOU FUCK")
+  var $this = $(this);
+
+  unsetPreference($this);
+  // at least visibly, setPreference on the other one
+  $('#reconfirm-expired-autoforward').hide();
+});
