@@ -12,7 +12,7 @@ function escapeRegExp(string){
 //
 // An optional thisArg is provided in case the new function is being defined on
 // an object and needs to be able to reference its properties with `this`:
-// without such an argument, `this` will refer to the global object.
+// without providing it, `this` will refer to the global object.
 function after(fn1, fn2, thisArg) {
   thisArg = thisArg || this;
 
