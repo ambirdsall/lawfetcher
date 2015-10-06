@@ -7,15 +7,15 @@ p { font-size: 0.8em; }
 }
   .link { width: 100%; }
 
-  .link--westlaw {}
+  /* .link--westlaw {} */
     .link--westlaw__title { color: #fc8c1e; }
-  .link--lexis {}
+  /* .link--lexis {} */
     .link--lexis__title { color: #dd2108; }
-  .link--google-scholar {}
+  /* .link--google-scholar {} */
     .link--google-scholar__title { color: #009f5a; }
-  .link--google {}
+  /* .link--google {} */
     .link--google__title { color: #3f83f1; }
-  .link--ravel {}
+  /* .link--ravel {} */
     .link--ravel__title { color: #5b78bb; }
 .primary-title {
   margin-top: 1em;
