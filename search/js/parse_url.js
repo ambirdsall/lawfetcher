@@ -119,6 +119,7 @@ var encodedQuery = window.location.search.slice(10),
     types;
 
 title.text(originalCitation);
+document.title = originalCitation;
 
 // SOURCES: [ Westlaw, Lexis, Ravel, Google Scholar, Google Search, LII ]
 // For each source, provide an object with three properties:
@@ -290,7 +291,7 @@ types = [
     subtypes: [
       {
         name: "frap",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:appellate|app)/i,
+        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:appellate|app|a)/i,
         mainCitePattern: /([^(]+)(?:s*(.))+/
       },
       {
@@ -319,7 +320,7 @@ types = [
     name:            "federal_case",
     idPattern:       /\d{1,5} (?:U\.? ?S\.?|S\. ?Ct\.|F\.(?:Supp\.?)?(?:\dd)?) d{1,5}/i,
     // some federal case citations have, e.g. '(2006)' following jump cite
-    // (if present): anything TODO?
+    // (if present): anything to do about it?
     mainCitePattern: /(.+\d{1,5})(?:, ?\d{1,5})/
   },
   {
