@@ -5,16 +5,12 @@ var $         = require('jquery'),
     each      = $.each,
     __slice   = Array.prototype.slice;
 
-function escapeRegExp(string){
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 // Define a new function from fn1 and fn2 equivalent to fn2(fn1)
 //
 // An optional thisArg is provided in case the new function is being defined on
 // an object and needs to be able to reference its properties with `this`:
 // without providing it, `this` will refer to the global object.
-function after(fn1, fn2, thisArg) {
+var after = function after(fn1, fn2, thisArg) {
   thisArg = thisArg || this;
 
   return function() {
@@ -127,141 +123,7 @@ document.title = originalCitation;
 //    baseUrl: the entire path up to params for that source's citation search
 //    archor: a $(DOM element). They will all have identically formatted IDs.
 //    canDeepLink: boolean
-sources = [
-  {
-    name: "Westlaw",
-    baseUrl: "http://a.next.westlaw.com/Link/Document/FullText?findType=Y&cite=",
-    anchor: $("#link--westlaw__a"),
-    canDeepLink: false,
-    cannot: []
-  },
-  {
-    name: "Lexis",
-    baseUrl: "http://advance.lexis.com/laapi/search?q=",
-    anchor: $("#link--lexis__a"),
-    canDeepLink: true,
-    cannot: ["federal_rule"]
-  },
-  {
-    name: "Ravel",
-    baseUrl: "http://www.ravellaw.com/search?query=",
-    anchor: $("#link--ravel__a"),
-    canDeepLink: false,
-    cannot: []
-  },
-  {
-    name: "Cornell LII",
-    baseUrl: "https://www.law.cornell.edu",
-    anchor: $("#link--lii__a"),
-    canDeepLink: true,
-    // can make fed*+_rule
-    cannot: ["federal_case", "state_constitution", "law_statute_code_rule", "default"],
-    typeSpecificTreatments: {
-      us_constitution: function(cite) {
-        var text = cite.mainCite,
-            path = "",
-            articleMatch,
-            sectionMatch;
-
-        if ( articleMatch = text.match(/art(?:\.?|icle) ?([0-9ivxlc]+)/i) ) {
-          path += "/article" + articleMatch[1];
-        }
-        if ( sectionMatch = text.match(/(?:sect(?:\.|ion)?|\u00a7) ?([0-9ivxlc]+)/i) ) {
-          path += "#section" + sectionMatch[1];
-        }
-
-        return this.baseUrl + "/constitution" + path;
-      },
-      cfr: function(cite) {
-        var text = cite.fullCite,
-            path = "",
-            titleMatch,
-            sectionMatch,
-            jumpCiteMatch;
-
-        if ( titleMatch = text.match(/(\d+)/) ) {
-          path += "/" + titleMatch[1];
-        }
-        if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([0-9\.]+)/i) ) {
-          path += "/" + sectionMatch[1];
-        }
-        if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
-        }
-
-        return this.baseUrl + "/cfr/text" + path;
-      },
-      usc: function(cite) {
-        var text = cite.fullCite,
-            path = "",
-            titleMatch,
-            sectionMatch,
-            jumpCiteMatch;
-
-        if ( titleMatch = text.match(/\d+/) ) {
-          path += "/" + titleMatch[0];
-        }
-        if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([0-9\.]+)/i) ) {
-          path += "/" + sectionMatch[1];
-        }
-        if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
-        }
-
-        return this.baseUrl + "/uscode/text" + path;
-      },
-      federal_rule: function(cite) {
-        var text = cite.fullCite,
-            subtypedCite,
-            path = "",
-            ruleNumberMatch,
-            rule,
-            jumpCiteMatch;
-
-        subtypedCite = detectType(cite.subtypes, text);
-
-        // Build link to the proper rule number
-        if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
-          rule = "/rule_" + ruleNumberMatch[0];
-          path += rule;
-        }
-        // And to the proper jump cite, if present
-        if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
-        }
-
-        return this.baseUrl + "/rules/" + subtypedCite.type + path;
-      }
-    }
-  },
-  {
-    name: "Google Scholar",
-    baseUrl: 'https://scholar.google.com/scholar?as_sdt=2006&hl=en&q=',
-    anchor: $("#link--google-scholar__a"),
-    canDeepLink: false,
-    cannot: [],
-    url: function(defaultUrl) {
-      // Uses RegExp constructor to separate out the baseUrl and the citation
-      // to allow the baseUrl to be updated without breaking the quotation-mark-
-      // wrapping functionality.
-      var citeMatcher = new RegExp(escapeRegExp(this.baseUrl) + "(.+)"),
-          citationFromDefaultUrl;
-
-      // the terminal [1] selects the capture group (i.e. everything that
-      // follows the baseUrl) from the match array.
-      citationFromDefaultUrl = defaultUrl.match(citeMatcher)[1]
-
-      return this.baseUrl + '"' + citationFromDefaultUrl + '"';
-    }
-  },
-  {
-    name: "Google Search",
-    baseUrl: "http://google.com/search?q=",
-    anchor: $("#link--google__a"),
-    canDeepLink: true,
-    cannot: []
-  }
-];
+sources = require('./modules/source_list');
 
 // types: [us_constitution, cfr, usc, federal_rule, federal_case, state_constitution, law_statute_code_rule, default]
 // for each type, an object with 3 properties:
@@ -269,77 +131,7 @@ sources = [
 //   idPattern: regex to 'type' anonymous citations as this
 //   mainCitePattern: regex that matches the type's jump cites; and captures
 //                    all characters before a jump cite's start
-types = [
-  {
-    name:            "us_constitution",
-    idPattern:       /U\.?S\.? Const/i,
-    mainCitePattern: /(.+), cl\./
-  },
-  {
-    name:            "cfr",
-    idPattern:       /(?:C\.? ?F\.? ?R\.?)/i,
-    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/
-  },
-  {
-    name:            "usc",
-    idPattern:       /(?:U\.? ?S\.? ?C\.?)/i,
-    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/
-  },
-  {
-    name:            "federal_rule",
-    idPattern:       /^F(?:(?:ed(?:\.|eral) )|\. ?)?R(?:(?:ules?)|\.?)/,
-    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/,
-    subtypes: [
-      {
-        name: "frap",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:appellate|app|a)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "frcrmp",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:criminal|crim|cr)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "frcp",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:civil|civ|c)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "fre",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:evidence|evid|e)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "frbp",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:bankruptcy|bankr|bkrtcy)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      }
-    ]
-  },
-  {
-    name:            "federal_case",
-    idPattern:       /\d{1,5} (?:U\.? ?S\.?|S\. ?Ct\.|F\.(?:Supp\.?)?(?:\dd)?) d{1,5}/i,
-    // some federal case citations have, e.g. '(2006)' following jump cite
-    // (if present): anything to do about it?
-    mainCitePattern: /(.+\d{1,5})(?:, ?\d{1,5})/
-  },
-  {
-    name:            "state_constitution",
-    idPattern:       /Const/i,
-    mainCitePattern: /(.*(?:section|\u00a7) ?[\d\.]+).+/i
-  },
-  {
-    name:            "law_statute_code_rule",
-    idPattern:       /(?:laws?)|(?:stat\.?)|(?:code)|(?:regs\.?)|(?:rule)/i,
-    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/
-  },
-  {
-    name:            "default",
-    idPattern:       /.*/,
-    mainCitePattern: /(?:(.+\d+)(?:, ?\d+))|(?:([^\(]+)(?:\s*\(.\))+)/
-  },
-]
+types = require('./modules/type_list');
 
 each(sources, function(index, source) {
   var currentSource = new Source(source);
