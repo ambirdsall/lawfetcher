@@ -1,0 +1,27 @@
+{
+  "name": "lawlinker",
+  "version": "1.0.0",
+  "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-js": "browserify js/*.js | uglifyjs -mc > js/dist/creator.js && browserify search/js/*.js | uglifyjs -mc > search/js/dist/sources.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ambirdsall/linkresolver.git"
+  },
+  "author": "Alex Birdsall & Peter W. Martin",
+  "license": "MIT",
+  "dependencies": {
+    "browserify": "^12.0.0",
+    "jquery": "^2.1.4",
+    "localforage": "^1.3.0",
+    "uglifyjs": "^2.4.10"
+  },
+  "devDependencies": {
+    "catw": "^1.0.1",
+    "jasmine": "^2.3.2",
+    "karma": "^0.13.14",
+    "watchify": "^3.5.0"
+  }
+}

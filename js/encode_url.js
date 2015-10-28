@@ -1,4 +1,5 @@
 var url        = 'http://birdsall.xyz/linkresolver/search/',
+    $          = require('jquery'),
     $input     = $('#url-encoder__input'),
     $helpText  = $('#submit--input-validator-text'),
     $results   = $('#results'),

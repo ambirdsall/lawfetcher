@@ -1,4 +1,5 @@
-var urlEncode = window.encodeURIComponent,
+var $         = require('jquery'),
+    urlEncode = window.encodeURIComponent,
     present   = $.inArray,
     extend    = $.extend,
     each      = $.each,

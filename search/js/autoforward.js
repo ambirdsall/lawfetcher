@@ -17,14 +17,16 @@
    1) Variable and function definitions
 \**********************************************************************/
 
-// 2,600,000,000 ms === 30.0926 days. Not actually a month, but close enough
-// for government work, as they say.
-var ONE_MONTH_MILLISECONDS = 2600000000;
-var buttonText = {
-  notSet: 'Always use<br>this source?',
-  isSet: 'Disable<br>Autoforward'
-}
-var $reconfirmDialogue = $('#reconfirm-expired-autoforward');
+var $                  = require('jquery'),
+    localforage        = require('localforage'),
+    // 2,600,000,000 ms === 30.0926 days. Not actually a month, but close enough
+    // for government work, as they say.
+    EXPIRATION_INTERVAL_MILLISECONDS = 2600000000,
+    buttonText         = {
+      notSet: 'Always use<br>this source?',
+      isSet: 'Disable<br>Autoforward'
+    },
+    $reconfirmDialogue = $('#reconfirm-expired-autoforward');
 
 // `isValid()` is a method of the `preferenceSetting` object. However, defining
 // it as a property of `preferenceSetting` can cause errors when cloning the
@@ -37,7 +39,7 @@ var isValid = function isValid() {
   var now = new Date(),
   timeDifference = now.getTime() - this.timeSet.getTime();
 
-  return timeDifference < ONE_MONTH_MILLISECONDS;
+  return timeDifference < EXPIRATION_INTERVAL_MILLISECONDS;
 }
 var setPreference = function setPreference($button) {
   var sourceName,

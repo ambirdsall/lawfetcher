@@ -1,3 +1,5 @@
+var localforage = require('localforage')
+
 localforage.getItem('autoforward', function(err, value) {
   if (err) {
     console.log(err);
