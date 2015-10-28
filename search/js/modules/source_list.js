@@ -1,7 +1,9 @@
-var $ = require('jquery'),
-    escapeRegExp = function escapeRegExp(string){
-      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    };
+var $            = require('jquery'),
+    U            = require('./utils'),
+    escapeRegExp = U.escapeRegExp,
+    Citation     = require('./citation'),
+    detectType  = require('../functions/detectType');
+
 
 
 module.exports = [
@@ -31,8 +33,11 @@ module.exports = [
     baseUrl: "https://www.law.cornell.edu",
     anchor: $("#link--lii__a"),
     canDeepLink: true,
-    // can make fed*+_rule
     cannot: ["federal_case", "state_constitution", "law_statute_code_rule", "default"],
+    // Before they are used, Source objects may be extended with one or more methods
+    // corresponding to a citation type name. These methods MUST take, in order:
+    //    the source's baseUrl
+    //    the url-encoded citation
     typeSpecificTreatments: {
       us_constitution: function(cite) {
         var text = cite.mainCite,
