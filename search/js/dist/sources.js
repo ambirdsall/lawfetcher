@@ -9564,9 +9564,13 @@ module.exports = function Citation(citationText, type) {
       jumpCite,
       matchData;
 
-  // mainCitePatterns find matches, perhaps counter-intuitively, against the given
-  // type's jump cite; everything before the jump cite is put in a capture group
-  // so that the jump cite can be optionally stripped by Sources
+  if ( !citationText.match(type.idPattern) ) {
+    throw new Error("Citation doesn't match the type given");
+  }
+
+  // mainCitePatterns find the main citation by matching against the jump cite
+  // of the given type; everything before the jump cite, if present, is put in a
+  // capture group so that the jump cite can be optionally stripped off
   if ( matchData = citationText.match(type.mainCitePattern) ) {
 
     // the default type checks against two jump cite patterns; it will have one

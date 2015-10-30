@@ -1,5 +1,5 @@
 // Karma configuration
-// Generated on Wed Oct 28 2015 23:20:15 GMT-0700 (PDT)
+// Generated on Wed Oct 28 2015 23:29:05 GMT-0700 (PDT)
 
 module.exports = function(config) {
   config.set({
@@ -10,13 +10,12 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: [ 'browserify', 'jasmine'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      'js/**/*.js',
-      'search/js/**/*.js'
+      'test/**/*.js'
     ],
 
 
@@ -28,6 +27,11 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'test/**/*.js': ['browserify']
+    },
+
+    browserify: {
+      debug: true
     },
 
 
