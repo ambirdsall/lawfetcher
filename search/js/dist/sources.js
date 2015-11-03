@@ -9226,8 +9226,7 @@ module.exports = function detectType(taxonomy, citationText) {
 
 },{"../types/citation":7}],3:[function(require,module,exports){
 var $            = require('jquery'),
-    U            = require('./utils'),
-    escapeRegExp = U.escapeRegExp,
+    escapeRegExp = require('./utils').escapeRegExp,
     Citation     = require('../types/citation'),
     detectType  = require('../functions/detectType');
 

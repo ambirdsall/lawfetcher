@@ -1,6 +1,5 @@
 var $            = require('jquery'),
-    U            = require('./utils'),
-    escapeRegExp = U.escapeRegExp,
+    escapeRegExp = require('./utils').escapeRegExp,
     Citation     = require('../types/citation'),
     detectType  = require('../functions/detectType');
 
