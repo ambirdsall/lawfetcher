@@ -24,7 +24,6 @@ function formatUrl(source, parsedCitation) {
                .append(p.html(url));
 }
 
-
 $title.text(originalCitation);
 document.title = originalCitation;
 
