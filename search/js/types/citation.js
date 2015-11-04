@@ -8,7 +8,7 @@ module.exports = function Citation(citationText, type) {
       matchData;
 
   if ( !citationText.match(type.idPattern) ) {
-    throw new Error("Citation doesn't match the type given");
+    throw new Error("Citation doesn't match the type given: " + citationText);
   }
 
   // mainCitePatterns find the main citation by matching against the jump cite

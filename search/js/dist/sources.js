@@ -12552,8 +12552,7 @@ var $                = require('jquery'),
     extend           = $.extend,
     each             = $.each,
     trim             = $.trim,
-    U                = require('./modules/utils'),
-    after            = U.after,
+    after            = require('./modules/utils').after,
     __slice          = [].slice,
     Source           = require('./types/source'),
     Citation         = require('./types/citation'),
@@ -12623,7 +12622,7 @@ module.exports = function Citation(citationText, type) {
       matchData;
 
   if ( !citationText.match(type.idPattern) ) {
-    throw new Error("Citation doesn't match the type given");
+    throw new Error("Citation doesn't match the type given: " + citationText);
   }
 
   // mainCitePatterns find the main citation by matching against the jump cite
