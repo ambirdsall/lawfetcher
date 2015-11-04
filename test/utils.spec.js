@@ -22,4 +22,10 @@ describe('The utils object', function() {
     expect(effOfGee).toBe( f(g(0)) );
     expect(effOfGee).not.toBe( g(f(0)) );
   });
+
+  it('can curry functions', function() {
+    var addOne = U.curry(function add(x, y) { return x + y; })(1);
+
+    expect(addOne(5)).toEqual(6);
+  });
 });
