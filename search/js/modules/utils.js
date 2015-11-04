@@ -38,4 +38,21 @@ U.escapeRegExp = function escapeRegExp(string){
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
 
+U.curry = function curry(fn) {
+  var arity = fn.length;
+
+  return function f1() {
+    var args = __slice.call(arguments, 0);
+    if (args.length >= arity) {
+      return fn.apply(null, args);
+    }
+    else {
+      return function f2() {
+        var args2 = __slice.call(arguments, 0);
+        return f1.apply(null, args.concat(args2));
+      }
+    }
+  };
+}
+
 module.exports = U;

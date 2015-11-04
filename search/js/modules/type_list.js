@@ -15,36 +15,29 @@ module.exports = [
     mainCitePattern: /([^\(]+)(?:\s*\(.\))+/
   },
   {
-    name:            "federal_rule",
-    idPattern:       /^F(?:(?:ed(?:\.|eral) )|\. ?)?R(?:(?:ules?)|\.?)/,
-    mainCitePattern: /([^\(]+)(?:\s*\(.\))+/,
-    subtypes: [
-      {
-        name: "frap",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:appellate|app|a)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "frcrmp",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:criminal|crim|cr)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "frcp",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:civil|civ|c)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "fre",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:evidence|evid|e)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      },
-      {
-        name: "frbp",
-        idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:bankruptcy|bankr|bkrtcy)/i,
-        mainCitePattern: /([^(]+)(?:s*(.))+/
-      }
-    ]
+    name: "frap",
+    idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:appellate|app|a)/i,
+    mainCitePattern: /([^(]+)(?:s*(.))+/
+  },
+  {
+    name: "frcrmp",
+    idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:criminal|crim|cr)/i,
+    mainCitePattern: /([^(]+)(?:s*(.))+/
+  },
+  {
+    name: "frcp",
+    idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:civil|civ|c)/i,
+    mainCitePattern: /([^(]+)(?:s*(.))+/
+  },
+  {
+    name: "fre",
+    idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:evidence|evid|e)/i,
+    mainCitePattern: /([^(]+)(?:s*(.))+/
+  },
+  {
+    name: "frbp",
+    idPattern: /(?:(?:federal|fed|f)\.? ?(?:rules?|r)\.? ?)(?:of )?(?:bankruptcy|bankr|bkrtcy)/i,
+    mainCitePattern: /([^(]+)(?:s*(.))+/
   },
   {
     name:            "federal_case",

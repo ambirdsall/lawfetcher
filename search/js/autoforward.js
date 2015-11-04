@@ -19,9 +19,8 @@
 
 var $                  = require('jquery'),
     localforage        = require('localforage'),
-    // 2,600,000,000 ms === 30.0926 days. Not actually a month, but close enough
-    // for government work, as they say.
-    EXPIRATION_INTERVAL_MILLISECONDS = 2600000000,
+    // 86,400 ms == 86.4 seconds
+    EXPIRATION_INTERVAL_MILLISECONDS = 86400,
     buttonText         = {
       notSet: 'Always use<br>this source?',
       isSet: 'Disable<br>Autoforward'

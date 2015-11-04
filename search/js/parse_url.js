@@ -2,8 +2,7 @@ var $                = require('jquery'),
     extend           = $.extend,
     each             = $.each,
     trim             = $.trim,
-    U                = require('./modules/utils'),
-    after            = U.after,
+    after            = require('./modules/utils').after,
     __slice          = [].slice,
     Source           = require('./types/source'),
     Citation         = require('./types/citation'),
@@ -20,13 +19,14 @@ function formatUrl(source, parsedCitation) {
   var p = $("<p></p>");
       url = source.url(parsedCitation);
 
-  source.anchor.attr("href", url)
+  source.anchor.attr({
+                  href: url,
+                  target: '_blank'
+                })
                .append(p.html(url));
 }
 
-
 $title.text(originalCitation);
-document.title = originalCitation;
 
 // SOURCES: [ Westlaw, Lexis, Ravel, Google Scholar, Google Search, LII ]
 // For each source, provide an object with three properties:

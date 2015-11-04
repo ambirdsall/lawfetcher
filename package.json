@@ -4,7 +4,8 @@
   "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-js": "browserify js/*.js | uglifyjs -mc > js/dist/creator.js && browserify search/js/*.js | uglifyjs -mc > search/js/dist/sources.js"
+    "build-js": "browserify js/*.js | uglifyjs -mc > js/dist/creator.js && browserify search/js/*.js | uglifyjs -mc > search/js/dist/sources.js",
+    "watch-js": "watchify js/autoforward.js js/encode_url.js -o js/dist/creator.js & watchify search/js/autoforward.js search/js/parse_url.js -o search/js/dist/sources.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,12 @@
   "devDependencies": {
     "catw": "^1.0.1",
     "jasmine": "^2.3.2",
+    "jasmine-core": "^2.3.4",
     "karma": "^0.13.14",
+    "karma-browserify": "^4.4.0",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "phantomjs": "^1.9.18",
     "watchify": "^3.5.0"
   }
 }
