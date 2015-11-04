@@ -16,7 +16,7 @@ module.exports = [
   },
   {
     name:            "federal_rule",
-    idPattern:       /^F(?:(?:ed(?:\.|eral) )|\. ?)?R(?:(?:ules?)|\.?)/,
+    idPattern:       /^F(?:(?:ed(?:\.|eral) ?)|\. ?)?R(?:(?:ules?)|\.?)/,
     mainCitePattern: /([^\(]+)(?:\s*\(.\))+/,
     subtypes: [
       {

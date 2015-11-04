@@ -12109,9 +12109,8 @@ process.umask = function() { return 0; };
 
 var $                  = require('jquery'),
     localforage        = require('localforage'),
-    // 2,600,000,000 ms === 30.0926 days. Not actually a month, but close enough
-    // for government work, as they say.
-    EXPIRATION_INTERVAL_MILLISECONDS = 2600000000,
+    // 86,400 ms == 86.4 seconds
+    EXPIRATION_INTERVAL_MILLISECONDS = 86400,
     buttonText         = {
       notSet: 'Always use<br>this source?',
       isSet: 'Disable<br>Autoforward'
@@ -12389,8 +12388,8 @@ module.exports = [
 
         // Build link to the proper rule number
         if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
-          rule = "/rule_" + ruleNumberMatch[0];
-          path += rule;
+          rule = 'rule_' + ruleNumberMatch[0];
+          path += '/' + rule;
         }
         // And to the proper jump cite, if present
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
@@ -12450,7 +12449,7 @@ module.exports = [
   },
   {
     name:            "federal_rule",
-    idPattern:       /^F(?:(?:ed(?:\.|eral) )|\. ?)?R(?:(?:ules?)|\.?)/,
+    idPattern:       /^F(?:(?:ed(?:\.|eral) ?)|\. ?)?R(?:(?:ules?)|\.?)/,
     mainCitePattern: /([^\(]+)(?:\s*\(.\))+/,
     subtypes: [
       {
@@ -12571,12 +12570,14 @@ function formatUrl(source, parsedCitation) {
   var p = $("<p></p>");
       url = source.url(parsedCitation);
 
-  source.anchor.attr("href", url)
+  source.anchor.attr({
+                  href: url,
+                  target: '_blank'
+                })
                .append(p.html(url));
 }
 
 $title.text(originalCitation);
-document.title = originalCitation;
 
 // SOURCES: [ Westlaw, Lexis, Ravel, Google Scholar, Google Search, LII ]
 // For each source, provide an object with three properties:

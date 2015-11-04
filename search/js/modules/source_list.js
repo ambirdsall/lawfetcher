@@ -103,8 +103,8 @@ module.exports = [
 
         // Build link to the proper rule number
         if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
-          rule = "/rule_" + ruleNumberMatch[0];
-          path += rule;
+          rule = 'rule_' + ruleNumberMatch[0];
+          path += '/' + rule;
         }
         // And to the proper jump cite, if present
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
