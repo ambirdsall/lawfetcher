@@ -32,19 +32,14 @@ localforage.getItem('autoforward', function(err, value) {
 },{"localforage":4}],2:[function(require,module,exports){
 var url        = 'http://birdsall.xyz/linkresolver/search/',
     $          = require('jquery'),
+    urlEncode  = window.encodeURIComponent,
     $input     = $('#url-encoder__input'),
     $helpText  = $('#submit--input-validator-text'),
     $results   = $('#results'),
     buildUrl;
 
-buildUrl = function buildUrl(e) {
-  e.preventDefault();
-  var citation     = $.trim($input.val()),
-      generatedUrl;
-
-  if (!citation.length) { return; }
-
-  // Whitelisted characters, optionally /as they appear in the regex/: 
+validateInput = function validateInput(input) {
+  // Whitelisted characters, optionally /as they appear in the regex/:
   //
   //   Spaces
   //   Letters
@@ -57,8 +52,32 @@ buildUrl = function buildUrl(e) {
   //   Forward slash
   //   Section symbol, /\u00a7/
   //   Paragraph symbol, /\u00b6/
-  if ( /^[ a-zA-Z\d-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d\(\),\.:\/\u00a7\00b6]*$/.test(citation) ) {
-    generatedUrl = url + '?citation=' + window.encodeURIComponent(citation);
+  return /^[ a-zA-Z\d-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d\(\),\.:\/\u00a7\00b6]*$/.test(input);
+};
+
+cleanDoubleSections = function cleanDoubleSections(citation) {
+  // if there's a double section, remove what follows the digits
+  //   (i.e. for 'SS 123-125' #=> 'S 123'; similar w/ 'SS 123, 125'
+  if ( /\u00a7{2}/.test(citation) ) {
+    return citation.replace(/\u00a7(\u00a7 ?\d+).+/, '$1');
+  } else {
+    return citation;
+  }
+};
+
+buildUrl = function buildUrl(citation) {
+  return url + '?citation=' + urlEncode(citation);
+};
+
+processForm = function processForm(e) {
+  e.preventDefault();
+  var citation     = cleanDoubleSections($.trim($input.val())),
+      generatedUrl;
+
+  if (!citation.length) { return; }
+
+  if ( validateInput(citation) ) {
+    generatedUrl = buildUrl(citation);
 
     // There may have been a validation error on a prior attempt.
     $input.parent().removeClass('has-error');
@@ -72,9 +91,9 @@ buildUrl = function buildUrl(e) {
   }
 };
 
-// attach `buildUrl` to either way the button's liable to be triggered
-$('#url-encoder__form').submit(buildUrl);
-$('#submit').click(buildUrl);
+// attach `processForm` to either way the button's liable to be triggered
+$('#url-encoder__form').submit(processForm);
+$('#submit').click(processForm);
 
 // select the entire text on first click, for ease of copy-pasting
 // $('.js-results--display').mouseup(function() {
