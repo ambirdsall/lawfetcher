@@ -22,13 +22,16 @@ describe('Cornell LII', function() {
   xit('makes the proper url for a United States Code citation', function() {
   });
 
-  var findFedRule = function(type) {
-        return type.name == 'federal_rule';
+  var findType = function(typeName) {
+        return function(type) {
+          return type.name === typeName;
+        }
       },
-      fedRule = types.filter(findFedRule)[0],
-      getUrls = function getUrls(citations) {
+      getUrls = function getUrls(citations, types, typeName) {
+        var currentType = types.filter(findType(typeName))[0];
+
         return citations.map(function(citeText) {
-          var citation = new Citation(citeText, fedRule);
+          var citation = new Citation(citeText, currentType);
 
           return lii.url(citation);
         });
@@ -44,7 +47,7 @@ describe('Cornell LII', function() {
           'Fed. R. App. Proc. 26.1(b)',
           'F.R. App. P. 26.1(b)'
         ],
-        results   = getUrls(citations),
+        results   = getUrls(citations, types, 'frap'),
         properUrl = 'https://www.law.cornell.edu/rules/frap/rule_26.1#rule_26.1_b';
 
     expect(results).toEqual(replaceEach(results, properUrl));
@@ -56,7 +59,7 @@ describe('Cornell LII', function() {
           'Federal Rules of Crim. Proc. 52(b)',
           'F.R. Crim. P. 52(b)'
         ],
-        results   = getUrls(citations),
+        results   = getUrls(citations, types, 'frcrmp'),
         properUrl = 'https://www.law.cornell.edu/rules/frcrmp/rule_52#rule_52_b';
 
     expect(results).toEqual(replaceEach(results, properUrl));
@@ -71,7 +74,7 @@ describe('Cornell LII', function() {
           'F.R.C.P. 26(a)(1)(B)',
           'FRCP 26(a)(1)(B)'
         ],
-        results = getUrls(citations),
+        results = getUrls(citations, types, 'frcp'),
         properUrl = 'https://www.law.cornell.edu/rules/frcp/rule_26#rule_26_a_1_B';
 
     expect(results).toEqual(replaceEach(results, properUrl));
@@ -84,7 +87,7 @@ describe('Cornell LII', function() {
           'F.R.E. 801(d)(2)',
           'FRE 801(d)(2)'
         ],
-        results   = getUrls(citations),
+        results   = getUrls(citations, types, 'fre'),
         properUrl = 'https://www.law.cornell.edu/rules/fre/rule_801#rule_801_d_2';
 
     expect(results).toEqual(replaceEach(results, properUrl));
@@ -97,7 +100,7 @@ describe('Cornell LII', function() {
           'Fed. Rules Bankr. Proc. 1007(b)(1)',
           'Fed. Rules Bankr. Proc. Rule 1007(b)(1)'
         ],
-        results   = getUrls(citations),
+        results   = getUrls(citations, types, 'frbp'),
         properUrl = 'https://www.law.cornell.edu/rules/frbp/rule_1007#rule_1007_b_1';
 
     expect(results).toEqual(replaceEach(results, properUrl));

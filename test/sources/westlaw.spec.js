@@ -1,6 +1,9 @@
 var westlaw = require('../../search/js/modules/source_list').filter(function(source) {
-  return source.name === 'Westlaw';
-});
+      return source.name === 'Westlaw';
+    }),
+    types    = require('../../search/js/modules/type_list'),
+    Source   = require('../../search/js/types/source'),
+    Citation = require('../../search/js/types/citation');
 
 if ( westlaw.length === 1 ) westlaw = westlaw[0];
 
