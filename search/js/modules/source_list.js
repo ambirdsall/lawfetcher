@@ -1,7 +1,7 @@
 var $            = require('jquery'),
     escapeRegExp = require('./utils').escapeRegExp,
     Citation     = require('../types/citation'),
-    detectType  = require('../functions/detectType');
+    detectType   = require('../functions/detectType');
 
 
 
@@ -11,14 +11,70 @@ module.exports = [
     baseUrl: "http://a.next.westlaw.com/Link/Document/FullText?findType=Y&cite=",
     anchor: $("#link--westlaw__a"),
     canDeepLink: false,
-    cannot: []
+    cannot: [],
+    typeSpecificTreatments: {
+      _federalRule: function(cite, typeName) {
+        var text = cite.fullCite,
+            ruleNumberMatch,
+            ruleNumber;
+
+        if ( ruleNumberMatch = text.match(/\d+ ?(?:\(.\))*/) ) {
+          ruleNumber = ruleNumberMatch[0];
+        }
+
+        return this.baseUrl + typeName + ruleNumber;
+    },
+      frap: function(cite) {
+        return this._federalRule(cite, 'frap%20');
+    },
+      frcp: function(cite) {
+        return this._federalRule(cite, 'frcp%20');
+    },
+      frcrmp: function(cite) {
+        return this._federalRule(cite, 'frcrp%20');
+    },
+      frbp: function(cite) {
+        return this._federalRule(cite, 'frbp%20');
+    },
+      fre: function(cite) {
+        return this._federalRule(cite, 'fre%20');
+      }
+    }
   },
   {
     name: "Lexis",
     baseUrl: "http://advance.lexis.com/laapi/search?q=",
     anchor: $("#link--lexis__a"),
     canDeepLink: true,
-    cannot: ["federal_rule"]
+    cannot: [],
+    typeSpecificTreatments: {
+      _federalRule: function(cite, typeName) {
+        var text = cite.fullCite,
+            ruleNumberMatch,
+            ruleNumber;
+
+        if ( ruleNumberMatch = text.match(/\d+ ?(?:\(.\))*/) ) {
+          ruleNumber = ruleNumberMatch[0];
+        }
+
+        return this.baseUrl + typeName + ruleNumber;
+    },
+      frap: function(cite) {
+        return this._federalRule(cite, 'frap%20');
+    },
+      frcp: function(cite) {
+        return this._federalRule(cite, 'frcp%20');
+    },
+      frcrmp: function(cite) {
+        return this._federalRule(cite, 'frcrp%20');
+    },
+      frbp: function(cite) {
+        return this._federalRule(cite, 'frbp%20');
+    },
+      fre: function(cite) {
+        return this._federalRule(cite, 'fre%20');
+      }
+    }
   },
   {
     name: "Ravel",
@@ -38,6 +94,26 @@ module.exports = [
     //    the source's baseUrl
     //    the url-encoded citation
     typeSpecificTreatments: {
+      _federalRule: function(typeName, cite) {
+        var text = cite.fullCite,
+            path = "",
+            ruleNumberMatch,
+            rule,
+            jumpCiteMatch;
+
+        // Build link to the proper rule number
+        // FIXME Remove conditional? if this assignment ever fails, the link is ruined
+        if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
+          rule = 'rule_' + ruleNumberMatch[0];
+          path += '/' + rule;
+        }
+        // And to the proper jump cite, if present
+        if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
+          path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
+        }
+
+        return this.baseUrl + "/rules/" + typeName + path;
+      },
       us_constitution: function(cite) {
         var text = cite.mainCite,
             path = "",
@@ -91,27 +167,20 @@ module.exports = [
 
         return this.baseUrl + "/uscode/text" + path;
       },
-      federal_rule: function(cite) {
-        var text = cite.fullCite,
-            subtypedCite,
-            path = "",
-            ruleNumberMatch,
-            rule,
-            jumpCiteMatch;
-
-        subtypedCite = detectType(cite.subtypes, text);
-
-        // Build link to the proper rule number
-        if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
-          rule = 'rule_' + ruleNumberMatch[0];
-          path += '/' + rule;
-        }
-        // And to the proper jump cite, if present
-        if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
-        }
-
-        return this.baseUrl + "/rules/" + subtypedCite.type + path;
+      frap:   function(cite) {
+        return this._federalRule('frap', cite);
+      },
+      frcrmp: function(cite) {
+        return this._federalRule('frcrmp', cite);
+      },
+      frcp:   function(cite) {
+        return this._federalRule('frcp', cite);
+      },
+      fre:    function(cite) {
+        return this._federalRule('fre', cite);
+      },
+      frbp:   function(cite) {
+        return this._federalRule('frbp', cite);
       }
     }
   },
