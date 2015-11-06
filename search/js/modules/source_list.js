@@ -158,7 +158,7 @@ module.exports = [
         if ( titleMatch = text.match(/\d+/) ) {
           path += "/" + titleMatch[0];
         }
-        if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([0-9\.]+)/i) ) {
+        if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([\w\-\.]+)/i) ) {
           path += "/" + sectionMatch[1];
         }
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
