@@ -51,7 +51,7 @@ processForm = function processForm(e) {
     $input.parent().removeClass('has-error');
     $helpText.hide();
 
-    $('#results--a-tag').val('<a href="' + generatedUrl + '">' + citation + '</a>');
+    $('#results--a-tag').html('<a href="' + generatedUrl + '">' + citation + '</a>');
     $('#results--raw-url').val(generatedUrl);
   } else {
     $input.parent().addClass('has-error');
@@ -64,12 +64,12 @@ $('#url-encoder__form').submit(processForm);
 $('#submit').click(processForm);
 
 // select the entire text on first click, for ease of copy-pasting
-// $('.js-results--display').mouseup(function() {
-//   $(this).select();
-// });
+$('.js-results--select-all').mouseup(function() {
+  $(this).select();
+});
 
-$('.js-results--display').focus(function(){
-  $('.js-results--display').mouseup(function(){
+$('.js-results--select-all').focus(function(){
+  $('.js-results--select-all').mouseup(function(){
     $(this).select(function(){
       $(this).off('mouseup');
     });
