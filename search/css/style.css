@@ -10,6 +10,7 @@ h3 {
   word-wrap: break-word;
 }
   .link { width: 100%; }
+    .link > a:hover { background-color: #fafafa; }
 
     .link--westlaw__title { color: #fc8c1e; }
     .link--lexis__title { color: #dd2108; }
