@@ -2,7 +2,7 @@ var localforage = require('localforage')
 
 localforage.getItem('autoforward', function(err, value) {
   if (err) {
-    console.log(err);
+    console.log(err)
   } else {
     // if there's a value, create a "remove autoforwarding" button, append it
     // to the DOM, and add an event handler which calls localforage.removeItem()
@@ -16,14 +16,13 @@ localforage.getItem('autoforward', function(err, value) {
           .click(function(e) {
             localforage.removeItem('autoforward', function(err) {
               if (err) {
-                console.log(err);
+                console.log(err)
               } else {
                 $("#autoforward-remover").removeClass("btn-danger").addClass("btn-success").fadeOut()
               }
-            });
-          }));
+            })
+          }))
     }
   }
-});
-
+})
 

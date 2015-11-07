@@ -8,8 +8,7 @@ var __slice = [].slice
 
 
 function Source(config) {
-  extend(this
-  , {
+  extend(this, {
       name:        config.name
     , baseUrl:     config.baseUrl
     , canDeepLink: config.canDeepLink
@@ -24,33 +23,30 @@ function Source(config) {
   )
 }
 
-extend(Source.prototype
-, {
-    url: function url(citation) {
-      var urlGetter = this[citation.type] || function(cite) {
-        debugger
-        var properCitation = (
-              // if canDeepLink contains either the citation type or '*'
-              this.canDeepLink.indexOf(cite.type) != -1
-              || this.canDeepLink.indexOf('*') != -1
-              // return deep or 'shallow' link
-              ? cite.fullCite
-              : cite.mainCite
-            )
+extend(Source.prototype, {
+  url: function url(citation) {
+    var urlGetter = this[citation.type] || function(cite) {
+      var properCitation = (
+            // if canDeepLink contains either the citation type or '*'
+            this.canDeepLink.indexOf(cite.type) != -1
+            || this.canDeepLink.indexOf('*') != -1
+            // return deep or 'shallow' link
+            ? cite.fullCite
+            : cite.mainCite
+          )
 
-        return this.baseUrl + urlEncode(properCitation)
-      }
-
-      return urlGetter.call(this, citation)
+      return this.baseUrl + urlEncode(properCitation)
     }
-  , canHandle: function canHandle(type) {
-      if ( present(type, this.cannot) === -1 ) {
-        return true
-      } else {
-        return false
-      }
+
+    return urlGetter.call(this, citation)
+  }
+, canHandle: function canHandle(type) {
+    if ( present(type, this.cannot) === -1 ) {
+      return true
+    } else {
+      return false
     }
   }
-)
+})
 
 module.exports = Source

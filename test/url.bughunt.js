@@ -1,4 +1,4 @@
-var Source,
-    sources,
-    types,
-    detectType;
+var Source
+, sources
+, types
+, detectType

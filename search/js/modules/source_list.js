@@ -103,91 +103,91 @@ module.exports = [
     //    the url-encoded citation
   , typeSpecificTreatments: {
       _federalRule: function(typeName, cite) {
-        var text = cite.fullCite,
-            path = "",
-            ruleNumberMatch,
-            rule,
-            jumpCiteMatch;
+        var text = cite.fullCite
+        , path = ""
+        , ruleNumberMatch
+        , rule
+        , jumpCiteMatch
 
         // Build link to the proper rule number
         // FIXME Remove conditional? if this assignment ever fails, the link is ruined
         if ( ruleNumberMatch = text.match(/\d+(?:\.\d+)?/) ) {
-          rule = 'rule_' + ruleNumberMatch[0];
-          path += '/' + rule;
+          rule = 'rule_' + ruleNumberMatch[0]
+          path += '/' + rule
         }
         // And to the proper jump cite, if present
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
+          path += "#" + rule + "_" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "")
         }
 
-        return this.baseUrl + "/rules/" + typeName + path;
-      },
-      us_constitution: function(cite) {
-        var text = cite.mainCite,
-            path = "",
-            articleMatch,
-            sectionMatch;
+        return this.baseUrl + "/rules/" + typeName + path
+      }
+    , us_constitution: function(cite) {
+        var text = cite.mainCite
+          , path = ""
+          , articleMatch
+          , sectionMatch
 
         if ( articleMatch = text.match(/art(?:\.?|icle) ?([0-9ivxlc]+)/i) ) {
-          path += "/article" + articleMatch[1];
+          path += "/article" + articleMatch[1]
         }
         if ( sectionMatch = text.match(/(?:sect(?:\.|ion)?|\u00a7) ?([0-9ivxlc]+)/i) ) {
-          path += "#section" + sectionMatch[1];
+          path += "#section" + sectionMatch[1]
         }
 
-        return this.baseUrl + "/constitution" + path;
-      },
-      cfr: function(cite) {
-        var text = cite.fullCite,
-            path = "",
-            titleMatch,
-            sectionMatch,
-            jumpCiteMatch;
+        return this.baseUrl + "/constitution" + path
+      }
+    , cfr: function(cite) {
+        var text = cite.fullCite
+        , path = ""
+        , titleMatch
+        , sectionMatch
+        , jumpCiteMatch
 
         if ( titleMatch = text.match(/(\d+)/) ) {
-          path += "/" + titleMatch[1];
+          path += "/" + titleMatch[1]
         }
         if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([0-9\.]+)/i) ) {
-          path += "/" + sectionMatch[1];
+          path += "/" + sectionMatch[1]
         }
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
+          path += "#" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "")
         }
 
-        return this.baseUrl + "/cfr/text" + path;
-      },
-      usc: function(cite) {
-        var text = cite.fullCite,
-            path = "",
-            titleMatch,
-            sectionMatch,
-            jumpCiteMatch;
+        return this.baseUrl + "/cfr/text" + path
+      }
+    , usc: function(cite) {
+        var text = cite.fullCite
+        , path = ""
+        , titleMatch
+        , sectionMatch
+        , jumpCiteMatch
 
         if ( titleMatch = text.match(/\d+/) ) {
-          path += "/" + titleMatch[0];
+          path += "/" + titleMatch[0]
         }
         if ( sectionMatch = text.match(/\d+\D+(?:sect(?:\.|ion)?|\u00a7)? ?([\w\-\.]+)/i) ) {
-          path += "/" + sectionMatch[1];
+          path += "/" + sectionMatch[1]
         }
         if ( jumpCiteMatch = text.match(/(\(.\))/g) ) {
-          path += "#" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "");
+          path += "#" + jumpCiteMatch.join("_").replace(/[\(\)]/g, "")
         }
 
-        return this.baseUrl + "/uscode/text" + path;
-      },
-      frap:   function(cite) {
+        return this.baseUrl + "/uscode/text" + path
+      }
+    , frap:   function(cite) {
         return this._federalRule('frap', cite)
-      },
-      frcrmp: function(cite) {
+      }
+    , frcrmp: function(cite) {
         return this._federalRule('frcrmp', cite)
-      },
-      frcp:   function(cite) {
+      }
+    , frcp:   function(cite) {
         return this._federalRule('frcp', cite)
-      },
-      fre:    function(cite) {
+      }
+    , fre:    function(cite) {
         return this._federalRule('fre', cite)
-      },
-      frbp:   function(cite) {
+      }
+    , frbp:   function(cite) {
         return this._federalRule('frbp', cite)
       }
     }
@@ -227,5 +227,5 @@ module.exports = [
   , canDeepLink: ['*']
   , cannot: []
   }
-];
+]
 

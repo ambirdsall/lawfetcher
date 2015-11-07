@@ -1,5 +1,5 @@
-var Source  = require('../search/js/types/source'),
-    extend  = require('../search/js/modules/utils').extend;
+var Source  = require('../search/js/types/source')
+, extend  = require('../search/js/modules/utils').extend
 
 describe('A source', function() {
   var foo = {

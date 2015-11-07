@@ -17,15 +17,15 @@
    1) Variable and function definitions
 \**********************************************************************/
 
-var $                  = require('jquery'),
-    localforage        = require('localforage'),
-    // 86,400 ms == 86.4 seconds
-    EXPIRATION_INTERVAL_MILLISECONDS = 86400,
-    buttonText         = {
-      notSet: 'Always use<br>this source?',
-      isSet: 'Disable<br>Autoforward'
-    },
-    $reconfirmDialogue = $('#reconfirm-expired-autoforward');
+var $                = require('jquery')
+, localforage        = require('localforage')
+  // 86,400 ms == 86.4 seconds
+, EXPIRATION_INTERVAL_MILLISECONDS = 86400
+, buttonText         = {
+    notSet: 'Always use<br>this source?'
+  , isSet: 'Disable<br>Autoforward'
+  }
+, $reconfirmDialogue = $('#reconfirm-expired-autoforward')
 
 // `isValid()` is a method of the `preferenceSetting` object. However, defining
 // it as a property of `preferenceSetting` can cause errors when cloning the
@@ -35,24 +35,24 @@ var isValid = function isValid() {
   // `timeSet` is, unsurprisingly, a time object set when the preference is
   // created, and remains a reference to that moment; `now` is (re)created
   // anew upon page loads with the retrieval of an existing preferenceSetting.
-  var now = new Date(),
-  timeDifference = now.getTime() - this.timeSet.getTime();
+  var now          = new Date()
+  , timeDifference = now.getTime() - this.timeSet.getTime()
 
-  return timeDifference < EXPIRATION_INTERVAL_MILLISECONDS;
+  return timeDifference < EXPIRATION_INTERVAL_MILLISECONDS
 }
 var setPreference = function setPreference($button) {
-  var sourceName,
-      linkId,
-      preferenceSetting;
+  var sourceName
+  , linkId
+  , preferenceSetting
 
-  linkId = $button.attr('id');
+  linkId = $button.attr('id')
   // the terminal [0] accesses the matching string, setting `sourceName` to the
   // actual matching service identifier, rather than the match array holding it.
-  sourceName = ( linkId.match(/lexis/) || linkId.match(/westlaw/) )[0];
+  sourceName = ( linkId.match(/lexis/) || linkId.match(/westlaw/) )[0]
   preferenceSetting = {
-    sourceName: sourceName,
+    sourceName: sourceName
     // "Set" the past participle
-    timeSet: new Date()
+  , timeSet: new Date()
   }
 
   localforage.setItem('autoforward', preferenceSetting, function(err, preference){
