@@ -1,99 +1,107 @@
-var $            = require('jquery'),
-    escapeRegExp = require('./utils').escapeRegExp,
-    Citation     = require('../types/citation'),
-    detectType   = require('../functions/detectType');
+var $          = require('jquery')
+, escapeRegExp = require('./utils').escapeRegExp
+, Citation     = require('../types/citation')
+, detectType   = require('../functions/detectType')
 
 
 
 module.exports = [
   {
-    name: "Westlaw",
-    baseUrl: "http://a.next.westlaw.com/Link/Document/FullText?findType=Y&cite=",
-    anchor: $("#link--westlaw__a"),
-    canDeepLink: false,
-    cannot: [],
-    typeSpecificTreatments: {
+    name: "Westlaw"
+  , baseUrl: "http://a.next.westlaw.com/Link/Document/FullText?findType=Y&cite="
+  , anchor: $("#link--westlaw__a")
+  , canDeepLink: []
+  , cannot: []
+  , typeSpecificTreatments: {
       _federalRule: function(cite, typeName) {
-        var text = cite.fullCite,
-            ruleNumberMatch,
-            ruleNumber;
+        var text = cite.fullCite
+        , ruleNumberMatch
+        , ruleNumber
 
         if ( ruleNumberMatch = text.match(/\d+ ?(?:\(.\))*/) ) {
-          ruleNumber = ruleNumberMatch[0];
+          ruleNumber = ruleNumberMatch[0]
         }
 
-        return this.baseUrl + typeName + ruleNumber;
-    },
-      frap: function(cite) {
-        return this._federalRule(cite, 'frap%20');
-    },
-      frcp: function(cite) {
-        return this._federalRule(cite, 'frcp%20');
-    },
-      frcrmp: function(cite) {
-        return this._federalRule(cite, 'frcrp%20');
-    },
-      frbp: function(cite) {
-        return this._federalRule(cite, 'frbp%20');
-    },
-      fre: function(cite) {
-        return this._federalRule(cite, 'fre%20');
+        return this.baseUrl + typeName + ruleNumber
+      }
+    , frap: function(cite) {
+        return this._federalRule(cite, 'frap%20')
+      }
+    , frcp: function(cite) {
+        return this._federalRule(cite, 'frcp%20')
+      }
+    , frcrmp: function(cite) {
+        return this._federalRule(cite, 'frcrp%20')
+      }
+    , frbp: function(cite) {
+        return this._federalRule(cite, 'frbp%20')
+      }
+    , fre: function(cite) {
+        return this._federalRule(cite, 'fre%20')
       }
     }
-  },
-  {
-    name: "Lexis",
-    baseUrl: "http://advance.lexis.com/laapi/search?q=",
-    anchor: $("#link--lexis__a"),
-    canDeepLink: true,
-    cannot: [],
-    typeSpecificTreatments: {
+  }
+, {
+    name: "Lexis"
+  , baseUrl: "http://advance.lexis.com/laapi/search?q="
+  , anchor: $("#link--lexis__a")
+  , canDeepLink: ['*']
+  , cannot: []
+  , typeSpecificTreatments: {
       _federalRule: function(cite, typeName) {
-        var text = cite.fullCite,
-            ruleNumberMatch,
-            ruleNumber;
+        var text = cite.fullCite
+        , ruleNumberMatch
+        , ruleNumber
 
         if ( ruleNumberMatch = text.match(/\d+ ?(?:\(.\))*/) ) {
-          ruleNumber = ruleNumberMatch[0];
+          ruleNumber = ruleNumberMatch[0]
         }
 
-        return this.baseUrl + typeName + ruleNumber;
-    },
-      frap: function(cite) {
-        return this._federalRule(cite, 'frap%20');
-    },
-      frcp: function(cite) {
-        return this._federalRule(cite, 'frcp%20');
-    },
-      frcrmp: function(cite) {
-        return this._federalRule(cite, 'frcrp%20');
-    },
-      frbp: function(cite) {
-        return this._federalRule(cite, 'frbp%20');
-    },
-      fre: function(cite) {
-        return this._federalRule(cite, 'fre%20');
+        return this.baseUrl + typeName + ruleNumber
+      }
+    , frap: function(cite) {
+        return this._federalRule(cite, 'frap%20')
+      }
+    , frcp: function(cite) {
+        return this._federalRule(cite, 'frcp%20')
+      }
+    , frcrmp: function(cite) {
+        return this._federalRule(cite, 'frcrp%20')
+      }
+    , frbp: function(cite) {
+        return this._federalRule(cite, 'frbp%20')
+      }
+    , fre: function(cite) {
+        return this._federalRule(cite, 'fre%20')
       }
     }
-  },
-  {
-    name: "Ravel",
-    baseUrl: "http://www.ravellaw.com/search?query=",
-    anchor: $("#link--ravel__a"),
-    canDeepLink: false,
-    cannot: []
-  },
-  {
-    name: "Cornell LII",
-    baseUrl: "https://www.law.cornell.edu",
-    anchor: $("#link--lii__a"),
-    canDeepLink: true,
-    cannot: ["federal_case", "state_constitution", "law_statute_code_rule", "default"],
+  }
+, {
+    name: "Ravel"
+  , baseUrl: "http://www.ravellaw.com/search?query="
+  , anchor: $("#link--ravel__a")
+  , canDeepLink: [
+      'cfr'
+    , 'usc'
+    , 'frap'
+    , 'frcp'
+    , 'frcrmp'
+    , 'frbp'
+    , 'fre'
+    ]
+  , cannot: []
+  }
+, {
+    name: "Cornell LII"
+  , baseUrl: "https://www.law.cornell.edu"
+  , anchor: $("#link--lii__a")
+  , canDeepLink: ['*']
+  , cannot: ["federal_case", "state_constitution", "law_statute_code_rule", "default"]
     // Before they are used, Source objects may be extended with one or more methods
     // corresponding to a citation type name. These methods MUST take, in order:
     //    the source's baseUrl
     //    the url-encoded citation
-    typeSpecificTreatments: {
+  , typeSpecificTreatments: {
       _federalRule: function(typeName, cite) {
         var text = cite.fullCite,
             path = "",
@@ -168,48 +176,56 @@ module.exports = [
         return this.baseUrl + "/uscode/text" + path;
       },
       frap:   function(cite) {
-        return this._federalRule('frap', cite);
+        return this._federalRule('frap', cite)
       },
       frcrmp: function(cite) {
-        return this._federalRule('frcrmp', cite);
+        return this._federalRule('frcrmp', cite)
       },
       frcp:   function(cite) {
-        return this._federalRule('frcp', cite);
+        return this._federalRule('frcp', cite)
       },
       fre:    function(cite) {
-        return this._federalRule('fre', cite);
+        return this._federalRule('fre', cite)
       },
       frbp:   function(cite) {
-        return this._federalRule('frbp', cite);
+        return this._federalRule('frbp', cite)
       }
     }
-  },
-  {
-    name: "Google Scholar",
-    baseUrl: 'https://scholar.google.com/scholar?as_sdt=2006&hl=en&q=',
-    anchor: $("#link--google-scholar__a"),
-    canDeepLink: false,
-    cannot: [],
-    url: function(defaultUrl) {
+  }
+, {
+    name: "Google Scholar"
+  , baseUrl: 'https://scholar.google.com/scholar?as_sdt=2006&hl=en&q='
+  , anchor: $("#link--google-scholar__a")
+  , canDeepLink: [
+      'cfr'
+    , 'usc'
+    , 'frap'
+    , 'frcp'
+    , 'frcrmp'
+    , 'frbp'
+    , 'fre'
+    ]
+  , cannot: []
+  , url: function(defaultUrl) {
       // Uses RegExp constructor to separate out the baseUrl and the citation
       // to allow the baseUrl to be updated without breaking the quotation-mark-
       // wrapping functionality.
-      var citeMatcher = new RegExp(escapeRegExp(this.baseUrl) + "(.+)"),
-          citationFromDefaultUrl;
+      var citeMatcher = new RegExp(escapeRegExp(this.baseUrl) + "(.+)")
+      , citationFromDefaultUrl
 
       // the terminal [1] selects the capture group (i.e. everything that
       // follows the baseUrl) from the match array.
       citationFromDefaultUrl = defaultUrl.match(citeMatcher)[1]
 
-      return this.baseUrl + '"' + citationFromDefaultUrl + '"';
+      return this.baseUrl + '"' + citationFromDefaultUrl + '"'
     }
-  },
-  {
-    name: "Google Search",
-    baseUrl: "http://google.com/search?q=",
-    anchor: $("#link--google__a"),
-    canDeepLink: true,
-    cannot: []
+  }
+, {
+    name: "Google Search"
+  , baseUrl: "http://google.com/search?q="
+  , anchor: $("#link--google__a")
+  , canDeepLink: ['*']
+  , cannot: []
   }
 ];
 
