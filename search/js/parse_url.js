@@ -7,8 +7,8 @@ var $              = require('jquery')
 , Source           = require('./types/source')
 , Citation         = require('./types/citation')
 , detectType       = require('./functions/detectType')
-  // window.location.search is the query string, including the '?'.
-  // Indeces 0-9 of the query string ('?citation=') are boilerplate.
+// window.location.search is the query string, including the '?'.
+// Indeces 0-9 of the query string ('?citation=') are boilerplate.
 , encodedQuery     = window.location.search.slice(10)
 , originalCitation = window.decodeURIComponent(encodedQuery)
 , $title           = $("#title")

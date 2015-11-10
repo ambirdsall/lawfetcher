@@ -20,6 +20,8 @@ h3 {
 .primary-title {
   margin-top: 1em;
   margin-bottom: 1em;
+  font-size: 3.3em;
+  font-family: 'Century Schoolbook' serif;
 }
 
 .source-list__title { margin-bottom: 1em; }

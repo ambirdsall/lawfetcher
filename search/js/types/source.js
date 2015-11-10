@@ -4,7 +4,7 @@ var __slice = [].slice
 , $         = require('jquery')
 , present   = $.inArray
 , urlEncode = window.encodeURIComponent
-
+, genericUrl = require('../functions/genericUrl')
 
 
 function Source(config) {
@@ -14,10 +14,10 @@ function Source(config) {
     , canDeepLink: config.canDeepLink
     , anchor:      config.anchor
     , cannot:      config.cannot
-      // By convention, typeSpecificTreatments is an object, each of whose methods
-      // is stored under a key that shares its name with a type. If a source is
-      // extended with such a method, it uses it to handle that type over the
-      // function defined at `Source.prototype.url.urlGetter`.
+    // By convention, typeSpecificTreatments is an object, each of whose methods
+    // is stored under a key that shares its name with a type. If a source is
+    // extended with such a method, it uses it to handle that type over the
+    // function defined at `Source.prototype.url.urlGetter`.
     }
   , config.typeSpecificTreatments || {}
   )
@@ -25,18 +25,7 @@ function Source(config) {
 
 extend(Source.prototype, {
   url: function url(citation) {
-    var urlGetter = this[citation.type] || function(cite) {
-      var properCitation = (
-            // if canDeepLink contains either the citation type or '*'
-            this.canDeepLink.indexOf(cite.type) != -1
-            || this.canDeepLink.indexOf('*') != -1
-            // return deep or 'shallow' link
-            ? cite.fullCite
-            : cite.mainCite
-          )
-
-      return this.baseUrl + urlEncode(properCitation)
-    }
+    var urlGetter = this[citation.type] || genericUrl
 
     return urlGetter.call(this, citation)
   }

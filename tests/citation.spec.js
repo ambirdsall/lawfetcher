@@ -22,7 +22,7 @@ describe('A citation', function() {
 
     it('can give the jump cite without the rest of the citation', function() {
       expect(valid.jumpCite).toBe(', okay?')
-    });
+    })
 
     it('can give the full citation', function() {
       expect(valid.fullCite).toBe(validText)
