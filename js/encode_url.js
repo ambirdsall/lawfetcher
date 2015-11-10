@@ -1,4 +1,4 @@
-var url         = 'http://birdsall.xyz/linkresolver/search/'
+var url         = 'http://birdsall.xyz/lawfetcher/search/'
 , $             = require('jquery')
 , validateInput = require('./functions/validateInput')
 , urlEncode     = window.encodeURIComponent
@@ -26,7 +26,7 @@ processForm = function processForm(e) {
   var citation = cleanDoubleSections($.trim($input.val()))
   , generatedUrl
 
-  if (!citation.length) return 
+  if (!citation.length) return
 
   if ( validateInput(citation) ) {
     generatedUrl = buildUrl(citation)
