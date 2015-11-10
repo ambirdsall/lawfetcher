@@ -14,10 +14,10 @@ function Source(config) {
     , canDeepLink: config.canDeepLink
     , anchor:      config.anchor
     , cannot:      config.cannot
-      // By convention, typeSpecificTreatments is an object, each of whose methods
-      // is stored under a key that shares its name with a type. If a source is
-      // extended with such a method, it uses it to handle that type over the
-      // function defined at `Source.prototype.url.urlGetter`.
+    // By convention, typeSpecificTreatments is an object, each of whose methods
+    // is stored under a key that shares its name with a type. If a source is
+    // extended with such a method, it uses it to handle that type over the
+    // function defined at `Source.prototype.url.urlGetter`.
     }
   , config.typeSpecificTreatments || {}
   )
