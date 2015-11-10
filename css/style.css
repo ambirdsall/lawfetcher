@@ -1,5 +1,10 @@
 .results { margin-top: 2em; }
 
+.results--a-tag {
+  font-size: 12pt;
+  font-family: 'Century Schoolbook';
+}
+
 /* 
 The id version is a specificity hack to set initial state for
 reveal/hide behavior in ../js/encode_url.js.
