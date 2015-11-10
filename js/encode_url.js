@@ -1,27 +1,11 @@
-var url      = 'http://birdsall.xyz/linkresolver/search/'
-, $          = require('jquery')
-, urlEncode  = window.encodeURIComponent
-, $input     = $('#url-encoder__input')
-, $helpText  = $('#submit--input-validator-text')
-, $results   = $('#results')
+var url         = 'http://birdsall.xyz/linkresolver/search/'
+, $             = require('jquery')
+, validateInput = require('./functions/validateInput')
+, urlEncode     = window.encodeURIComponent
+, $input        = $('#url-encoder__input')
+, $helpText     = $('#submit--input-validator-text')
+, $results      = $('#results')
 , buildUrl
-
-validateInput = function validateInput(input) {
-  // Whitelisted characters, optionally /as they appear in the regex/:
-  //
-  //   Spaces
-  //   Letters
-  //   Numbers
-  //   Dashes, /-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d/
-  //   Parentheses
-  //   Comma
-  //   Period
-  //   Colon
-  //   Forward slash
-  //   Section symbol, /\u00a7/
-  //   Paragraph symbol, /\u00b6/
-  return /^[ a-zA-Z\d-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d\(\),\.:\/\u00a7\00b6]*$/.test(input)
-}
 
 cleanDoubleSections = function cleanDoubleSections(citation) {
   // if there's a double section, remove what follows the digits

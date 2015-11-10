@@ -28,31 +28,15 @@ localforage.getItem('autoforward', function(err, value) {
 })
 
 
-},{"localforage":4}],2:[function(require,module,exports){
-var url      = 'http://birdsall.xyz/linkresolver/search/'
-, $          = require('jquery')
-, urlEncode  = window.encodeURIComponent
-, $input     = $('#url-encoder__input')
-, $helpText  = $('#submit--input-validator-text')
-, $results   = $('#results')
+},{"localforage":5}],2:[function(require,module,exports){
+var url         = 'http://birdsall.xyz/linkresolver/search/'
+, $             = require('jquery')
+, validateInput = require('./functions/validateInput')
+, urlEncode     = window.encodeURIComponent
+, $input        = $('#url-encoder__input')
+, $helpText     = $('#submit--input-validator-text')
+, $results      = $('#results')
 , buildUrl
-
-validateInput = function validateInput(input) {
-  // Whitelisted characters, optionally /as they appear in the regex/:
-  //
-  //   Spaces
-  //   Letters
-  //   Numbers
-  //   Dashes, /-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d/
-  //   Parentheses
-  //   Comma
-  //   Period
-  //   Colon
-  //   Forward slash
-  //   Section symbol, /\u00a7/
-  //   Paragraph symbol, /\u00b6/
-  return /^[ a-zA-Z\d-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d\(\),\.:\/\u00a7\00b6]*$/.test(input)
-}
 
 cleanDoubleSections = function cleanDoubleSections(citation) {
   // if there's a double section, remove what follows the digits
@@ -109,7 +93,26 @@ $('.js-results--select-all').focus(function() {
   })
 })
 
-},{"jquery":3}],3:[function(require,module,exports){
+},{"./functions/validateInput":3,"jquery":4}],3:[function(require,module,exports){
+module.exports = function validateInput(input) {
+  // Whitelisted characters, optionally /as they appear in the regex/:
+  //
+  //   Spaces
+  //   Letters
+  //   Numbers
+  //   Dashes, /-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d/
+  //   Parentheses
+  //   Comma
+  //   Period
+  //   Colon
+  //   Apostrophe /'\u2019/ (\u2019 is the unicode for the curly version)
+  //   Forward slash
+  //   Section symbol, /\u00a7/
+  //   Paragraph symbol, /\u00b6/
+  return /^[ a-zA-Z\d-\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uff0d\(\),\.:'\u2019\/\u00a7\u00b6]*$/.test(input)
+}
+
+},{}],4:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -9321,7 +9324,7 @@ return jQuery;
 
 }));
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (process,global){
 /*!
     localForage -- Offline Storage, Improved
@@ -12105,7 +12108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 });
 ;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":5}],5:[function(require,module,exports){
+},{"_process":6}],6:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

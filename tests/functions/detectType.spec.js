@@ -1,5 +1,5 @@
-var detectType = require('../search/js/functions/detectType')
-, Citation   = require('../search/js/types/citation')
+var detectType = require('../../search/js/functions/detectType')
+, Citation   = require('../../search/js/types/citation')
 , mockTypes  = [
     {
       name: 'type_one'
