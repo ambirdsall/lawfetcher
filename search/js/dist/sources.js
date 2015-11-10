@@ -12281,7 +12281,24 @@ module.exports = function detectType(taxonomy, citationText) {
   }
 }
 
-},{"../types/citation":10}],6:[function(require,module,exports){
+},{"../types/citation":11}],6:[function(require,module,exports){
+var urlEncode = window.encodeURIComponent
+
+// meant to be invoked as `genericUrl.call(source, cite)`
+module.exports = function genericUrl(cite) {
+  var properCitation = (
+    // if canDeepLink contains either the citation type or '*'
+    this.canDeepLink.indexOf(cite.type) != -1
+    || this.canDeepLink.indexOf('*') != -1
+    // return deep or 'shallow' link
+    ? cite.fullCite
+    : cite.mainCite
+  )
+
+  return this.baseUrl + urlEncode(properCitation)
+}
+
+},{}],7:[function(require,module,exports){
 var $          = require('jquery')
 , escapeRegExp = require('./utils').escapeRegExp
 , Citation     = require('../types/citation')
@@ -12514,7 +12531,7 @@ module.exports = [
 ]
 
 
-},{"../functions/detectType":5,"../types/citation":10,"./utils":8,"jquery":1}],7:[function(require,module,exports){
+},{"../functions/detectType":5,"../types/citation":11,"./utils":9,"jquery":1}],8:[function(require,module,exports){
 module.exports = [
   {
     name:            "us_constitution"
@@ -12581,9 +12598,9 @@ module.exports = [
 ]
 
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var __slice = [].slice
-, U       = {}
+, U         = {}
 
 // Define a new function from fn1 and fn2 equivalent to fn2(fn1)
 //
@@ -12600,7 +12617,7 @@ U.after = function after(fn1, fn2, thisArg) {
 
 U.extend = function extend () {
   var consumer  = arguments[0]
-  , providers = __slice.call(arguments, 1)
+  , providers   = __slice.call(arguments, 1)
   , key
   , i
   , provider
@@ -12642,7 +12659,7 @@ U.curry = function curry(fn) {
 
 module.exports = U
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var $              = require('jquery')
 , extend           = $.extend
 , each             = $.each
@@ -12706,7 +12723,7 @@ each(sources, function(index, source) {
 })
 
 
-},{"./functions/detectType":5,"./modules/source_list":6,"./modules/type_list":7,"./modules/utils":8,"./types/citation":10,"./types/source":11,"jquery":1}],10:[function(require,module,exports){
+},{"./functions/detectType":5,"./modules/source_list":7,"./modules/type_list":8,"./modules/utils":9,"./types/citation":11,"./types/source":12,"jquery":1}],11:[function(require,module,exports){
 var $    = require('jquery')
 , extend = $.extend
 , trim   = $.trim
@@ -12744,14 +12761,14 @@ module.exports = function Citation(citationText, type) {
 }
 
 
-},{"jquery":1}],11:[function(require,module,exports){
+},{"jquery":1}],12:[function(require,module,exports){
 var __slice = [].slice
 , U         = require('../modules/utils')
 , extend    = U.extend
 , $         = require('jquery')
 , present   = $.inArray
 , urlEncode = window.encodeURIComponent
-
+, genericUrl = require('../functions/genericUrl')
 
 
 function Source(config) {
@@ -12772,18 +12789,7 @@ function Source(config) {
 
 extend(Source.prototype, {
   url: function url(citation) {
-    var urlGetter = this[citation.type] || function(cite) {
-      var properCitation = (
-            // if canDeepLink contains either the citation type or '*'
-            this.canDeepLink.indexOf(cite.type) != -1
-            || this.canDeepLink.indexOf('*') != -1
-            // return deep or 'shallow' link
-            ? cite.fullCite
-            : cite.mainCite
-          )
-
-      return this.baseUrl + urlEncode(properCitation)
-    }
+    var urlGetter = this[citation.type] || genericUrl
 
     return urlGetter.call(this, citation)
   }
@@ -12798,4 +12804,4 @@ extend(Source.prototype, {
 
 module.exports = Source
 
-},{"../modules/utils":8,"jquery":1}]},{},[4,9]);
+},{"../functions/genericUrl":6,"../modules/utils":9,"jquery":1}]},{},[4,10]);

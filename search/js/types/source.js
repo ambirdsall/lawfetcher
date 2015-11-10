@@ -4,7 +4,7 @@ var __slice = [].slice
 , $         = require('jquery')
 , present   = $.inArray
 , urlEncode = window.encodeURIComponent
-
+, genericUrl = require('../functions/genericUrl')
 
 
 function Source(config) {
@@ -25,18 +25,7 @@ function Source(config) {
 
 extend(Source.prototype, {
   url: function url(citation) {
-    var urlGetter = this[citation.type] || function(cite) {
-      var properCitation = (
-            // if canDeepLink contains either the citation type or '*'
-            this.canDeepLink.indexOf(cite.type) != -1
-            || this.canDeepLink.indexOf('*') != -1
-            // return deep or 'shallow' link
-            ? cite.fullCite
-            : cite.mainCite
-          )
-
-      return this.baseUrl + urlEncode(properCitation)
-    }
+    var urlGetter = this[citation.type] || genericUrl
 
     return urlGetter.call(this, citation)
   }

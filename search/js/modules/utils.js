@@ -1,5 +1,5 @@
 var __slice = [].slice
-, U       = {}
+, U         = {}
 
 // Define a new function from fn1 and fn2 equivalent to fn2(fn1)
 //
@@ -16,7 +16,7 @@ U.after = function after(fn1, fn2, thisArg) {
 
 U.extend = function extend () {
   var consumer  = arguments[0]
-  , providers = __slice.call(arguments, 1)
+  , providers   = __slice.call(arguments, 1)
   , key
   , i
   , provider
