@@ -16,14 +16,14 @@ var $              = require('jquery')
 , types
 
 function formatUrl(source, parsedCitation) {
-  var p = $("<p></p>")
+  var $p = $("<p></p>")
   , url = source.url(parsedCitation)
 
   source.anchor.attr({
       href: url
     , target: '_blank'
     })
-    .append(p.html(url))
+    .append($p.html(url))
 }
 
 $title.text(originalCitation)
