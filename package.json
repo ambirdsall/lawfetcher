@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma start",
     "build-js": "browserify js/*.js | uglifyjs -mc > js/dist/creator.js && browserify search/js/*.js | uglifyjs -mc > search/js/dist/sources.js",
     "watch-js": "watchify js/autoforward.js js/encode_url.js -o js/dist/creator.js & watchify search/js/autoforward.js search/js/parse_url.js -o search/js/dist/sources.js"
   },
