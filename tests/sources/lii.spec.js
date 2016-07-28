@@ -10,7 +10,6 @@ var types     = require('../../search/js/modules/type_list')
 , Citation    = require('../../search/js/types/citation')
 , H           = require('./source.spec.helpers')
 , getUrls     = H.getUrls(lii)
-, findType    = H.findType
 , replaceEach = H.replaceEach
 
 describe('Cornell LII', function() {
