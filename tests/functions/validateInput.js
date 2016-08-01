@@ -13,6 +13,10 @@ describe('validateInput()', function() {
       expect(validateInput(' ')).toBe(true)
     })
 
+    it('allows non-breaking spaces', function() {
+      expect(validateInput(' ')).toBe(true)
+    })
+
     it('allows pilcrows', function() {
       expect(validateInput('¶')).toBe(true)
     })
