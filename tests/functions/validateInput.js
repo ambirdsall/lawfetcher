@@ -17,6 +17,10 @@ describe('validateInput()', function() {
       expect(validateInput(' ')).toBe(true)
     })
 
+    it('allows ampersands', function() {
+      expect(validateInput('&')).toBe(true)
+    })
+
     it('allows pilcrows', function() {
       expect(validateInput('¶')).toBe(true)
     })
