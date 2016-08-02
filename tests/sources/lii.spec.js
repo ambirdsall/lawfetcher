@@ -9,7 +9,7 @@ if ( lii.length === 1 ) lii = new Source(lii[0])
 var types     = require('../../search/js/modules/type_list')
 , Citation    = require('../../search/js/types/citation')
 , H           = require('./source.spec.helpers')
-, getUrls     = H.getUrls(lii)
+, getUrls     = H.getUrls(lii, types)
 , replaceEach = H.replaceEach
 
 describe('Cornell LII', function() {
@@ -34,7 +34,7 @@ describe('Cornell LII', function() {
       , 'Fed. R. App. Proc. 26.1(b)'
       , 'F.R. App. P. 26.1(b)'
       ]
-    , results   = getUrls(citations, types, 'frap')
+    , results   = getUrls(citations, 'frap')
     , properUrl = 'https://www.law.cornell.edu/rules/frap/rule_26.1#rule_26.1_b'
 
     expect(results).toEqual(replaceEach(results, properUrl))
@@ -46,7 +46,7 @@ describe('Cornell LII', function() {
       , 'Federal Rules of Crim. Proc. 52(b)'
       , 'F.R. Crim. P. 52(b)'
       ]
-    , results   = getUrls(citations, types, 'frcrmp')
+    , results   = getUrls(citations, 'frcrmp')
     , properUrl = 'https://www.law.cornell.edu/rules/frcrmp/rule_52#rule_52_b'
 
     expect(results).toEqual(replaceEach(results, properUrl))
@@ -61,7 +61,7 @@ describe('Cornell LII', function() {
       , 'F.R.C.P. 26(a)(1)(B)'
       , 'FRCP 26(a)(1)(B)'
       ]
-    , results = getUrls(citations, types, 'frcp')
+    , results = getUrls(citations, 'frcp')
     , properUrl = 'https://www.law.cornell.edu/rules/frcp/rule_26#rule_26_a_1_B'
 
     expect(results).toEqual(replaceEach(results, properUrl))
@@ -74,7 +74,7 @@ describe('Cornell LII', function() {
       , 'F.R.E. 801(d)(2)'
       , 'FRE 801(d)(2)'
       ]
-    , results   = getUrls(citations, types, 'fre')
+    , results   = getUrls(citations, 'fre')
     , properUrl = 'https://www.law.cornell.edu/rules/fre/rule_801#rule_801_d_2'
 
     expect(results).toEqual(replaceEach(results, properUrl))
@@ -87,7 +87,7 @@ describe('Cornell LII', function() {
       , 'Fed. Rules Bankr. Proc. 1007(b)(1)'
       , 'Fed. Rules Bankr. Proc. Rule 1007(b)(1)'
       ]
-    , results   = getUrls(citations, types, 'frbp')
+    , results   = getUrls(citations, 'frbp')
     , properUrl = 'https://www.law.cornell.edu/rules/frbp/rule_1007#rule_1007_b_1'
 
     expect(results).toEqual(replaceEach(results, properUrl))

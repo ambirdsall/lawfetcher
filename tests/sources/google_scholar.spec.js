@@ -9,7 +9,7 @@ if ( google_scholar.length === 1 ) google_scholar = google_scholar[0]
 var types     = require('../../search/js/modules/type_list')
 , Citation    = require('../../search/js/types/citation')
 , H           = require('./source.spec.helpers')
-, getUrls     = H.getUrls(google_scholar)
+, getUrls     = H.getUrls(google_scholar, types)
 , findType    = H.findType
 , replaceEach = H.replaceEach
 
@@ -28,7 +28,7 @@ describe('Google Scholar', function() {
     var citations = [
         '123 U.S.C. § 2000e-2(a)'
       ]
-    , results   = getUrls(citations, types, 'usc')
+    , results   = getUrls(citations, 'usc')
     , properUrl = 'https://scholar.google.com/scholar?as_sdt=2006&hl=en&q=%22123%20U.S.C.%20%C2%A7%202000e-2(a)%22'
 
     expect(results).toEqual(replaceEach(results, properUrl))

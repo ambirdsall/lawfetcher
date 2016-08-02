@@ -9,7 +9,7 @@ if ( google.length === 1 ) google = google[0]
 var types     = require('../../search/js/modules/type_list')
 , Citation    = require('../../search/js/types/citation')
 , H           = require('./source.spec.helpers')
-, getUrls     = H.getUrls(google)
+, getUrls     = H.getUrls(google, types)
 , findType    = H.findType
 , replaceEach = H.replaceEach
 
@@ -28,7 +28,7 @@ describe('Google Search', function() {
     var citations = [
         '123 U.S.C. § 2000e-2(a)'
       ]
-    , results   = getUrls(citations, types, 'usc')
+    , results   = getUrls(citations, 'usc')
     , properUrl = 'http://google.com/search?q=123%20U.S.C.%20%C2%A7%202000e-2(a)'
 
     expect(results).toEqual(replaceEach(results, properUrl))
@@ -38,7 +38,7 @@ describe('Google Search', function() {
     var citations = [
         'Federal Rules of Appellate Procedure 26.1(b)'
       ]
-    , results   = getUrls(citations, types, 'frap')
+    , results   = getUrls(citations, 'frap')
     , properUrl = 'http://google.com/search?q=Federal%20Rules%20of%20Appellate%20Procedure%2026.1(b)'
 
     expect(results).toEqual(replaceEach(results, properUrl))

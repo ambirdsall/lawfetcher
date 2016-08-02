@@ -8,7 +8,7 @@ var H        = {}
     }
   }
 
-H.getUrls = U.curry(function getUrls(source, citations, types, typeName) {
+H.getUrls = U.curry(function getUrls(source, types, citations, typeName) {
   var currentType = types.filter(findType(typeName))[0]
 
   return citations.map(function(citeText) {
