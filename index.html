@@ -6,7 +6,7 @@
   <meta name=viewport content="width=device-width, initial-scale=1">
 
   <title>Lawfetcher • Creator</title>
-  <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -23,14 +23,13 @@
 
         <div class="row">
           <hr class="[ col-xs-8 col-xs-offset-2 ]">
-          <h2 class="col-xs-12  text-center">Enter Citation to Be Linked<sup><a
-              href="guidance">(?)</a></sup></h2>
+          <h2 class="col-xs-12  text-center">Enter Citation to Be Linked</h2>
           <form id="url-encoder__form">
             <div class="form-group">
               <div class="[ col-xs-8  col-xs-offset-2 ]">
                 <div class="input-group">
                   <label class="sr-only" for="citation">Citation</label>
-                  <input id="url-encoder__input" class="form-control" type="text" name="citation">
+                  <input id="url-encoder__input" class="form-control serif" type="text" name="citation">
                   <span class="input-group-btn">
                     <button id="submit" class="[ btn  btn-primary ]" type="button">Generate URL</button>
                   </span>
@@ -38,6 +37,16 @@
               </div>
             </div>
           </form>
+          <div class="col-xs-6 col-xs-offset-3 text-center">
+            <h3>Not legally trained? Try one of these:</h3>
+            <div class="list-group">
+              <a class="list-group-item list-group-item-action serif js-example-citation">189 F.2d 107</a>
+              <a class="list-group-item list-group-item-action serif js-example-citation">U.S. Const. art. I, § 7, cl. 1</a>
+              <a class="list-group-item list-group-item-action serif js-example-citation">45 C.F.R. § 147.130(a)(1)(iv)</a>
+              <a class="list-group-item list-group-item-action serif js-example-citation">Federal Rules of Appellate Procedure 26.1(b)</a>
+              <a class="list-group-item list-group-item-action serif js-example-citation">F.R.A.P. 26.1(b)</a>
+            </div>
+          </div>
 
           <!-- This div remains hidden until there is a validation error -->
           <div id="submit--input-validator-text" class="submit--help-text [ alert  alert-danger ]  [ col-xs-8 col-xs-offset-2 ]  text-center">
@@ -45,26 +54,11 @@
           </div>
 
         </div>
-
-        <div class="row">
-          <div class="[ col-xs-8 col-xs-offset-2 ]">
-            <form>
-              <div class="results form-group " id="results">
-                <div class="form-group">
-                  <label for="results--a-tag">Linked Citation</label>
-                  <div id="results--a-tag" class="results--a-tag [ form-control  input-group input-group-lg ] well" type="textarea" rows="3" name="results--a-tag"></div>
-                </div>
-                <div class="form-group">
-                  <label for="results--raw-url">Underlying URL</label>
-                  <textarea id="results--raw-url" class="[ form-control input-group input-group-lg ] js-results--select-all" type="textarea" rows="3" name="results--raw-url"></textarea>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="js/dist/creator.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script type="text/javascript" src="dist/66774985fe25d45397960f5f98410139creator.js"></script>
+  <script>$('.js-example-citation').click(function () { $('#url-encoder__input').val($(this).text()) })</script>
 </body>
 </html>

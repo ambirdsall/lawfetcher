@@ -1,28 +1,39 @@
-var H        = {}
-, U          = require('../../search/js/modules/utils')
-, Citation   = require('../../search/js/types/citation')
-, genericUrl = require('../../search/js/functions/genericUrl')
-, findType   = function findType(typeName) {
-    return function(type) {
-      return type.name === typeName
-    }
-  }
+let H            = {}
+const _          = require(`lodash`)
+const U          = require(`../../js/utils`)
+const Citation   = require(`../../js/types/citation`)
+const Source     = require(`../../js/types/source`)
+const genericUrl = require(`../../js/functions/genericUrl`)
+const withTypeId = function withTypeId(typeName) { return (type) => type.typeId === typeName }
 
-H.getUrls = U.curry(function getUrls(source, types, citations, typeName) {
-  var currentType = types.filter(findType(typeName))[0]
+H.findType = U.curry(function findType(types, typeName) {
+  return _.find(types, withTypeId(typeName))
+})
 
-  return citations.map(function(citeText) {
-    var citation = new Citation(citeText, currentType)
-    // FIXME: doesn't properly handle decorating url() (cf. google_scholar)
-    , urlGetter  = source.url || genericUrl
+H.getUrl = U.curry(function getUrl(source, types, citeText, typeName) {
+  const currentType = H.findType(types, typeName)
+  const citation    = Citation(citeText, currentType)
 
+  return source.url(citation)
+})
 
-    return urlGetter.call(source, citation)
+H.getUrls = U.curry(function getUrls(source, types, citationTexts, typeName) {
+  const currentType = H.findType(types, typeName)
+
+  return citationTexts.map(function(citeText) {
+    const citation = Citation(citeText, currentType)
+
+    return source.url(citation)
   })
 })
 
 H.replaceEach = function replaceEach(arr, str) {
   return arr.map(function() { return str })
+}
+
+// Specifically westlaw and lexis test urls
+H.federalRuleNumber = function ruleNumber(federalRuleCite) {
+  return _.head(federalRuleCite.match(/\d.*/))
 }
 
 module.exports = H
