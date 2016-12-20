@@ -1,70 +1,54 @@
-var google    = require('../../search/js/modules/source_list')
-    .filter(function(source) {
-      return source.name === 'Google Search'
-    })
-, Source      = require('../../search/js/types/source')
+const _            = require(`lodash`)
+const Source       = require(`../../js/types/source`)
+const Citation     = require(`../../js/types/citation`)
+const googleConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Google Search`)
+const google       = new Source(googleConfig)
+const types        = require(`../../js/data/type_list`)
+const testCases    = require(`../data/test_cases`)
+const H            = require(`./source.spec.helpers`)
+const getUrls      = H.getUrls(google, types)
+const replaceEach  = H.replaceEach
+const urlEncode    = window.encodeURIComponent
 
-if ( google.length === 1 ) google = google[0]
-
-var types     = require('../../search/js/modules/type_list')
-, Citation    = require('../../search/js/types/citation')
-, H           = require('./source.spec.helpers')
-, getUrls     = H.getUrls(google, types)
-, findType    = H.findType
-, replaceEach = H.replaceEach
-
-describe('Google Search', function() {
-  it('stores its baseUrl', function() {
-    expect(google.baseUrl).toBe('http://google.com/search?q=')
+describe(`Google Search`, () => {
+  it(`stores its baseUrl`, () => {
+    expect(google.baseUrl).toBe(`https://google.com/search?q=`)
   })
 
-  xit('makes the proper url for a US Constitution citation', function() {
+  it(`cannot handle a WL database citation`, () => {
+    expect(google.canHandle(`wl_database`)).toBe(false)
   })
 
-  xit('makes the proper url for a Code of Federal Regulations citation', function() {
+  it(`wraps docket number citations in quotes`, () => {
+    const docketNumbers = testCases.docket_number.all
+    const results       = getUrls(docketNumbers, `docket_number`)
+    const properUrls    = _.map(docketNumbers, cite => `${google.baseUrl}"${urlEncode(cite)}"`)
+
+    expect(google.canHandle(`docket_number`)).toBe(true)
+    expect(results).toEqual(properUrls)
   })
 
-  it('makes the proper url for a United States Code citation', function() {
-    var citations = [
-        '123 U.S.C. § 2000e-2(a)'
-      ]
-    , results   = getUrls(citations, 'usc')
-    , properUrl = 'http://google.com/search?q=123%20U.S.C.%20%C2%A7%202000e-2(a)'
+  it(`makes the proper url for a google search for every other type of citation`, () => {
+    var us_consts = [
+          `U.S. CONST. art. I, § 7, cl. 1`
+        , `U.S. Const. amend. XIV, § 1`
+        ]
+      , uscs = [
+          `123 U.S.C. § 2000e-2(a)`
+        ]
+      , fraps = [
+          `Federal Rules of Appellate Procedure 26.1(b)`
+        ]
+      , urls = [
+          `https://google.com/search?q=U.S.%20CONST.%20art.%20I%2C%20%C2%A7%207%2C%20cl.%201`
+        , `https://google.com/search?q=U.S.%20Const.%20amend.%20XIV%2C%20%C2%A7%201`
+        , `https://google.com/search?q=123%20U.S.C.%20%C2%A7%202000e-2(a)`
+        , `https://google.com/search?q=Federal%20Rules%20of%20Appellate%20Procedure%2026.1(b)`
+        ]
+      , results = _.concat(getUrls(us_consts, `us_constitution`), getUrls(uscs, `usc`), getUrls(fraps, `frap`))
 
-    expect(results).toEqual(replaceEach(results, properUrl))
-  })
-
-  it('makes the proper url for a Federal Rule of Appellate Procedure citation', function() {
-    var citations = [
-        'Federal Rules of Appellate Procedure 26.1(b)'
-      ]
-    , results   = getUrls(citations, 'frap')
-    , properUrl = 'http://google.com/search?q=Federal%20Rules%20of%20Appellate%20Procedure%2026.1(b)'
-
-    expect(results).toEqual(replaceEach(results, properUrl))
-  })
-
-  xit('makes the proper url for a Federal Rule of Criminal Procedure citation', function() {
-  })
-
-  xit('makes the proper url for a Federal Rule of Civil Procedure citation', function() {
-  })
-
-  xit('makes the proper url for a Federal Rule of Evidence citation', function() {
-  })
-
-  xit('makes the proper url for a Federal Rule of Bankruptcy Procedure citation', function() {
-  })
-
-  xit('makes the proper url for a Federal case citation', function() {
-  })
-
-  xit('makes the proper url for a state constitution citation', function() {
-  })
-
-  xit('makes the proper url for a law/statute/code/rule citation', function() {
-  })
-
-  xit("makes the proper url for a citation that doesn't match any type", function() {
+    expect(results).toEqual(urls)
   })
 })
+
+// vim:foldmethod=marker:foldmarker={,}:foldlevel=1

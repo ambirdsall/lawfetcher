@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+var encoding = 'utf-8'
+var md5      = require('md5')
+var data
+
+/**
+ * Once we have data, carry out processing.
+ */
+function createHash (data) {
+  console.log(md5(data))
+}
+
+
+if (process.stdin.isTTY) { // Called with arg, as: ./md5 "this as input"
+
+  // Even though executed by name, the first argument is still "node",
+  // the second the script name. The third is the string we want.
+  data = new Buffer(process.argv[2] || '', encoding)
+  createHash(data)
+
+} else { // Accepting piped content, as: echo "this as input" | ./md5
+
+  data = ''
+  process.stdin.setEncoding(encoding)
+
+  process.stdin.on('readable', function () {
+    var chunk
+    while (chunk = process.stdin.read()) {
+      data += chunk
+    }
+  })
+
+  process.stdin.on('end', function () { createHash(data) })
+}

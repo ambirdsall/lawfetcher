@@ -1,16 +1,499 @@
-.results { margin-top: 2em; }
-
-.results--a-tag {
-  font-size: 12pt;
-  font-family: 'Century Schoolbook';
+h2 {
+  font-weight: normal;
 }
 
-/* 
-The id version is a specificity hack to set initial state for
-reveal/hide behavior in ../js/encode_url.js.
+.btn {
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(140,140,140,0.2));
+}
+
+.results {
+  margin-top: 2em;
+}
+
+.results--a-tag {
+  font-family: 'Century Schoolbook';
+  font-size: 12pt;
+}
+
+/*
+ The id version is a specificity hack to set initial state for
+ reveal/hide behavior in ../js/encode_url.js.
  */
-#submit--input-validator-text { display: none; }
+#submit--input-validator-text {
+  display: none;
+}
 
 .submit--help-text {
   margin-top: 1.5em;
 }
+
+/* search results */
+
+[id=url-encoder__form] {
+  margin: 3em 0;
+}
+  .submit__text { margin-left: 0.4em; }
+
+  @media only screen and (max-width: 600px) {
+    .submit__text { display: none; }
+  }
+
+[id=permalink__text][id=permalink__text] {
+  background-color: #fafafa;
+  text-align: center;
+}
+
+[id=permalink__icon] {
+  color: #bbb;
+}
+
+.permalink {
+  width: 40em;
+  max-width: 90vw;
+  /*
+   * 3.3rem margin-bottom matches vertical margins of `.primary-title`;
+   * another 1.5rem roughly matches the margin-bottom of `.lead`;
+   * another 1.5rem roughly matches the "Link to this page" label's height;
+   * another 1rem is added because humans perceive ideal vertical centering
+   * to be slightly above "true" center.
+   *
+   * 3.3rem + 1.5rem + 1.5rem + 1rem = 7.3rem
+   */
+  margin: 0 auto 7.3rem;
+}
+
+body .lawfetcher-results {
+  text-align: center;
+}
+.lawfetcher-results h3 {
+  font-size: 1.2em;
+  margin-bottom: 0.7em;
+}
+
+.link > .form-control {
+  height: 8.5em;
+  word-wrap: break-word;
+}
+.lawfetcher-results .link {
+  margin-bottom: 1em;
+  width: 100%;
+  word-break: break-all;
+}
+.lawfetcher-results    .link > a:hover {
+  background-color: #fafafa;
+}
+
+.lawfetcher-results    .link--westlaw__title {
+/*  color: #fc8c1e; */
+}
+.lawfetcher-results    .link--lexis__title {
+/*  color: #dd2108; */
+}
+.lawfetcher-results    .link--google-scholar__title {
+/*  color: #009f5a; */
+}
+.lawfetcher-results    .link--google__title {
+/*  color: #3f83f1; */
+}
+.lawfetcher-results    .link--ravel__title {
+/*  color: #5b78bb; */
+}
+.lawfetcher-results    .link--justia__title {
+/*  color: #06357A; */
+}
+.lawfetcher-results .primary-title, .link__citation { font-family: 'Century Schoolbook', serif; }
+  .lawfetcher-results .primary-title {
+    font-size: 3.3em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+  .link__citation {
+    color: #333;
+    /* Without this, the `text-decoration` value of the parent <a> tag is
+     * impossible to override */
+    display: inline-block;
+    font-size: 1.3em;
+    margin: 0;
+    text-decoration: none;
+  }
+
+  .link__url {
+    color: #aaa;
+    font-size: 0.8em;
+  }
+
+.source-list__title {
+  margin-bottom: 1em;
+}
+.source-list--subscription__title {
+
+}
+
+.reconfirm-autoforward__btn {
+  margin: 0 1em;
+}
+
+.autoforward__btn {
+  background-color: #ddd;
+}
+
+/* Using the id is a specificity hack to set the initial state of a conditionally- */
+/* revealed element */
+#reconfirm-expired-autoforward {
+  display: none;
+}
+
+<!-- lii skin -- >
+
+html body {
+  margin-top: 0px;
+}
+
+.element-invisible {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px,1px,1px,1px);
+  overflow: hidden;
+  height: 1px;
+}
+
+.btn-primary {
+  background-color: #b31b1b;
+  border: solid 1px #8B0000;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #8B0000;
+}
+
+div.addthis_horizontal_follow_toolbox p, div.addthis_horizontal_follow_toolbox div.addthis_toolbox {
+  display: inline;
+}
+
+div.addthis_horizontal_follow_toolbox p span {
+  margin-top: -10px;
+  padding: 0 0.2em;
+}
+
+div.addthis_horizontal_follow_toolbox div.addthis_toolbox {
+
+}
+
+/* cu */
+div#cu-identity {
+  background: #68645b;
+  height: 45px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  border: none;
+}
+
+div#cu-identity a {
+  text-decoration: none;
+}
+
+a#cusearch {
+  color: #fff;
+  background: #68645b;
+  padding-top: 12px;
+  float: right;
+  font-size: 12px;
+}
+@media (max-width: 767px) {
+  a#cusearch {
+    font-size: 10px;
+    padding-top: 16px;
+  }
+}
+
+a#clslink {
+  font-family: Palatino, Georgia, Times, "Times New Roman", serif;
+  color: #fff;
+  background: #68645b;
+  font-size: 14px;
+  padding-left: 5px;
+  padding-top: 12px;
+}
+@media (max-width: 767px) {
+  a#clslink {
+    font-size: 10px;
+    padding-top: 16px;
+  }
+}
+
+a#insignialink, a#clslink {
+  float: left;
+}
+
+a#insignialink img.img-responsive {
+  max-width: 40px;
+  padding-top: 0;
+}
+
+/* navigation and branding on multiple lines */
+nav#liiallnav.navbar.navbar-default {
+  border: none;
+  background: none;
+}
+
+#liibanner {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#liinav {
+  clear: both;
+  border-bottom: 1px solid #d4e0e4;
+  border-top: 1px solid #d4e0e4;
+}
+@media (min-width: 1200px) {
+  #liinav {
+    margin-left: -15px;
+  }
+}
+
+div#liinav ul li a {
+  padding-bottom: 1px;
+  padding-top: 4px;
+}
+
+div#liinav ul#liinavsoc {
+  margin-right: 0;
+}
+
+div#liinav ul#liinavsoc li {
+  padding-top: 4px;
+}
+
+/* background image swap */
+.lblue {
+  color: #72bbea;
+}
+
+.lblueinv {
+  background: #72bbea;
+  color: #fff;
+}
+
+a#liilogo {
+  padding: 0;
+  margin-top: 4px;
+}
+
+@media (max-width: 658px) {
+  a#liilogo {
+    width: 74px;
+    height: 48px;
+    background: url("https://www.law.cornell.edu/images/lii_min_logo_80x54.jpg") no-repeat 0 0;
+  }
+}
+@media (min-width: 659px) and (max-width: 991px) {
+  a#liilogo {
+    /*    width: 74px;
+     height: 48px;
+     background: url("https://www.law.cornell.edu/images/lii_min_logo_80x54.jpg") no-repeat 0 0; */
+    width: 448px;
+    height: 54px;
+    background: url("https://www.law.cornell.edu/images/lii_logo_448x54.png") no-repeat 0 0;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  a#liilogo {
+    width: 448px;
+    height: 54px;
+    background: url("https://www.law.cornell.edu/images/lii_logo_448x54.png") no-repeat 0 0;
+  }
+}
+@media (min-width: 1200px) {
+  a#liilogo {
+    width: 448px;
+    height: 54px;
+    background: url("https://www.law.cornell.edu/images/lii_logo_448x54.png") no-repeat 0 0;
+  }
+}
+
+#liidonatewrap, #liisearchlinkwrap, #liisearch {
+	display: inline-block;
+  vertical-align: middle;
+}
+
+#liinavbarstuff {
+  vertical-align: middle;
+}
+
+a#liidonate {
+  padding: 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 100;
+  display: inline-block;
+  text-decoration: none;
+  /*  margin: 5px 10px 0; */
+  margin: 5px auto 0;
+}
+@media (max-width: 767px) {
+  a#liidonate {
+    display: inline-block;
+    margin: inherit 5px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  a#liidonate {
+    display: inline-block;
+    margin: inherit 5px;
+  }
+}
+
+a#liidonate span.glyphicon.glyphicon-gift {
+  padding: 6px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  -ms-border-radius: 14px;
+  border-radius: 14px;
+  background: #fff;
+  color: #72bbea;
+  font-size: 16px;
+}
+
+a#liidonate span.gltxt {
+  margin-left: 4px;
+}
+@media (max-width: 767px) {
+  a#liidonate span.gltxt {
+    display: none;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  a#liidonate span.gltxt {
+    display: none;
+  }
+}
+
+#liibanner .navbar-form {
+  border: none;
+}
+
+@media (max-width: 767px) {
+  #liinavbarstuff {
+    float: right;
+    margin-right: 5px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  #liinavbarstuff {
+    float: right;
+    margin-right: 5px;
+  }
+}
+
+a#liisearchlink {
+  padding: 10px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  background: #b31b1b;
+  font-size: 18px;
+  font-weight: 100;
+  display: inline-block;
+  text-decoration: none;
+  /*  margin: 5px 10px 0; */
+  margin: 5px auto 0;
+}
+
+a#liisearchlink {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  a#liisearchlink {
+    display: inline-block;
+    margin: inherit 5px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  a#liisearchlink {
+    display: inline-block;
+    margin: inherit 5px;
+  }
+}
+
+a#liisearchlink span.glyphicon.glyphicon-search {
+  padding: 6px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  -ms-border-radius: 14px;
+  border-radius: 14px;
+  background: #fff;
+  color: #b31b1b;
+  font-size: 16px;
+}
+
+#liisearch {
+  max-height: 46px;
+  margin: 6px 16px 0 6px;
+  width: 200px;
+  padding: 10px;
+  display: inline-block;
+}
+
+@media (max-width: 767px) {
+  #liisearch {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  #liisearch {
+    display: none;
+  }
+}
+
+#liisearchbox {
+  display: inline-block;
+}
+
+form#search-block-form {
+  display: inline-block;
+}
+
+/* header, footer nav styles */
+
+#liiheader {
+  z-index: 9999;
+  background: #fff;
+}
+
+#liiheader.affix {
+  margin-top: -55px;
+  width: 100%;
+}
+
+ul#liiheadernav > li a, ul#liifooternav > li a {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #8B7F5F;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, "sans serif";
+  text-decoration: none;
+}
+
+ul#liiheadernav > li a {
+  font-size: 12.8px;
+}
+
+ul#liifooternav > li a {
+  font-size: 14px;
+}
+
+#liifooter {
+  border-top: solid 1px #ccc;
+  margin-top: 4ex;
+  clear: both;
+}
+

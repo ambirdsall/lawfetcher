@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+
+    <title>Lawfetcher • Sources</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+
+    <div class="center-column">
+
+      <div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+        <h1 class="text-center">Lawfetcher</h1>
+        <p class="lead text-center">Go read the source document of any U.S. legal citation</p>
+      </div>
+    </div>
+    <div class="container-fluid lawfetcher-results">
+      <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+          <h1 id="title" class="primary-title"></h1>
+          <label>Link to this page</label>
+          <div class="input-group permalink">
+            <span id="permalink__icon-wrapper" class="input-group-addon"><i id="permalink__icon" class="glyphicon glyphicon-link"></i></span>
+            <input type="text" class="form-control" id="permalink__text" readonly=readonly>
+            <!-- copy btn goes here if feature supported -->
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- This div is hidden unless there is an existing but expired preference stored -->
+          <div id="reconfirm-expired-autoforward" class="row">
+            <div class="[ alert alert-warning ]" role="alert">
+              <h3 class="js-reconfirm__template">Would you like to continue automatically</h3>
+              <h3 class="js-reconfirm__template">forwarding all citations to {{source}}?</h3>
+
+              <div class="control-panel">
+                <button id="js-reconfirm-autoforward" class="reconfirm-autoforward__btn  [ btn btn-success ]">
+                  I would
+                </button>
+                <button id="js-delete-autoforward"    class="reconfirm-autoforward__btn  [ btn btn-warning ]">
+                  Delete Preference
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!--  SOURCES  -->
+          <div class="row">
+            <div class="source-list col-xs-12 col-md-6" id="source-list--free">
+              <h2 class="source-list__title">Free &amp; Open Sources</h2>
+
+              <div class="list-group">
+                <div class="[ link link--lii ]">
+                  <a id="link--lii__a" class="form-control" href=""> <h3 class="link--lii__title">LII</h3> </a>
+                </div>
+                <div class="[ link link--fdsys ]">
+                  <a id="link--fdsys__a" class="form-control" href=""> <h3 class="link--fdsys__title">Federal Digital System</h3> </a>
+                </div>
+                <div class="[ link link--google-scholar ]">
+                  <a id="link--google-scholar__a" class="form-control" href=""> <h3 class="link--google-scholar__title">Google Scholar</h3> </a>
+                </div>
+                <div class="[ link link--casetext ]">
+                  <a id="link--casetext__a" class="form-control" href=""> <h3 class="link--casetext__title">Casetext</h3> </a>
+                </div>
+                <div class="[ link link--courtlistener ]">
+                  <a id="link--courtlistener__a" class="form-control" href=""> <h3 class="link--courtlistener__title">CourtListener</h3> </a>
+                </div>
+                <!-- <div class="[ link link--fastcase ]"> -->
+                <!--   <a id="link--fastcase__a" class="form-control" href=""> <h3 class="link--fastcase__title">Fastcase (via Permafrast)</h3> </a> -->
+                <!-- </div> -->
+                <div class="[ link link--google ]">
+                  <a id="link--google__a" class="form-control" href=""> <h3 class="link--google__title">Google Search</h3> </a>
+                </div>
+                <div class="[ link link--justia ]">
+                  <a id="link--justia__a" class="form-control" href=""> <h3 class="link--justia__title">Justia</h3> </a>
+                </div>
+                <div class="[ link link--ravel ]">
+                  <a id="link--ravel__a" class="form-control" href=""> <h3 class="link--ravel__title">Ravel Law</h3> </a>
+                </div>
+              </div><!-- /.list-group -->
+            </div><!-- /#source-list-free -->
+
+            <div class="source-list col-xs-12 col-md-6" id="source-list--subscription">
+              <h2 class="source-list__title source-list--subscription__title">Subscription Services</h2>
+              <div class="list-group">
+                <div class="[ link link--lexis ] input-group">
+                  <a id="link--lexis__a" class="link__a form-control" href=""> <h3 id="link--lexis__title" class="link--lexis__title">Lexis Advance</h3> </a>
+                  <span class="input-group-addon">
+                    <button class="btn  btn-default  autoforward__btn" id="autoforward--lexis">
+                      Always use
+                      <br>
+                      this source?
+                    </button> </span>
+                </div>
+                <div class="[ link link--westlaw ] input-group">
+                  <a id="link--westlaw__a" class="form-control" href=""> <h3 id="link--westlaw__title" class="link--westlaw__title">WestlawNext</h3> </a>
+                  <span class="input-group-addon">
+                    <button class="btn  btn-default  autoforward__btn" id="autoforward--westlaw" >
+                      Always use
+                      <br>
+                      this source?
+                    </button> </span>
+                </div>
+                <div class="[ link link--hein-online ]">
+                  <a id="link--hein-online__a" class="form-control" href=""> <h3 class="link--hein-online__title">HeinOnline</h3> </a>
+                </div>
+              </div>
+            </div><!-- /#source-list-subscription -->
+          </div><!-- /.row -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="dist/sources.js"></script>
+  </body>
+</html>
