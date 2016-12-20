@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Ensure the script can access the locally-installed versions of npm-managed tools
+PATH=node_modules/.bin:$PATH
+
+main() {
+  set_script_sources_to_dev_filenames
+  watch_js
+}
+
+set_script_sources_to_dev_filenames() {
+  echo "Updating script tags' src attributes..."
+  sub_dev_creator_filename
+  sub_dev_sources_filename
+}
+
+watch_js() {
+  echo "Watching js files..."
+  watchify -t [ babelify --presets [ es2015 ] ] js/autoforward.js js/encode_url.js -o dist/creator.js -d &
+  watchify -t [ babelify --presets [ es2015 ] ] js/citation/*.js -o citation/dist/sources.js -d
+}
+
+sub_dev_creator_filename() {
+  sed "s_/[^/]*creator.js_/creator.js_" index.html > newindex.html
+  mv newindex.html index.html
+}
+
+sub_dev_sources_filename() {
+  sed "s_/[^/]*sources.js_/sources.js_" citation/index.html > citation/newindex.html
+  mv citation/newindex.html citation/index.html
+}
+
+main
+
+# vim:foldmethod=marker:foldmarker={,}:foldlevel=0

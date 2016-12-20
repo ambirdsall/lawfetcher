@@ -1,16 +1,146 @@
-.results { margin-top: 2em; }
-
-.results--a-tag {
-  font-size: 12pt;
-  font-family: 'Century Schoolbook';
+h2 {
+  font-weight: normal;
 }
 
-/* 
-The id version is a specificity hack to set initial state for
-reveal/hide behavior in ../js/encode_url.js.
+.btn {
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(140,140,140,0.2));
+}
+
+.results {
+  margin-top: 2em;
+}
+
+.results--a-tag {
+  font-family: 'Century Schoolbook';
+  font-size: 12pt;
+}
+
+/*
+ The id version is a specificity hack to set initial state for
+ reveal/hide behavior in ../js/encode_url.js.
  */
-#submit--input-validator-text { display: none; }
+#submit--input-validator-text {
+  display: none;
+}
 
 .submit--help-text {
   margin-top: 1.5em;
 }
+
+/* search results */
+
+[id=url-encoder__form] {
+  margin: 3em 0;
+}
+  .submit__text { margin-left: 0.4em; }
+
+  @media only screen and (max-width: 600px) {
+    .submit__text { display: none; }
+  }
+
+[id=permalink__text][id=permalink__text] {
+  background-color: #fafafa;
+  text-align: center;
+}
+
+[id=permalink__icon] {
+  color: #bbb;
+}
+
+.permalink {
+  width: 40em;
+  max-width: 90vw;
+  /*
+   * 3.3rem margin-bottom matches vertical margins of `.primary-title`;
+   * another 1.5rem roughly matches the margin-bottom of `.lead`;
+   * another 1.5rem roughly matches the "Link to this page" label's height;
+   * another 1rem is added because humans perceive ideal vertical centering
+   * to be slightly above "true" center.
+   *
+   * 3.3rem + 1.5rem + 1.5rem + 1rem = 7.3rem
+   */
+  margin: 0 auto 7.3rem;
+}
+
+body .lawfetcher-results {
+  text-align: center;
+}
+.lawfetcher-results h3 {
+  font-size: 1.2em;
+  margin-bottom: 0.7em;
+}
+
+.link > .form-control {
+  height: 8.5em;
+  word-wrap: break-word;
+}
+.lawfetcher-results .link {
+  margin-bottom: 1em;
+  width: 100%;
+  word-break: break-all;
+}
+.lawfetcher-results    .link > a:hover {
+  background-color: #fafafa;
+}
+
+.lawfetcher-results    .link--westlaw__title {
+/*  color: #fc8c1e; */
+}
+.lawfetcher-results    .link--lexis__title {
+/*  color: #dd2108; */
+}
+.lawfetcher-results    .link--google-scholar__title {
+/*  color: #009f5a; */
+}
+.lawfetcher-results    .link--google__title {
+/*  color: #3f83f1; */
+}
+.lawfetcher-results    .link--ravel__title {
+/*  color: #5b78bb; */
+}
+.lawfetcher-results    .link--justia__title {
+/*  color: #06357A; */
+}
+.lawfetcher-results .primary-title, .link__citation { font-family: 'Century Schoolbook', serif; }
+  .lawfetcher-results .primary-title {
+    font-size: 3.3em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+  .link__citation {
+    color: #333;
+    /* Without this, the `text-decoration` value of the parent <a> tag is
+     * impossible to override */
+    display: inline-block;
+    font-size: 1.3em;
+    margin: 0;
+    text-decoration: none;
+  }
+
+  .link__url {
+    color: #aaa;
+    font-size: 0.8em;
+  }
+
+.source-list__title {
+  margin-bottom: 1em;
+}
+.source-list--subscription__title {
+
+}
+
+.reconfirm-autoforward__btn {
+  margin: 0 1em;
+}
+
+.autoforward__btn {
+  background-color: #ddd;
+}
+
+/* Using the id is a specificity hack to set the initial state of a conditionally- */
+/* revealed element */
+#reconfirm-expired-autoforward {
+  display: none;
+}
+
+.serif { font-family: 'Century Schoolbook'; }

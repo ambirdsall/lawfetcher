@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# Ensure the script can access the locally-installed versions of npm-managed tools
+PATH=node_modules/.bin:$PATH
+
+main() {
+  generate_stamped_filenames
+  bundle_js
+  set_script_sources_to_stamped_filenames
+  clean_up_out_of_date_stamped_bundles
+}
+
+generate_stamped_filenames() {
+  echo "Generating stamped filenames..."
+  generate_creator_filename
+  generate_sources_filename
+}
+
+bundle_js() {
+  echo "Bundling js files..."
+  bundle_creator_js
+  bundle_sources_js
+}
+
+set_script_sources_to_stamped_filenames() {
+  echo "Updating script tags' src attributes..."
+  sub_stamped_creator_filename
+  sub_stamped_sources_filename
+}
+
+clean_up_out_of_date_stamped_bundles() {
+  echo "Cleaning up old bundles..."
+  clean_up_creator
+  clean_up_sources
+}
+
+bundle_creator_js() {
+  browserify -t [ babelify --presets [ es2015 ] ] js/autoforward.js js/encode_url.js | uglifyjs -mc > dist/$creator_filename
+}
+
+bundle_sources_js() {
+  browserify -t [ babelify --presets [ es2015 ] ] js/citation/*.js | uglifyjs -mc > citation/dist/$sources_filename
+}
+
+generate_creator_filename() {
+  generate_creator_prefix
+  creator_filename=${creator_prefix}creator.js
+}
+
+generate_creator_prefix() {
+  creator_prefix=$(browserify js/autoforward.js js/encode_url.js | ./scripts/md5)
+}
+
+generate_sources_filename() {
+  generate_sources_prefix
+  sources_filename=${sources_prefix}sources.js
+}
+
+generate_sources_prefix() {
+  sources_prefix=$(browserify js/citation/*.js | ./scripts/md5)
+}
+
+sub_stamped_creator_filename() {
+  sed "s_/[^/]*creator.js_/${creator_filename}_" index.html > newindex.html
+  mv newindex.html index.html
+}
+
+sub_stamped_sources_filename() {
+  sed "s_/[^/]*sources.js_/${sources_filename}_" citation/index.html > citation/newindex.html
+  mv citation/newindex.html citation/index.html
+}
+
+# Remove all files from dist/ EXCEPT newly built file and canonical dev script creator.js
+clean_up_creator() {
+  obsolete_creatorjs_files=$(ls dist | grep -Ev "^(creator|${creator_filename})")
+
+  # -n returns false if var expansion results in zero-length string
+  #    i.e. no need to run rm command if no obsolete stamped filenames still exist
+  if [[ -n "$obsolete_creatorjs_files" ]]; then
+    for obs_creator_file in $obsolete_creatorjs_files; do
+      rm "dist/$obs_creator_file"
+    done;
+  fi
+}
+
+# Remove all files from citation/dist/ EXCEPT newly built file and canonical dev script sources.js
+clean_up_sources() {
+  obsolete_sourcejs_files=$(ls citation/dist | grep -Ev "^(sources|${sources_filename})")
+
+  # -n returns false if var expansion results in zero-length string
+  #    i.e. no need to run rm command if no obsolete stamped filenames still exist
+  if [[ -n "$obsolete_sourcejs_files" ]]; then
+    for obs_source_file in $obsolete_sourcejs_files; do
+      rm "citation/dist/$obs_source_file"
+    done;
+  fi
+}
+
+main
+
+# vim:foldmethod=marker:foldmarker={,}:foldlevel=0

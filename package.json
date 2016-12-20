@@ -1,35 +1,47 @@
 {
-  "name": "lawlinker",
+  "name": "RIO",
   "version": "1.0.0",
   "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
   "scripts": {
     "test": "karma start",
-    "start": "npm run watch-js & live-server --port=6789",
-    "build-js": "browserify js/*.js | uglifyjs -mc > js/dist/creator.js && browserify search/js/*.js | uglifyjs -mc > search/js/dist/sources.js",
-    "watch-js": "watchify js/autoforward.js js/encode_url.js -o js/dist/creator.js & watchify search/js/autoforward.js search/js/parse_url.js -o search/js/dist/sources.js"
+    "lint": "./node_modules/.bin/eslint **/*.js || true",
+    "build": "./scripts/single-test-run && ./scripts/build",
+    "watch": "./scripts/watch",
+    "postinstall": "node node_modules/phantomjs-prebuilt/install.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ambirdsall/linkresolver.git"
+    "url": "git+https://github.com/LIICornell/rio.git"
   },
   "author": "Alex Birdsall & Peter W. Martin",
   "license": "MIT",
   "dependencies": {
     "browserify": "^12.0.0",
+    "clipboard": "^1.5.12",
     "jquery": "^2.1.4",
     "localforage": "^1.3.0",
+    "lodash": "^4.14.2",
     "uglifyjs": "^2.4.10"
   },
   "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-preset-es2015": "^6.14.0",
+    "babelify": "^7.3.0",
     "catw": "^1.0.1",
+    "eslint": "^3.2.2",
+    "eslint-config-standard": "^5.3.5",
+    "eslint-plugin-promise": "^2.0.0",
+    "eslint-plugin-standard": "^2.0.0",
     "jasmine": "^2.3.2",
-    "jasmine-core": "^2.3.4",
-    "karma": "^0.13.14",
-    "karma-browserify": "^4.4.0",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.1",
-    "live-server": "^1.0.0",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-browserify": "^5.0.4",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "md5": "^2.2.1",
     "phantomjs": "^1.9.18",
+    "phantomjs-prebuilt": "^2.1.7",
     "watchify": "^3.5.0"
   }
 }
