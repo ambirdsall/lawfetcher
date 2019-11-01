@@ -7,11 +7,12 @@
     "lint": "./node_modules/.bin/eslint **/*.js || true",
     "build": "./scripts/single-test-run && ./scripts/build",
     "watch": "./scripts/watch",
+    "serve": "live-server --port=1234",
     "postinstall": "node node_modules/phantomjs-prebuilt/install.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LIICornell/rio.git"
+    "url": "git+https://github.com/ambirdsall/lawfetcher.git"
   },
   "author": "Alex Birdsall & Peter W. Martin",
   "license": "MIT",
