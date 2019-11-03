@@ -1,26 +1,26 @@
-const each                 = require(`lodash/each`)
-const urlDecode            = require(`../functions/urlHelpers`).urlDecode
-const Clipboard            = require(`clipboard`)
-const clipboard            = new Clipboard(`.js-clipboard`)
-const Source               = require(`../types/source`)
-const Citation             = require(`../types/citation`)
-const sourceList           = require(`../data/source_list`)
+import { each } from 'lodash-es'
+import Clipboard from 'clipboard'
 
-const encodedQuery         = window.location.search.slice(1)
-const originalCitation     = urlDecode(encodedQuery)
+import { urlDecode } from '../functions'
+import { Source, Citation } from '../types'
+import { sources } from '../data'
 
-const $freeSources         = $(`#source-list--free`)
-const $subscriptionSources = $(`#source-list--subscription`)
-const $title               = $("#title")
-const $permalink           = $(`#permalink__text`)
-const tooltipText          = `Copy to Clipboard`
+const clipboard        = new Clipboard(`.js-clipboard`)
+const encodedQuery     = window.location.search.slice(1)
+const originalCitation = urlDecode(encodedQuery)
+const tooltipText      = 'Copy to Clipboard'
+
+const $freeSources         = $('#source-list--free')
+const $subscriptionSources = $('#source-list--subscription')
+const $title               = $('#title')
+const $permalink           = $('#permalink__text')
 
 // Set up the rest of the page
 $title.text(originalCitation)
 $permalink.val(window.location.href)
 
 // build links and link elements for every relevant source
-each(sourceList, (source) => {
+each(sources, (source) => {
   const currentSource = Source(source)
   const typedCite = Citation.from(originalCitation)
 

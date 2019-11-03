@@ -1,5 +1,5 @@
-const after = require(`./after`)
+import { after } from '.'
 
-module.exports = function pipeline(...fns) {
+export default function pipeline(...fns) {
   return fns.reduce((acc, fn) => after(acc, fn))
 }

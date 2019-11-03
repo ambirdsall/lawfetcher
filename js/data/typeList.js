@@ -1,14 +1,15 @@
-const head                   = require(`lodash/head`)
-const captureGroup           = require(`../utils/captureGroup`)
-const curry                  = require(`../utils/curry`)
-const matchAnyOf             = require(`../utils/matchAnyOf`)
-const matchAllOf             = require(`../utils/matchAllOf`)
-const anyStateAbbreviation   = matchAnyOf.apply(null, require(`./state_abbreviations`))
-const anyFederalCaseReporter = matchAnyOf.apply(null, require(`./federal_case_reporters`))
+import { head } from 'lodash-es'
+
+import { captureGroup, curry, matchAnyOf, matchAllOf } from '../utils'
+import { stateAbbreviations, federalCaseReporters } from '../data'
+
+// TODO use normal fn call syntax, as `const anyStateAbbreviation = matchAnyOf(stateAbbreviations)`
+const anyStateAbbreviation   = matchAnyOf.apply(null, stateAbbreviations)
+const anyFederalCaseReporter = matchAnyOf.apply(null, federalCaseReporters)
 const fedRuleNumberWithJump  = curry(federalRuleNumber)(true)
 const fedRuleNumber          = curry(federalRuleNumber)(false)
 
-module.exports = [
+export default [
   { typeId:          `us_constitution`//{{{
   , idPattern:       /U\.?S\.? Const/i
   , mainCitePattern: /(.+), cl\./
@@ -155,7 +156,7 @@ function federalRuleNumber(withJumpCite, citeText) {
                   )
   let ruleNumberMatch
 
-  if ( ruleNumberMatch = citeText.match(matcher) ) return head(ruleNumberMatch)
+  if ( (ruleNumberMatch = citeText.match(matcher)) ) return head(ruleNumberMatch)
 }
 
 // vim:foldmethod=marker:foldmarker={{{,}}}:foldlevel=0:foldopen=:foldclose=

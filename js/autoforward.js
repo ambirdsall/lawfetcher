@@ -1,6 +1,6 @@
-const localforage = require(`localforage`)
+import * as localforage from 'localforage'
 
-localforage.getItem(`autoforward`, (err, value) => {
+localforage.getItem('autoforward', (err, value) => {
   if (err) {
     console.log(err)
   } else {
@@ -9,17 +9,17 @@ localforage.getItem(`autoforward`, (err, value) => {
       // the removeItem success callback should ice the button with a nice
       // jQuery fade out
     if (value) {
-      $(`.center-column`)
-        .append($(`<button></button>`)
-          .addClass(`btn btn-danger center-block`)
-          .attr(`id`, `autoforward-remover`)
-          .html(`Remove Autoforwarding`)
+      $('.center-column')
+        .append($('<button></button>')
+          .addClass('btn btn-danger center-block')
+          .attr('id', 'autoforward-remover')
+          .html('Remove Autoforwarding')
           .click((e) => {
-            localforage.removeItem(`autoforward`, (err) => {
+            localforage.removeItem('autoforward', (err) => {
               if (err) {
                 console.log(err)
               } else {
-                $(`#autoforward-remover`).removeClass(`btn-danger`).addClass(`btn-success`).fadeOut()
+                $('#autoforward-remover').removeClass('btn-danger').addClass('btn-success').fadeOut()
               }
             })
           }))

@@ -1,8 +1,7 @@
-const requireFields = require(`../utils/requireFields`)
-const after         = require(`../utils/after`)
-const extend        = require(`../utils/extend`)
-const includes      = require(`lodash/includes`)
-const genericUrl    = require(`../functions/genericUrl`)
+import { includes } from 'lodash-es'
+
+import { requireFields, after, extend } from '../utils'
+import { genericUrl } from '../functions'
 
 function Source(config) {
   if (! (this instanceof Source)) return new Source(config)
@@ -41,4 +40,4 @@ extend(Source.prototype, {
   }
 })
 
-module.exports = Source
+export default Source

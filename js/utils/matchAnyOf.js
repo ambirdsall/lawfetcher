@@ -1,19 +1,5 @@
-const reduce       = require(`lodash/reduce`)
-const escapeRegExp = require(`./escapeRegExp`)
-
-// Takes any number of strings or regexes as arguments
-// Returns a new regex pattern which matches any of its arguments
-//
-// Note: because of the way the regular expressions get combined, flags are
-// discarded. The main annoyance this causes is with case-sensitivity: because
-// it's impossible to give flags to only one sub-pattern, case-insensitive
-// matches have to be specified for each individual letter, as:
-//    /[Cc]ase [Ii]nsensitive/
-// or worse,
-//    /[Hh][Tt][Mm][Ll]/
-module.exports = function matchAnyOf(...list) {
-  return reduce(list, orCombiner, new NullPattern())
-}
+import { reduce } from 'lodash-es'
+import { escapeRegExp } from '.'
 
 function orCombiner(acc, pattern) {
   let next
@@ -50,3 +36,17 @@ function orCombiner(acc, pattern) {
 // So NullPattern is just a semantic name to feed `instanceof` to provide an
 // escape hatch for an edge case.
 function NullPattern(){}
+
+// Takes any number of strings or regexes as arguments
+// Returns a new regex pattern which matches any of its arguments
+//
+// Note: because of the way the regular expressions get combined, flags are
+// discarded. The main annoyance this causes is with case-sensitivity: because
+// it's impossible to give flags to only one sub-pattern, case-insensitive
+// matches have to be specified for each individual letter, as:
+//    /[Cc]ase [Ii]nsensitive/
+// or worse,
+//    /[Hh][Tt][Mm][Ll]/
+export default function matchAnyOf(...list) {
+  return reduce(list, orCombiner, new NullPattern())
+}

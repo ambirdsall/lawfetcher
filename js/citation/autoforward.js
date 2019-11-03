@@ -1,29 +1,11 @@
-  /*\
-  |*|  CONTENTS
-  |*|
-  |*|  1) Variable and function definitions
-  |*|  2) Check for valid autoforwarding preference
-  |*|  3) Autoforwarding logic for valid preferences
-  |*|  4) Logic for invalid (i.e. expired) preferences:
-  |*|       * substitute the appropriate source name for {{source}}
-  |*|       * reveal reconfirm/dismiss alert box
-  |*|  5) Add event handlers to buttons
-  \*/
+import localforage from 'localforage'
 
-
-
-
-/**********************************************************************\
-   1) Variable and function definitions
-\**********************************************************************/
-
-const localforage                      = require(`localforage`)
-const ONE_DAY                          = 86400000 // in milliseconds
-const EXPIRATION_INTERVAL_MILLISECONDS = 7 * ONE_DAY
-const buttonText                       = { notSet: `Always use<br>this source?`
-                                         , isSet: `Disable<br>Autoforward`
-                                         }
-const $reconfirmDialogue               = $(`#reconfirm-expired-autoforward`)
+const ONE_DAY             = 86400000 // in milliseconds
+const EXPIRATION_INTERVAL = 7 * ONE_DAY
+const buttonText          = { notSet: 'Always use<br>this source?'
+                            , isSet: 'Disable<br>Autoforward'
+                            }
+const $reconfirmDialogue  = $('#reconfirm-expired-autoforward')
 
 // `isValid()` is a method of the `preferenceSetting` object. However, defining
 // it as a property of `preferenceSetting` can cause errors when cloning the
@@ -36,11 +18,11 @@ function isValid() {
   const now            = new Date()
   const timeDifference = now.getTime() - this.timeSet.getTime()
 
-  return timeDifference < EXPIRATION_INTERVAL_MILLISECONDS
+  return timeDifference < EXPIRATION_INTERVAL
 }
 
 function setPreference($button) {
-  const linkId = $button.attr(`id`)
+  const linkId = $button.attr('id')
   // the terminal [0] accesses the matching string, setting `sourceName` to the
   // actual matching service identifier, rather than the match array holding it.
   const sourceName = ( linkId.match(/lexis/) || linkId.match(/westlaw/) )[0]
@@ -48,24 +30,24 @@ function setPreference($button) {
                             , timeSet: new Date() // "Set" here is a past participle
                             }
 
-  localforage.setItem(`autoforward`, preferenceSetting, (err, preference) => {
+  localforage.setItem('autoforward', preferenceSetting, (err, preference) => {
     if ( err ) {
       console.log(err)
     } else {
       $button.html(buttonText.isSet)
-             .addClass(`btn-warning  js-isPreference`)
-             .removeClass(`btn-default`)
+             .addClass('btn-warning  js-isPreference')
+             .removeClass('btn-default')
     }
   })
 }
 function unsetPreference($button) {
-  localforage.removeItem(`autoforward`, (err) => {
+  localforage.removeItem('autoforward', (err) => {
     if ( err ) {
       console.log(err)
     } else {
       $button.html(buttonText.notSet)
-             .removeClass(`js-isPreference  btn-warning`)
-             .addClass(`btn-default`)
+             .removeClass('js-isPreference  btn-warning')
+             .addClass('btn-default')
     }
   })
 }
@@ -86,57 +68,43 @@ function displayAlert($button) {
   $button.parent().parent().after($alert)
 }
 function removeAlert() {
-  $(`.alert`).remove()
+  $('.alert').remove()
 }
 
-
-/**********************************************************************\
-   2) Check for valid autoforward preference
-\**********************************************************************/
-localforage.getItem(`autoforward`, (err, preference) => {
+// Handle autoforward preference, if any
+localforage.getItem('autoforward', (err, preference) => {
   if ( err ) {
     console.log(err)
 
-  /**********************************************************************\
-      3) Autoforwarding logic for valid preferences
-  \**********************************************************************/
+    // Autoforwarding logic for valid preferences
   } else if ( preference && isValid.call(preference) ) {
     const linkToPreferredService = $(`#link--${preference.sourceName}__a`)
-    window.location.href = linkToPreferredService.attr(`href`)
+    window.location.href = linkToPreferredService.attr('href')
 
-  /**********************************************************************\
-      4) Logic for invalid (i.e. expired) preferences
-  \**********************************************************************/
+    // Logic for invalid (i.e. expired) preferences
   } else if ( preference ) {
-
-    /********************************************************************\
-        * substitute the appropriate source name for {{source}}
-    \********************************************************************/
+    // substitute the appropriate source name for {{source}}
     const $linkTitle = $(`#link--${preference.sourceName}__title`)
     const serviceName = $linkTitle.text()
-    const $reconfirmTemplate = $(`.js-reconfirm__template`)
+    const $reconfirmTemplate = $('.js-reconfirm__template')
 
+    // TODO: is `this` being set correctly here?
     $reconfirmTemplate.each(() => {
       const $this = $(this)
 
       $this.text($this.text().replace(/\{\{source\}\}/g, serviceName))
     })
 
-    /********************************************************************\
-        * reveal reconfirm/dismiss alert box
-    \********************************************************************/
+    // reveal reconfirm/dismiss alert box
     $reconfirmDialogue.show()
   }
 })
 
-
-/**********************************************************************\
-   5) Add event handlers to buttons
-\**********************************************************************/
-$(`.autoforward__btn`).click((e) => {
+// wire up the buttons
+$('.autoforward__btn').click((e) => {
   const $this = $(this)
 
-  if ( $this.hasClass(`js-isPreference`) ) {
+  if ( $this.hasClass('js-isPreference') ) {
     unsetPreference($this)
     removeAlert()
   } else {
@@ -145,27 +113,27 @@ $(`.autoforward__btn`).click((e) => {
   }
 })
 
-$(`#js-reconfirm-autoforward`).click((e) => {
+$('#js-reconfirm-autoforward').click((e) => {
   const $this = $(this)
 
-  localforage.getItem(`autoforward`, (err, preference) => {
+  localforage.getItem('autoforward', (err, preference) => {
     if ( err ) {
       console.log(err)
     } else {
       preference.timeSet = new Date()
-      localforage.setItem(`autoforward`, preference, (err, preference) => {
+      localforage.setItem('autoforward', preference, (err, preference) => {
         $reconfirmDialogue.hide()
       })
     }
   })
   // at least visibly, setPreference on the other one
-  $(`#reconfirm-expired-autoforward`).hide()
+  $('#reconfirm-expired-autoforward').hide()
 });
 
-$(`#js-delete-autoforward`).click((e) => {
+$('#js-delete-autoforward').click((e) => {
   const $this = $(this)
 
   unsetPreference($this)
   // at least visibly, setPreference on the other one
-  $(`#reconfirm-expired-autoforward`).hide()
+  $('#reconfirm-expired-autoforward').hide()
 })
