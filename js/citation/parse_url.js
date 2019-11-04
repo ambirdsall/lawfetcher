@@ -7,7 +7,7 @@ import { sources } from '../data'
 import { handleAutoforwardPreference } from './autoforward'
 
 const clipboard        = new Clipboard(`.js-clipboard`)
-const encodedQuery     = window.location.search.slice(1)
+const encodedQuery     = window.location.hash.slice(1)
 const originalCitation = urlDecode(encodedQuery)
 const tooltipText      = 'Copy to Clipboard'
 
