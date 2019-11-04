@@ -6,5 +6,5 @@
 export default function compose(fn1, fn2, thisArg) {
   thisArg = thisArg || this
 
-  return () => fn2.call(thisArg, fn1.apply(thisArg, arguments))
+  return function() { return fn2.call(thisArg, fn1.apply(thisArg, arguments)) }
 }

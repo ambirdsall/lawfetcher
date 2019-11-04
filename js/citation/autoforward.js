@@ -87,8 +87,7 @@ export function handleAutoforwardPreference() {
       const serviceName = $linkTitle.text()
       const $reconfirmTemplate = $('.js-reconfirm__template')
 
-      // TODO: is `this` being set correctly here?
-      $reconfirmTemplate.each(() => {
+      $reconfirmTemplate.each(function() {
         const $this = $(this)
 
         $this.text($this.text().replace(/\{\{source\}\}/g, serviceName))
