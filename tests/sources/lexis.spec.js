@@ -1,14 +1,16 @@
-const _           = require(`lodash`)
-const Source      = require(`../../js/types/source`)
-const Citation    = require(`../../js/types/citation`)
-const lexisConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Lexis`)
+import { difference, isFunction, find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const lexisConfig = find(sources, (source) => source.name === `Lexis`)
 const lexis       = new Source(lexisConfig)
-const types       = require(`../../js/data/type_list`)
-const testCases   = require(`../data/test_cases`)
-const H           = require(`./source.spec.helpers`)
-const getUrls     = H.getUrls(lexis, types)
-const replaceEach = H.replaceEach
-const findType    = H.findType(types)
+const getUrls     = getUrls(lexis, citationTypes)
+const findType    = findType(citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Lexis`, () => {
@@ -17,7 +19,7 @@ describe(`Lexis`, () => {
   })
 
   it(`has the expected _typeSpecificUrls`, () => {
-    var allTypes = types.map(function(t) { return t.name })
+    var allTypes = citationTypes.map(function(t) { return t.name })
       , expectedTSTs = [
           `frap`
         , `frcp`
@@ -26,9 +28,9 @@ describe(`Lexis`, () => {
         , `fre`
         , `default`
         ]
-      , lexisTSTs = allTypes.filter(function(typeName) { lexis.hasOwnProperty(typeName) && _.isFunction(lexis[typeName]) })
+      , lexisTSTs = allTypes.filter(function(typeName) { lexis.hasOwnProperty(typeName) && isFunction(lexis[typeName]) })
 
-    expect(_.difference(lexisTSTs, expectedTSTs)).toEqual([])
+    expect(difference(lexisTSTs, expectedTSTs)).toEqual([])
   })
 
   describe(`Unhandled citation types`, () => {
@@ -53,7 +55,7 @@ describe(`Lexis`, () => {
   it(`makes the proper url for a Code of Federal Regulations citation`, () => {
     const citations  = testCases.cfr.all
     const results    = getUrls(citations, `cfr`)
-    const properUrls = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -72,7 +74,7 @@ describe(`Lexis`, () => {
     const citations               = testCases.uniform_commercial_code.all
     const results                 = getUrls(citations, `uniform_commercial_code`)
     const uniform_commercial_code = findType(`uniform_commercial_code`)
-    const properUrls              = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, uniform_commercial_code).fullCite)}`)
+    const properUrls              = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, uniform_commercial_code).fullCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -81,7 +83,7 @@ describe(`Lexis`, () => {
     const citations   = testCases.wl_database.all
     const results     = getUrls(citations, `wl_database`)
     const wl_database = findType(`wl_database`)
-    const properUrls  = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, wl_database).fullCite)}`)
+    const properUrls  = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, wl_database).fullCite)}`)
 
     expect(lexis.canHandle(`wl_database`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -91,7 +93,7 @@ describe(`Lexis`, () => {
     const citations         = testCases.statutes_at_large.all
     const results           = getUrls(citations, `statutes_at_large`)
     const statutes_at_large = findType(`statutes_at_large`)
-    const properUrls        = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, statutes_at_large).fullCite)}`)
+    const properUrls        = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, statutes_at_large).fullCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -100,7 +102,7 @@ describe(`Lexis`, () => {
     const citations        = testCases.federal_register.all
     const results          = getUrls(citations, `federal_register`)
     const federal_register = findType(`federal_register`)
-    const properUrls       = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, federal_register).fullCite)}`)
+    const properUrls       = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, federal_register).fullCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -108,7 +110,7 @@ describe(`Lexis`, () => {
   it(`makes the proper url for a Federal Rule of Appellate Procedure citation`, () => {
     const citations  = testCases.frap.all
     const results    = getUrls(citations, `frap`)
-    const properUrls = _.map(citations, (cite) => `${lexis.baseUrl}frap%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frap%20${H.federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -117,7 +119,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.frcrmp.all
     const results    = getUrls(citations, `frcrmp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcrmp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${lexis.baseUrl}frcrp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frcrp%20${H.federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -126,7 +128,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.frcp.all
     const results    = getUrls(citations, `frcp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${lexis.baseUrl}frcp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frcp%20${H.federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -135,7 +137,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.fre.all
     const results    = getUrls(citations, `fre`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, fre).mainCite)
-    const properUrls = _.map(citations, (cite) => `${lexis.baseUrl}fre%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}fre%20${H.federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -144,7 +146,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.frbp.all
     const results    = getUrls(citations, `frbp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frbp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${lexis.baseUrl}frbp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frbp%20${H.federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -153,7 +155,7 @@ describe(`Lexis`, () => {
     const citations    = testCases.federal_case.all
     const results      = getUrls(citations, `federal_case`)
     const federal_case = findType(`federal_case`)
-    const properUrls   = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, federal_case).fullCite)}`)
+    const properUrls   = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, federal_case).fullCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -162,7 +164,7 @@ describe(`Lexis`, () => {
     const citations          = testCases.state_constitution.all
     const results            = getUrls(citations, `state_constitution`)
     const state_constitution = findType(`state_constitution`)
-    const properUrls         = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, state_constitution).fullCite)}`)
+    const properUrls         = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, state_constitution).fullCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -171,7 +173,7 @@ describe(`Lexis`, () => {
     const citations   = testCases.law_journal.all
     const results     = getUrls(citations, `law_journal`)
     const law_journal = findType(`law_journal`)
-    const properUrls  = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, law_journal).mainCite)}`)
+    const properUrls  = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, law_journal).mainCite)}`)
 
     expect(lexis.canHandle(`law_journal`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -181,7 +183,7 @@ describe(`Lexis`, () => {
     const citations             = testCases.law_statute_code_rule.all
     const results               = getUrls(citations, `law_statute_code_rule`)
     const law_statute_code_rule = findType(`law_statute_code_rule`)
-    const properUrls            = _.map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).fullCite)}`)
+    const properUrls            = map(citations, (cite) => `${lexis.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).fullCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -189,7 +191,7 @@ describe(`Lexis`, () => {
   it(`makes the correct url for a docket number citation`, () => {
     const docketNumbers = testCases.docket_number.all
     const results       = getUrls(docketNumbers, `docket_number`)
-    const properUrls    = _.map(docketNumbers, cite => `${lexis.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls    = map(docketNumbers, cite => `${lexis.baseUrl}"${urlEncode(cite)}"`)
 
     expect(lexis.canHandle(`docket_number`)).toBe(true)
     expect(results).toEqual(properUrls)

@@ -1,6 +1,6 @@
-const _      = require(`lodash`)
-const Source = require(`../js/types/source`)
-const extend = require(`../js/utils/extend`)
+import { each, map } from 'lodash-es'
+import { Source } from '../js/types'
+import { extend } from '../js/utils'
 
 describe(`A source`, () => {
   const fooCitation = {
@@ -20,7 +20,7 @@ describe(`A source`, () => {
   it(`requires its config object to have certain fields`, () => {
     const required = [`name`, `baseUrl`, `_deepLinkableTypes`, `$anchor`, `_cannot`]
     // each member of invalidConfigs is missing a single required field
-    const invalidConfigs = _.map(required, (field) => {
+    const invalidConfigs = map(required, (field) => {
             let invalid = extend({}, generic)
             delete invalid[field]
             return invalid
@@ -28,7 +28,7 @@ describe(`A source`, () => {
     const instantiateWith = (config) => Source(config)
     const instantiatingValid = instantiateWith.bind(this, generic)
 
-    _.each(invalidConfigs, (invalid) => {
+    each(invalidConfigs, (invalid) => {
       const instantiatingInvalid = instantiateWith.bind(this, invalid)
 
       expect(instantiatingInvalid).toThrow()

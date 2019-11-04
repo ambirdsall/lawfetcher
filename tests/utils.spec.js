@@ -1,13 +1,23 @@
-describe(`The utils object`, () => {
-  const U = require(`../js/utils`)
+import {
+  compose,
+  captureGroup,
+  curry,
+  escapeRegExp,
+  extend,
+  matchAllOf,
+  matchAnyOf,
+  pipeline,
+  requiredFields
+} from '../js/utils'
 
+describe(`The utils object`, () => {
   describe(`extend function`, () => {
     it(`adds properties of all subsequent arguments to its first argument`, () => {
       let baseObj    = {old: true}
       const mixinOne = {new: true}
       const mixinTwo = {newer: true}
 
-      U.extend(baseObj, mixinOne, mixinTwo)
+      extend(baseObj, mixinOne, mixinTwo)
 
       expect(baseObj).toEqual({old: true, new: true, newer: true})
     })
@@ -17,23 +27,23 @@ describe(`The utils object`, () => {
       const mixinOne = {new: true}
       const mixinTwo = {new: `very true`}
 
-      U.extend(baseObj, mixinOne)
+      extend(baseObj, mixinOne)
       expect(baseObj).toEqual({old: true, new: true})
 
-      U.extend(baseObj, mixinTwo)
+      extend(baseObj, mixinTwo)
       expect(baseObj).toEqual({old: true, new: `very true`})
     })
   })
   describe(`escapeRegExp function`, () => {
     it(`escapes special characters for regex`, () => {
-      expect(U.escapeRegExp(`?`)).toBe(`\\?`)
+      expect(escapeRegExp(`?`)).toBe(`\\?`)
     })
   })
-  describe(`after function`, () => {
+  describe(`compose function`, () => {
     it(`can compose two functions`, () => {
       const f = function addThree(x) { return x + 3 }
       const g = function timesTwo(y) { return y * 2 }
-      const effOfGee = U.after(g, f).call(this, 0)
+      const effOfGee = compose(g, f).call(this, 0)
 
       expect(effOfGee).toBe( f(g(0)) )
       expect(effOfGee).not.toBe( g(f(0)) )
@@ -43,7 +53,7 @@ describe(`The utils object`, () => {
     it(`can compose several functions`, () => {
       const add5    = n => n + 5
       const times10 = n => n * 10
-      const pl      = U.pipeline(add5, times10, Math.sqrt)
+      const pl      = pipeline(add5, times10, Math.sqrt)
 
       expect(pl(5)).toBe(10)
     })
@@ -51,13 +61,13 @@ describe(`The utils object`, () => {
   describe(`curry function`, () => {
     it(`takes a function and returns a logically equivalent function`, () => {
       const add    = function add(x, y) { return x + y }
-      const newAdd = U.curry(add)
+      const newAdd = curry(add)
 
       expect(newAdd(1, 5)).toEqual(add(1, 5))
     })
 
     it(`lets you "pre-fill" arguments to the new function`, () => {
-      const newAdd = U.curry(function add(x, y) { return x + y })
+      const newAdd = curry(function add(x, y) { return x + y })
       const addOne = newAdd(1)
 
       expect(addOne(5)).toEqual(6)
@@ -68,17 +78,17 @@ describe(`The utils object`, () => {
       const a_and_b       = {a: 1, b: 2}
       const a_and_b_and_c = {a: 1, b: 2, c: null}
 
-      expect(U.requireFields(a_and_b, `a`, `b`)).toBe(true)
-      expect(U.requireFields(a_and_b_and_c, `a`, `b`, `c`)).toBe(true)
+      expect(requireFields(a_and_b, `a`, `b`)).toBe(true)
+      expect(requireFields(a_and_b_and_c, `a`, `b`, `c`)).toBe(true)
     })
 
     it(`throws an exception if the object is missing any of the specified keys`, () => {
       // camelCase is much harder to read with single-letter "words"
       const a_and_b              = {a: 1, b: 2}
       const a_and_b_and_c        = {a: 1, b: 2, c: null}
-      const callWithMissingField = U.requireFields.bind(this, a_and_b, `a`, `b`, `c`)
-      const callWithOneField     = U.requireFields.bind(this, a_and_b, `a`)
-      const callWithAllFields    = U.requireFields.bind(this, a_and_b_and_c, `a`, `b`, `c`)
+      const callWithMissingField = requireFields.bind(this, a_and_b, `a`, `b`, `c`)
+      const callWithOneField     = requireFields.bind(this, a_and_b, `a`)
+      const callWithAllFields    = requireFields.bind(this, a_and_b_and_c, `a`, `b`, `c`)
 
       expect(callWithMissingField).toThrow()
       expect(callWithOneField).not.toThrow()
@@ -89,35 +99,35 @@ describe(`The utils object`, () => {
       const a_and_b       = {a: undefined, b: 2}
       const a_and_b_and_c = {a: 1, b: 2, c: null}
 
-      expect(U.requireFields(a_and_b, `a`)).toBe(true)
-      expect(U.requireFields(a_and_b_and_c, `c`)).toBe(true)
+      expect(requireFields(a_and_b, `a`)).toBe(true)
+      expect(requireFields(a_and_b_and_c, `c`)).toBe(true)
     })
   })
   describe(`matchAnyOf function`, () => {
     it(`can take regex arguments`, () => {
-      expect(U.matchAnyOf.bind(this, /foo/)).not.toThrow()
-      expect(U.matchAnyOf.bind(this, /foo/, /bar/)).not.toThrow()
+      expect(matchAnyOf.bind(this, /foo/)).not.toThrow()
+      expect(matchAnyOf.bind(this, /foo/, /bar/)).not.toThrow()
     })
 
     it(`can take string arguments`, () => {
-      expect(U.matchAnyOf.bind(this, `foo`)).not.toThrow()
-      expect(U.matchAnyOf.bind(this, `foo`, `bar`)).not.toThrow()
+      expect(matchAnyOf.bind(this, `foo`)).not.toThrow()
+      expect(matchAnyOf.bind(this, `foo`, `bar`)).not.toThrow()
     })
 
     it(`or both!`, () => {
-      expect(U.matchAnyOf.bind(this, /foo/, `bar`)).not.toThrow()
+      expect(matchAnyOf.bind(this, /foo/, `bar`)).not.toThrow()
     })
 
     it(`nothing else, though`, () => {
-      expect(U.matchAnyOf.bind(this, 17, `even if some args are correct`)).toThrow()
+      expect(matchAnyOf.bind(this, 17, `even if some args are correct`)).toThrow()
     })
 
     it(`returns a regex`, () => {
-      expect(U.matchAnyOf(/foo/, `bar`)).toEqual(jasmine.any(RegExp))
+      expect(matchAnyOf(/foo/, `bar`)).toEqual(jasmine.any(RegExp))
     })
 
     it(`matches string arguments literally, not as regexes`, () => {
-      const pattern = U.matchAnyOf(`superm.*n`)//, `d[aeiou]nk`)
+      const pattern = matchAnyOf(`superm.*n`)//, `d[aeiou]nk`)
 
       expect(`superman`).not.toMatch(pattern)
       expect(`supermoon`).not.toMatch(pattern)
@@ -127,7 +137,7 @@ describe(`The utils object`, () => {
     })
 
     it(`matches anything one of its arguments matches`, () => {
-      const pattern = U.matchAnyOf(`bear`, /superm.*n/, `J.L. & Econ.`)
+      const pattern = matchAnyOf(`bear`, /superm.*n/, `J.L. & Econ.`)
 
       expect(`bear`).toMatch(pattern)
       expect(`superman`).toMatch(pattern)
@@ -137,30 +147,30 @@ describe(`The utils object`, () => {
   })
   describe(`matchAllOf function`, () => {
     it(`can take regex arguments`, () => {
-      expect(U.matchAllOf.bind(this, /foo/)).not.toThrow()
-      expect(U.matchAllOf.bind(this, /foo/, /bar/)).not.toThrow()
+      expect(matchAllOf.bind(this, /foo/)).not.toThrow()
+      expect(matchAllOf.bind(this, /foo/, /bar/)).not.toThrow()
     })
 
     it(`can take string arguments`, () => {
-      expect(U.matchAllOf.bind(this, `foo`)).not.toThrow()
-      expect(U.matchAllOf.bind(this, `foo`, `bar`)).not.toThrow()
+      expect(matchAllOf.bind(this, `foo`)).not.toThrow()
+      expect(matchAllOf.bind(this, `foo`, `bar`)).not.toThrow()
     })
 
     it(`or both!`, () => {
-      expect(U.matchAllOf.bind(this, /foo/, `bar`)).not.toThrow()
+      expect(matchAllOf.bind(this, /foo/, `bar`)).not.toThrow()
     })
 
     it(`nothing else, though`, () => {
-      expect(U.matchAllOf.bind(this, 17, `even if some args are correct`)).toThrow()
+      expect(matchAllOf.bind(this, 17, `even if some args are correct`)).toThrow()
     })
 
     it(`returns a regex`, () => {
-      expect(U.matchAllOf(/foo/, `bar`)).toEqual(jasmine.any(RegExp))
+      expect(matchAllOf(/foo/, `bar`)).toEqual(jasmine.any(RegExp))
     })
 
     it(`matches string arguments literally, not as regexes`, () => {
-      const wildcardPattern       = U.matchAllOf(`superm.*n`)
-      const characterClassPattern = U.matchAllOf(`d[aeiou]nk`)
+      const wildcardPattern       = matchAllOf(`superm.*n`)
+      const characterClassPattern = matchAllOf(`d[aeiou]nk`)
 
       expect(`superman`).not.toMatch(wildcardPattern)
       expect(`supermoon`).not.toMatch(wildcardPattern)
@@ -170,7 +180,7 @@ describe(`The utils object`, () => {
     })
 
     it(`only matches if all of its arguments are matched, in order`, () => {
-      const patternOne = U.matchAllOf(`bear`, /superm.*n/, `J.L. & Econ.`)
+      const patternOne = matchAllOf(`bear`, /superm.*n/, `J.L. & Econ.`)
 
       expect(`bear`).not.toMatch(patternOne)
       expect(`superman`).not.toMatch(patternOne)
@@ -180,7 +190,7 @@ describe(`The utils object`, () => {
       expect(`bearsupermanJ.L. & Econ.`).toMatch(patternOne)
       expect(`bearsupermodulationJ.L. & Econ.`).toMatch(patternOne)
 
-      const patternTwo = U.matchAllOf(`my `, /[Nn]ative /, U.matchAnyOf(`language`, `country`, `app`))
+      const patternTwo = matchAllOf(`my `, /[Nn]ative /, matchAnyOf(`language`, `country`, `app`))
 
       expect(`my `).not.toMatch(patternTwo)
       expect(`my native `).not.toMatch(patternTwo)
@@ -194,22 +204,22 @@ describe(`The utils object`, () => {
   })
   describe(`captureGroup function`, () => {
     it(`returns the substring matching the pattern's capture group`, () => {
-      expect(U.captureGroup(/foo (b.r)/, `foo bar`)).toEqual(`bar`)
+      expect(captureGroup(/foo (b.r)/, `foo bar`)).toEqual(`bar`)
     })
 
     it(`returns null if the string doesn't match the pattern's capture group`, () => {
-      expect(U.captureGroup(/foo (b.r)/, `foo bear`)).toEqual(null)
-      expect(U.captureGroup(/foo (b.r)/, `foo bar`)).not.toEqual(null)
+      expect(captureGroup(/foo (b.r)/, `foo bear`)).toEqual(null)
+      expect(captureGroup(/foo (b.r)/, `foo bar`)).not.toEqual(null)
     })
 
     describe(`optional capture group number argument`, () => {
       it(`returns the first capture group's match by default`, () => {
-        expect(U.captureGroup(/(foo) (b.r)/, `foo bar`)).toBe(`foo`)
+        expect(captureGroup(/(foo) (b.r)/, `foo bar`)).toBe(`foo`)
       })
 
       it(`uses 1-based indexing for capture group numbers`, () => {
-        expect(U.captureGroup(/(foo) (b.r)/, `foo bar`, 1)).toBe(`foo`)
-        expect(U.captureGroup(/(foo) (b.r)/, `foo bar`, 2)).toBe(`bar`)
+        expect(captureGroup(/(foo) (b.r)/, `foo bar`, 1)).toBe(`foo`)
+        expect(captureGroup(/(foo) (b.r)/, `foo bar`, 2)).toBe(`bar`)
       })
     })
   })

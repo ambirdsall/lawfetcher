@@ -1,14 +1,17 @@
-const _           = require(`lodash`)
-const Source      = require(`../../js/types/source`)
-const Citation    = require(`../../js/types/citation`)
-const ravelConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Ravel`)
+import { find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType,
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const ravelConfig = find(sources, (source) => source.name === `Ravel`)
 const ravel       = new Source(ravelConfig)
-const types       = require(`../../js/data/type_list`)
-const H           = require(`./source.spec.helpers`)
-const testCases   = require(`../data/test_cases`)
-const getUrls     = H.getUrls(ravel, types)
-const replaceEach = H.replaceEach
-const findType    = H.findType(types)
+const getUrls     = getUrls(ravel, citationTypes)
+const findType    = findType(citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Ravel`, () => {
@@ -76,7 +79,7 @@ describe(`Ravel`, () => {
   it(`makes the proper url for a Federal Rule of Appellate Procedure citation`, () => {
     const citations  = testCases.frap.all
     const results    = getUrls(citations, `frap`)
-    const properUrls = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
+    const properUrls = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -84,7 +87,7 @@ describe(`Ravel`, () => {
   it(`makes the proper url for a Federal Rule of Criminal Procedure citation`, () => {
     const citations  = testCases.frcrmp.all
     const results    = getUrls(citations, `frcrmp`)
-    const properUrls = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
+    const properUrls = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -92,7 +95,7 @@ describe(`Ravel`, () => {
   it(`makes the proper url for a Federal Rule of Civil Procedure citation`, () => {
     const citations  = testCases.frcp.all
     const results    = getUrls(citations, `frcp`)
-    const properUrls = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
+    const properUrls = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -100,7 +103,7 @@ describe(`Ravel`, () => {
   it(`makes the proper url for a Federal Rule of Evidence citation`, () => {
     const citations  = testCases.fre.all
     const results    = getUrls(citations, `fre`)
-    const properUrls = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
+    const properUrls = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -108,7 +111,7 @@ describe(`Ravel`, () => {
   it(`makes the proper url for a Federal Rule of Bankruptcy Procedure citation`, () => {
     const citations  = testCases.frbp.all
     const results    = getUrls(citations, `frbp`)
-    const properUrls = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
+    const properUrls = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -117,7 +120,7 @@ describe(`Ravel`, () => {
     const citations    = testCases.federal_case.all
     const results      = getUrls(citations, `federal_case`)
     const federal_case = findType(`federal_case`)
-    const properUrls   = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(Citation(cite, federal_case).mainCite)}`)
+    const properUrls   = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(Citation(cite, federal_case).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -126,7 +129,7 @@ describe(`Ravel`, () => {
     const citations          = testCases.state_constitution.all
     const results            = getUrls(citations, `state_constitution`)
     const state_constitution = findType(`state_constitution`)
-    const properUrls         = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(Citation(cite, state_constitution).mainCite)}`)
+    const properUrls         = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(Citation(cite, state_constitution).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -135,7 +138,7 @@ describe(`Ravel`, () => {
     const citations             = testCases.law_statute_code_rule.all
     const results               = getUrls(citations, `law_statute_code_rule`)
     const law_statute_code_rule = findType(`law_statute_code_rule`)
-    const properUrls            = _.map(citations, (cite) => `${ravel.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}`)
+    const properUrls            = map(citations, (cite) => `${ravel.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -143,7 +146,7 @@ describe(`Ravel`, () => {
   it(`makes the correct url for a docket number citation`, () => {
     const docketNumbers = testCases.docket_number.all
     const results       = getUrls(docketNumbers, `docket_number`)
-    const properUrls    = _.map(docketNumbers, cite => `${ravel.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls    = map(docketNumbers, cite => `${ravel.baseUrl}"${urlEncode(cite)}"`)
 
     expect(ravel.canHandle(`docket_number`)).toBe(true)
     expect(results).toEqual(properUrls)

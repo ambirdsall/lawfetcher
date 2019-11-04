@@ -1,6 +1,6 @@
-import { validateInput } from './functions'
-import { urlEncode } from './functions'
-import { cleanDoubleSections } from './functions'
+import { cleanDoubleSections, urlEncode, validateInput } from './functions'
+import { handleAutoforwardPreference } from './autoforward'
+
 const resultsBaseUrl = `${window.location.href}citation?`
 const $input         = $('#url-encoder__input')
 const $helpText      = $('#submit--input-validator-text')
@@ -25,3 +25,5 @@ function processForm(e) {
 // attach `processForm` to either way the button's liable to be triggered
 $('#url-encoder__form').submit(processForm)
 $('#submit').click(processForm)
+
+handleAutoforwardPreference()

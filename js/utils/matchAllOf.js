@@ -1,5 +1,5 @@
 import { reduce } from 'lodash-es'
-import { escapeRegExp } from '.'
+import escapeRegExp from './escapeRegExp'
 
 function andCombiner(acc, pattern) {
   let next

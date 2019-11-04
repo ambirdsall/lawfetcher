@@ -1,5 +1,4 @@
-// Karma configuration
-// Generated on Wed Oct 28 2015 23:29:05 GMT-0700 (PDT)
+process.env.CHROME_BIN = require('puppeteer').executablePath()
 
 module.exports = function(config) {
   config.set({
@@ -24,7 +23,7 @@ module.exports = function(config) {
   , reporters: ['dots']
   , colors: true
 
-  , browsers: ['PhantomJS']
+  , browsers: ['ChromeHeadless']
   , port: 9876
   , concurrency: Infinity
   })

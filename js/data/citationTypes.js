@@ -1,7 +1,8 @@
 import { head } from 'lodash-es'
 
 import { captureGroup, curry, matchAnyOf, matchAllOf } from '../utils'
-import { stateAbbreviations, federalCaseReporters } from '../data'
+import federalCaseReporters from './federalCaseReporters'
+import stateAbbreviations from './stateAbbreviations'
 
 // TODO use normal fn call syntax, as `const anyStateAbbreviation = matchAnyOf(stateAbbreviations)`
 const anyStateAbbreviation   = matchAnyOf.apply(null, stateAbbreviations)

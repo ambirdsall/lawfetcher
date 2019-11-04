@@ -1,6 +1,6 @@
 import { includes } from 'lodash-es'
 
-import { requireFields, after, extend } from '../utils'
+import { requireFields, compose, extend } from '../utils'
 import { genericUrl } from '../functions'
 
 function Source(config) {

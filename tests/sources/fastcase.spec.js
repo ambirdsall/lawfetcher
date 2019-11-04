@@ -1,13 +1,15 @@
-const _              = require(`lodash`)
-const Source         = require(`../../js/types/source`)
-const Citation       = require(`../../js/types/citation`)
-const fastcaseConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Fastcase`)
+import { difference, isFunction, find } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const fastcaseConfig = find(sources, (source) => source.name === `Fastcase`)
 const fastcase       = new Source(fastcaseConfig)
-const types          = require(`../../js/data/type_list`)
-const testCases      = require(`../data/test_cases`)
-const H              = require(`./source.spec.helpers`)
-const getUrls        = H.getUrls(fastcase, types)
-const replaceEach    = H.replaceEach
+const getUrls        = makeGetUrls(fastcase, citationTypes)
 const urlEncode      = window.encodeURIComponent
 
 describe(`Fastcase Search`, () => {
@@ -16,11 +18,11 @@ describe(`Fastcase Search`, () => {
   })
 
   it(`has the expected _typeSpecificUrls`, () => {
-    var allTypes = types.map(function(t) { return t.typeId })
+    var allTypes = citationTypes.map(t => t.typeId)
       , expectedTSTs = [`federal_case`]
-      , fastcaseTSTs = allTypes.filter(function(typeName) { fastcase.hasOwnProperty(typeName) && _.isFunction(fastcase[typeName]) })
+      , fastcaseTSTs = allTypes.filter(typeName => fastcase.hasOwnProperty(typeName) && isFunction(fastcase[typeName]))
 
-    expect(_.difference(fastcaseTSTs, expectedTSTs)).toEqual([])
+    expect(difference(fastcaseTSTs, expectedTSTs)).toEqual([])
   })
 
   describe(`Unhandled citation types`, () => {

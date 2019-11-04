@@ -4,6 +4,7 @@ import Clipboard from 'clipboard'
 import { urlDecode } from '../functions'
 import { Source, Citation } from '../types'
 import { sources } from '../data'
+import { handleAutoforwardPreference } from './autoforward'
 
 const clipboard        = new Clipboard(`.js-clipboard`)
 const encodedQuery     = window.location.search.slice(1)
@@ -32,6 +33,9 @@ each(sources, (source) => {
   }
 })
 
+// if autoforwarding, handle that before setting up a UI you won't use
+handleAutoforwardPreference()
+
 // If no free sources can handle (i.e. a wl_database citation), remove that section entirely
 if ( $freeSources.find(`.list-group`).children().length === 0 ) {
   // Remove the free sources section
@@ -47,7 +51,7 @@ if ( $freeSources.find(`.list-group`).children().length === 0 ) {
 // is still potentially useful for a user who misses the (quite obvious) copy
 // button, and as a fallback for browsers like Safari that do not handle the
 // copy button.
-$permalink.mouseup(() => $(this).select() )
+$permalink.mouseup(function() { $(this).select() })
 
 if ( document.queryCommandSupported(`copy`) ) {
   // Replace permalink's static "I'm a link!" icon with tooltipped copy button

@@ -1,5 +1,3 @@
-import localforage from 'localforage'
-
 const ONE_DAY             = 86400000 // in milliseconds
 const EXPIRATION_INTERVAL = 7 * ONE_DAY
 const buttonText          = { notSet: 'Always use<br>this source?'
@@ -30,7 +28,7 @@ function setPreference($button) {
                             , timeSet: new Date() // "Set" here is a past participle
                             }
 
-  localforage.setItem('autoforward', preferenceSetting, (err, preference) => {
+  localStorage.setItem('autoforward', preferenceSetting, (err, preference) => {
     if ( err ) {
       console.log(err)
     } else {
@@ -41,7 +39,7 @@ function setPreference($button) {
   })
 }
 function unsetPreference($button) {
-  localforage.removeItem('autoforward', (err) => {
+  localStorage.removeItem('autoforward', (err) => {
     if ( err ) {
       console.log(err)
     } else {
@@ -71,69 +69,71 @@ function removeAlert() {
   $('.alert').remove()
 }
 
-// Handle autoforward preference, if any
-localforage.getItem('autoforward', (err, preference) => {
-  if ( err ) {
-    console.log(err)
-
-    // Autoforwarding logic for valid preferences
-  } else if ( preference && isValid.call(preference) ) {
-    const linkToPreferredService = $(`#link--${preference.sourceName}__a`)
-    window.location.href = linkToPreferredService.attr('href')
-
-    // Logic for invalid (i.e. expired) preferences
-  } else if ( preference ) {
-    // substitute the appropriate source name for {{source}}
-    const $linkTitle = $(`#link--${preference.sourceName}__title`)
-    const serviceName = $linkTitle.text()
-    const $reconfirmTemplate = $('.js-reconfirm__template')
-
-    // TODO: is `this` being set correctly here?
-    $reconfirmTemplate.each(() => {
-      const $this = $(this)
-
-      $this.text($this.text().replace(/\{\{source\}\}/g, serviceName))
-    })
-
-    // reveal reconfirm/dismiss alert box
-    $reconfirmDialogue.show()
-  }
-})
-
-// wire up the buttons
-$('.autoforward__btn').click((e) => {
-  const $this = $(this)
-
-  if ( $this.hasClass('js-isPreference') ) {
-    unsetPreference($this)
-    removeAlert()
-  } else {
-    setPreference($this)
-    displayAlert($this)
-  }
-})
-
-$('#js-reconfirm-autoforward').click((e) => {
-  const $this = $(this)
-
-  localforage.getItem('autoforward', (err, preference) => {
+export function handleAutoforwardPreference() {
+  // Handle autoforward preference, if any
+  localStorage.getItem('autoforward', (err, preference) => {
     if ( err ) {
       console.log(err)
-    } else {
-      preference.timeSet = new Date()
-      localforage.setItem('autoforward', preference, (err, preference) => {
-        $reconfirmDialogue.hide()
+
+      // Autoforwarding logic for valid preferences
+    } else if ( preference && isValid.call(preference) ) {
+      const linkToPreferredService = $(`#link--${preference.sourceName}__a`)
+      window.location.href = linkToPreferredService.attr('href')
+
+      // Logic for invalid (i.e. expired) preferences
+    } else if ( preference ) {
+      // substitute the appropriate source name for {{source}}
+      const $linkTitle = $(`#link--${preference.sourceName}__title`)
+      const serviceName = $linkTitle.text()
+      const $reconfirmTemplate = $('.js-reconfirm__template')
+
+      // TODO: is `this` being set correctly here?
+      $reconfirmTemplate.each(() => {
+        const $this = $(this)
+
+        $this.text($this.text().replace(/\{\{source\}\}/g, serviceName))
       })
+
+      // reveal reconfirm/dismiss alert box
+      $reconfirmDialogue.show()
     }
   })
-  // at least visibly, setPreference on the other one
-  $('#reconfirm-expired-autoforward').hide()
-});
 
-$('#js-delete-autoforward').click((e) => {
-  const $this = $(this)
+  // wire up the buttons
+  $('.autoforward__btn').click((e) => {
+    const $this = $(this)
 
-  unsetPreference($this)
-  // at least visibly, setPreference on the other one
-  $('#reconfirm-expired-autoforward').hide()
-})
+    if ( $this.hasClass('js-isPreference') ) {
+      unsetPreference($this)
+      removeAlert()
+    } else {
+      setPreference($this)
+      displayAlert($this)
+    }
+  })
+
+  $('#js-reconfirm-autoforward').click((e) => {
+    const $this = $(this)
+
+    localStorage.getItem('autoforward', (err, preference) => {
+      if ( err ) {
+        console.log(err)
+      } else {
+        preference.timeSet = new Date()
+        localStorage.setItem('autoforward', preference, (err, preference) => {
+          $reconfirmDialogue.hide()
+        })
+      }
+    })
+    // at least visibly, setPreference on the other one
+    $('#reconfirm-expired-autoforward').hide()
+  });
+
+  $('#js-delete-autoforward').click((e) => {
+    const $this = $(this)
+
+    unsetPreference($this)
+    // at least visibly, setPreference on the other one
+    $('#reconfirm-expired-autoforward').hide()
+  })
+}

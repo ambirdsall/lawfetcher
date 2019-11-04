@@ -1,13 +1,15 @@
-const _                   = require(`lodash`)
-const Source              = require(`../../js/types/source`)
-const Citation            = require(`../../js/types/citation`)
-const courtlistenerConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `CourtListener`)
+import { find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const courtlistenerConfig = find(sources, (source) => source.name === `CourtListener`)
 const courtlistener       = new Source(courtlistenerConfig)
-const types               = require(`../../js/data/type_list`)
-const testCases           = require(`../data/test_cases`)
-const H                   = require(`./source.spec.helpers`)
-const getUrls             = H.getUrls(courtlistener, types)
-const replaceEach         = H.replaceEach
+const getUrls             = makeGetUrls(courtlistener, citationTypes)
 const urlEncode           = window.encodeURIComponent
 
 describe(`CourtListener Search`, () => {
@@ -103,8 +105,8 @@ describe(`CourtListener Search`, () => {
   it(`makes the proper url for a Federal case citation`, () => {
     const citations   = testCases.federal_case.all
     const results     = getUrls(citations, `federal_case`)
-    const federalCase = _.find(types, (t) => t.typeId === `federal_case`)
-    const properUrls  = _.map(citations, (cite) => `${courtlistener.baseUrl}?citation=${urlEncode(Citation(cite, federalCase).mainCite)}`)
+    const federalCase = find(citationTypes, (t) => t.typeId === `federal_case`)
+    const properUrls  = map(citations, (cite) => `${courtlistener.baseUrl}?citation=${urlEncode(Citation(cite, federalCase).mainCite)}`)
 
     expect(courtlistener.canHandle(`federal_case`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -113,7 +115,7 @@ describe(`CourtListener Search`, () => {
   it(`makes the proper url for a docket number citation`, () => {
     const docketNumbers = testCases.docket_number.all
     // cite.slice(4) removes the "No. " from the beginning of the citation strings, leaving the raw docket number
-    const properUrls = _.map(docketNumbers, cite => `${courtlistener.baseUrl}?docket_number=${urlEncode(cite.slice(4))}`)
+    const properUrls = map(docketNumbers, cite => `${courtlistener.baseUrl}?docket_number=${urlEncode(cite.slice(4))}`)
 
     expect(courtlistener.canHandle(`docket_number`)).toBe(true)
     expect(getUrls(docketNumbers, `docket_number`)).toEqual(properUrls)

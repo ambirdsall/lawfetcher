@@ -1,9 +1,9 @@
-import { after } from '../utils'
+import { compose } from '../utils'
 
-export const urlEncode = after(window.encodeURIComponent, (encodedURIComponent) => {
+export const urlEncode = compose(window.encodeURIComponent, (encodedURIComponent) => {
   return encodedURIComponent.replace(/%20/g, '_')
 })
 
-export const urlDecode = after(window.decodeURIComponent, (decodedURIComponent) => {
+export const urlDecode = compose(window.decodeURIComponent, (decodedURIComponent) => {
   return decodedURIComponent.replace(/_/g, ' ')
 })
