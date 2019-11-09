@@ -1,3 +1,4 @@
 #!/bin/bash
 
+rollup --config rollup.test.config.js --file tests/test-bundle.js
 karma start --single-run
