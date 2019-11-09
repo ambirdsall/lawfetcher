@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
   "scripts": {
-    "pretest": "rollup --config rollup.test.config.js --file tests/test-bundle.js",
-    "test": "karma start",
+    "test": "./scripts/test",
     "lint": "./node_modules/.bin/eslint **/*.js || true",
     "build": "./scripts/single-test-run && ./scripts/build",
     "watch": "./scripts/watch",
