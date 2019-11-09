@@ -73,22 +73,22 @@ describe(`The utils object`, () => {
       expect(addOne(5)).toEqual(6)
     })
   })
-  describe(`requireFields function`, () => {
+  describe(`requiredFields function`, () => {
     it(`takes an object and any number of required keys`, () => {
       const a_and_b       = {a: 1, b: 2}
       const a_and_b_and_c = {a: 1, b: 2, c: null}
 
-      expect(requireFields(a_and_b, `a`, `b`)).toBe(true)
-      expect(requireFields(a_and_b_and_c, `a`, `b`, `c`)).toBe(true)
+      expect(requiredFields(a_and_b, `a`, `b`)).toBe(true)
+      expect(requiredFields(a_and_b_and_c, `a`, `b`, `c`)).toBe(true)
     })
 
     it(`throws an exception if the object is missing any of the specified keys`, () => {
       // camelCase is much harder to read with single-letter "words"
       const a_and_b              = {a: 1, b: 2}
       const a_and_b_and_c        = {a: 1, b: 2, c: null}
-      const callWithMissingField = requireFields.bind(this, a_and_b, `a`, `b`, `c`)
-      const callWithOneField     = requireFields.bind(this, a_and_b, `a`)
-      const callWithAllFields    = requireFields.bind(this, a_and_b_and_c, `a`, `b`, `c`)
+      const callWithMissingField = requiredFields.bind(this, a_and_b, `a`, `b`, `c`)
+      const callWithOneField     = requiredFields.bind(this, a_and_b, `a`)
+      const callWithAllFields    = requiredFields.bind(this, a_and_b_and_c, `a`, `b`, `c`)
 
       expect(callWithMissingField).toThrow()
       expect(callWithOneField).not.toThrow()
@@ -99,8 +99,8 @@ describe(`The utils object`, () => {
       const a_and_b       = {a: undefined, b: 2}
       const a_and_b_and_c = {a: 1, b: 2, c: null}
 
-      expect(requireFields(a_and_b, `a`)).toBe(true)
-      expect(requireFields(a_and_b_and_c, `c`)).toBe(true)
+      expect(requiredFields(a_and_b, `a`)).toBe(true)
+      expect(requiredFields(a_and_b_and_c, `c`)).toBe(true)
     })
   })
   describe(`matchAnyOf function`, () => {

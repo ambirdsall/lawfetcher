@@ -5,13 +5,14 @@ import testCases from '../data/test_cases'
 import {
   findType as makeFindType,
   getUrls as makeGetUrls,
+  getUrl as makeGetUrl,
   replaceEach,
 } from './source.spec.helpers'
 
 const google_scholarConfig = find(sources, (source) => source.name === `Google Scholar`)
 const google_scholar       = new Source(google_scholarConfig)
-const getUrl               = getUrl(google_scholar, citationTypes)
-const getUrls              = getUrls(google_scholar, citationTypes)
+const getUrl               = makeGetUrl(google_scholar, citationTypes)
+const getUrls              = makeGetUrls(google_scholar, citationTypes)
 const findType             = makeFindType(citationTypes)
 const urlEncode            = window.encodeURIComponent
 

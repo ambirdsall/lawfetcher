@@ -3,14 +3,16 @@ import { Source, Citation } from '../../js/types'
 import { sources, citationTypes } from '../../js/data'
 import testCases from '../data/test_cases'
 import {
-  getUrls as makeGetUrls,
-  replaceEach,
+  findType as makeFindType
+, getUrls as makeGetUrls
+, replaceEach
+, federalRuleNumber
 } from './source.spec.helpers'
 
 const westlawConfig = find(sources, (source) => source.name === `Westlaw`)
 const westlaw       = new Source(westlawConfig)
-const getUrls       = getUrls(westlaw, citationTypes)
-const findType      = findType(citationTypes)
+const getUrls       = makeGetUrls(westlaw, citationTypes)
+const findType      = makeFindType(citationTypes)
 const urlEncode     = window.encodeURIComponent
 
 describe(`Westlaw`, () => {
@@ -115,7 +117,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.frap.all
     const results    = getUrls(citations, `frap`)
     const frap        = findType(`frap`)
-    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frap%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frap%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -124,7 +126,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.frcrmp.all
     const results    = getUrls(citations, `frcrmp`)
     const frcrmp        = findType(`frcrmp`)
-    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frcrp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frcrp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -134,7 +136,7 @@ describe(`Westlaw`, () => {
     const results    = getUrls(citations, `frcp`)
     const frcp        = findType(`frcp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcp).mainCite)
-    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frcp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frcp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -144,7 +146,7 @@ describe(`Westlaw`, () => {
     const results    = getUrls(citations, `fre`)
     const fre        = findType(`fre`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, fre).mainCite)
-    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}fre%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}fre%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -154,7 +156,7 @@ describe(`Westlaw`, () => {
     const results    = getUrls(citations, `frbp`)
     const frbp        = findType(`frbp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frbp).mainCite)
-    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frbp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frbp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })

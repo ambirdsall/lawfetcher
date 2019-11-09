@@ -5,13 +5,14 @@ import testCases from '../data/test_cases'
 import {
   findType as makeFindType,
   getUrls as makeGetUrls,
+  getUrl as makeGetUrl,
   replaceEach,
 } from './source.spec.helpers'
 
 const heinOnlineConfig = find(sources, (source) => source.name === `HeinOnline`)
 const heinOnline       = new Source(heinOnlineConfig)
-const getUrl           = getUrl(heinOnline, citationTypes)
-const getUrls          = getUrls(heinOnline, citationTypes)
+const getUrl           = makeGetUrl(heinOnline, citationTypes)
+const getUrls          = makeGetUrls(heinOnline, citationTypes)
 const findType         = makeFindType(citationTypes)
 const urlEncode        = window.encodeURIComponent
 

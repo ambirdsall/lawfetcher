@@ -10,8 +10,8 @@ import {
 
 const justiaConfig = find(sources, (source) => source.name === `Justia`)
 const justia       = new Source(justiaConfig)
-const getUrls      = getUrls(justia, citationTypes)
-const findType     = findType(citationTypes)
+const getUrls      = makeGetUrls(justia, citationTypes)
+const findType     = makeFindType(citationTypes)
 const urlEncode    = window.encodeURIComponent
 
 describe(`Justia Search`, () => {

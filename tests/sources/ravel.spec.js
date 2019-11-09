@@ -10,8 +10,8 @@ import {
 
 const ravelConfig = find(sources, (source) => source.name === `Ravel`)
 const ravel       = new Source(ravelConfig)
-const getUrls     = getUrls(ravel, citationTypes)
-const findType    = findType(citationTypes)
+const getUrls     = makeGetUrls(ravel, citationTypes)
+const findType    = makeFindType(citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Ravel`, () => {

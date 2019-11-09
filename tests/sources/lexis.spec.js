@@ -3,14 +3,16 @@ import { Source, Citation } from '../../js/types'
 import { sources, citationTypes } from '../../js/data'
 import testCases from '../data/test_cases'
 import {
-  getUrls as makeGetUrls,
-  replaceEach,
+  federalRuleNumber
+, findType as makeFindType
+, getUrls as makeGetUrls
+, replaceEach
 } from './source.spec.helpers'
 
 const lexisConfig = find(sources, (source) => source.name === `Lexis`)
 const lexis       = new Source(lexisConfig)
-const getUrls     = getUrls(lexis, citationTypes)
-const findType    = findType(citationTypes)
+const getUrls     = makeGetUrls(lexis, citationTypes)
+const findType    = makeFindType(citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Lexis`, () => {
@@ -110,7 +112,7 @@ describe(`Lexis`, () => {
   it(`makes the proper url for a Federal Rule of Appellate Procedure citation`, () => {
     const citations  = testCases.frap.all
     const results    = getUrls(citations, `frap`)
-    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frap%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frap%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -119,7 +121,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.frcrmp.all
     const results    = getUrls(citations, `frcrmp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcrmp).mainCite)
-    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frcrp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frcrp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -128,7 +130,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.frcp.all
     const results    = getUrls(citations, `frcp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcp).mainCite)
-    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frcp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frcp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -137,7 +139,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.fre.all
     const results    = getUrls(citations, `fre`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, fre).mainCite)
-    const properUrls = map(citations, (cite) => `${lexis.baseUrl}fre%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}fre%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -146,7 +148,7 @@ describe(`Lexis`, () => {
     const citations  = testCases.frbp.all
     const results    = getUrls(citations, `frbp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frbp).mainCite)
-    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frbp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${lexis.baseUrl}frbp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })

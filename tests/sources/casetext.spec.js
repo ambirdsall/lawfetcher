@@ -10,8 +10,8 @@ import {
 
 const casetextConfig = find(sources, (source) => source.name === 'Casetext')
 const casetext       = new Source(casetextConfig)
-const getUrls        = makeGetUrls(casetext, types)
-const findType       = makeFindType(types)
+const getUrls        = makeGetUrls(casetext, citationTypes)
+const findType       = makeFindType(citationTypes)
 const urlEncode      = window.encodeURIComponent
 
 describe(`Casetext Search`, () => {

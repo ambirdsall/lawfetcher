@@ -3,14 +3,15 @@ import { Source, Citation } from '../../js/types'
 import { sources, citationTypes } from '../../js/data'
 import testCases from '../data/test_cases'
 import {
+  findType as makeFindType,
   getUrls as makeGetUrls,
   replaceEach,
 } from './source.spec.helpers'
 
 const liiConfig   = find(sources, (source) => source.name === `LII`)
 const lii         = new Source(liiConfig)
-const getUrls     = getUrls(lii, citationTypes)
-const findType    = findType(citationTypes)
+const getUrls     = makeGetUrls(lii, citationTypes)
+const findType    = makeFindType(citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Cornell LII`, () => {

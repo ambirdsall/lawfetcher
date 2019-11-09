@@ -4,13 +4,14 @@ import { sources, citationTypes } from '../../js/data'
 import testCases from '../data/test_cases'
 import {
   getUrls as makeGetUrls,
+  getUrl as makeGetUrl,
   replaceEach,
 } from './source.spec.helpers'
 
 const fdsysConfig = find(sources, (source) => source.name === `Federal Digital System`)
 const fdsys       = new Source(fdsysConfig)
-const getUrl      = getUrl(fdsys, citationTypes)
-const getUrls     = getUrls(fdsys, citationTypes)
+const getUrl      = makeGetUrl(fdsys, citationTypes)
+const getUrls     = makeGetUrls(fdsys, citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Federal Digital System`, () => {
