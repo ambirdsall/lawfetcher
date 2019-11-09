@@ -4,7 +4,8 @@
   "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
   "scripts": {
     "test": "./scripts/single-test-run",
-    "lint": "./node_modules/.bin/eslint **/*.js || true",
+    "test:watch": "ls tests/test-bundle.js | entr npm test",
+    "lint": "eslint **/*.js || true",
     "build": "./scripts/single-test-run && ./scripts/build",
     "watch": "./scripts/watch",
     "serve": "live-server --port=1234",
@@ -30,6 +31,7 @@
     "babel-preset-es2015": "^6.14.0",
     "babelify": "^7.3.0",
     "catw": "^1.0.1",
+    "entr": "0.0.0",
     "eslint": "^3.2.2",
     "eslint-config-standard": "^5.3.5",
     "eslint-plugin-promise": "^2.0.0",
