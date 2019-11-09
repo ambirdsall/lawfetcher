@@ -26,10 +26,10 @@ describe(`A source`, () => {
             return invalid
           })
     const instantiateWith = (config) => Source(config)
-    const instantiatingValid = instantiateWith.bind(this, generic)
+    const instantiatingValid = instantiateWith.bind(null, generic)
 
     each(invalidConfigs, (invalid) => {
-      const instantiatingInvalid = instantiateWith.bind(this, invalid)
+      const instantiatingInvalid = instantiateWith.bind(null, invalid)
 
       expect(instantiatingInvalid).toThrow()
     })

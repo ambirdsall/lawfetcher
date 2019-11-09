@@ -43,7 +43,7 @@ describe(`The utils object`, () => {
     it(`can compose two functions`, () => {
       const f = function addThree(x) { return x + 3 }
       const g = function timesTwo(y) { return y * 2 }
-      const effOfGee = compose(g, f).call(this, 0)
+      const effOfGee = compose(g, f).call(null, 0)
 
       expect(effOfGee).toBe( f(g(0)) )
       expect(effOfGee).not.toBe( g(f(0)) )
@@ -86,9 +86,9 @@ describe(`The utils object`, () => {
       // camelCase is much harder to read with single-letter "words"
       const a_and_b              = {a: 1, b: 2}
       const a_and_b_and_c        = {a: 1, b: 2, c: null}
-      const callWithMissingField = requiredFields.bind(this, a_and_b, `a`, `b`, `c`)
-      const callWithOneField     = requiredFields.bind(this, a_and_b, `a`)
-      const callWithAllFields    = requiredFields.bind(this, a_and_b_and_c, `a`, `b`, `c`)
+      const callWithMissingField = requiredFields.bind(null, a_and_b, `a`, `b`, `c`)
+      const callWithOneField     = requiredFields.bind(null, a_and_b, `a`)
+      const callWithAllFields    = requiredFields.bind(null, a_and_b_and_c, `a`, `b`, `c`)
 
       expect(callWithMissingField).toThrow()
       expect(callWithOneField).not.toThrow()
@@ -105,21 +105,21 @@ describe(`The utils object`, () => {
   })
   describe(`matchAnyOf function`, () => {
     it(`can take regex arguments`, () => {
-      expect(matchAnyOf.bind(this, /foo/)).not.toThrow()
-      expect(matchAnyOf.bind(this, /foo/, /bar/)).not.toThrow()
+      expect(matchAnyOf.bind(null, /foo/)).not.toThrow()
+      expect(matchAnyOf.bind(null, /foo/, /bar/)).not.toThrow()
     })
 
     it(`can take string arguments`, () => {
-      expect(matchAnyOf.bind(this, `foo`)).not.toThrow()
-      expect(matchAnyOf.bind(this, `foo`, `bar`)).not.toThrow()
+      expect(matchAnyOf.bind(null, `foo`)).not.toThrow()
+      expect(matchAnyOf.bind(null, `foo`, `bar`)).not.toThrow()
     })
 
     it(`or both!`, () => {
-      expect(matchAnyOf.bind(this, /foo/, `bar`)).not.toThrow()
+      expect(matchAnyOf.bind(null, /foo/, `bar`)).not.toThrow()
     })
 
     it(`nothing else, though`, () => {
-      expect(matchAnyOf.bind(this, 17, `even if some args are correct`)).toThrow()
+      expect(matchAnyOf.bind(null, 17, `even if some args are correct`)).toThrow()
     })
 
     it(`returns a regex`, () => {
@@ -147,21 +147,21 @@ describe(`The utils object`, () => {
   })
   describe(`matchAllOf function`, () => {
     it(`can take regex arguments`, () => {
-      expect(matchAllOf.bind(this, /foo/)).not.toThrow()
-      expect(matchAllOf.bind(this, /foo/, /bar/)).not.toThrow()
+      expect(matchAllOf.bind(null, /foo/)).not.toThrow()
+      expect(matchAllOf.bind(null, /foo/, /bar/)).not.toThrow()
     })
 
     it(`can take string arguments`, () => {
-      expect(matchAllOf.bind(this, `foo`)).not.toThrow()
-      expect(matchAllOf.bind(this, `foo`, `bar`)).not.toThrow()
+      expect(matchAllOf.bind(null, `foo`)).not.toThrow()
+      expect(matchAllOf.bind(null, `foo`, `bar`)).not.toThrow()
     })
 
     it(`or both!`, () => {
-      expect(matchAllOf.bind(this, /foo/, `bar`)).not.toThrow()
+      expect(matchAllOf.bind(null, /foo/, `bar`)).not.toThrow()
     })
 
     it(`nothing else, though`, () => {
-      expect(matchAllOf.bind(this, 17, `even if some args are correct`)).toThrow()
+      expect(matchAllOf.bind(null, 17, `even if some args are correct`)).toThrow()
     })
 
     it(`returns a regex`, () => {
