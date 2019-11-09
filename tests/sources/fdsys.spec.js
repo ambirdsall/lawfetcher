@@ -1,14 +1,17 @@
-const _           = require(`lodash`)
-const Source      = require(`../../js/types/source`)
-const Citation    = require(`../../js/types/citation`)
-const fdsysConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Federal Digital System`)
+import { difference, isFunction, find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  getUrls as makeGetUrls,
+  getUrl as makeGetUrl,
+  replaceEach,
+} from './source.spec.helpers'
+
+const fdsysConfig = find(sources, (source) => source.name === `Federal Digital System`)
 const fdsys       = new Source(fdsysConfig)
-const types       = require(`../../js/data/type_list`)
-const testCases   = require(`../data/test_cases`)
-const H           = require(`./source.spec.helpers`)
-const getUrl      = H.getUrl(fdsys, types)
-const getUrls     = H.getUrls(fdsys, types)
-const replaceEach = H.replaceEach
+const getUrl      = makeGetUrl(fdsys, citationTypes)
+const getUrls     = makeGetUrls(fdsys, citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Federal Digital System`, () => {
@@ -17,11 +20,11 @@ describe(`Federal Digital System`, () => {
   })
 
   it(`has the expected _typeSpecificUrls`, () => {
-    const allTypes     = types.map(t => t.typeId )
+    const allTypes     = citationTypes.map(t => t.typeId )
     const expectedTSTs = [`federal_register`]
-    const fdsysTSTs    = allTypes.filter(function(typeName) { fdsys.hasOwnProperty(typeName) && _.isFunction(fdsys[typeName]) })
+    const fdsysTSTs    = allTypes.filter(function(typeName) { fdsys.hasOwnProperty(typeName) && isFunction(fdsys[typeName]) })
 
-    expect(_.difference(fdsysTSTs, expectedTSTs)).toEqual([])
+    expect(difference(fdsysTSTs, expectedTSTs)).toEqual([])
   })
 
   describe(`Unhandled citation types`, () => {
@@ -100,7 +103,7 @@ describe(`Federal Digital System`, () => {
     const congressNum = (c) => c.match(/(\d*)-\d*/)[1]
     const lawNum = (c) => c.match(/\d*-(\d*)/)[1]
     const toUrl = (cite) => `${fdsys.baseUrl}?collection=plaw&lawtype=public&congress=${congressNum(cite)}&lawnum=${lawNum(cite)}`
-    const properUrls = _.map(citations, toUrl)
+    const properUrls = map(citations, toUrl)
 
     expect(fdsys.canHandle(`public_law`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -112,7 +115,7 @@ describe(`Federal Digital System`, () => {
     const volumeNum = (c) => c.match(/(\d*) stat/i)[1]
     const pageNum = (c) => c.match(/stat\.? ?(\d*)/i)[1]
     const toUrl = (cite) => `${fdsys.baseUrl}?collection=statute&volume=${volumeNum(cite)}&page=${pageNum(cite)}`
-    const properUrls = _.map(citations, toUrl)
+    const properUrls = map(citations, toUrl)
 
     expect(fdsys.canHandle(`statutes_at_large`)).toBe(true)
     expect(results).toEqual(properUrls)

@@ -1,14 +1,14 @@
-const extend        = $.extend
-const trim          = $.trim
-const compact       = require(`lodash/compact`)
-const requireFields = require(`../utils/requireFields`)
-const citationTypes = require(`../data/type_list`)
-const detectType    = require(`../functions/detectType`)
+import { compact } from 'lodash-es'
+import { requiredFields } from '../utils'
+import { citationTypes } from '../data'
+import { detectType } from '../functions'
+
+const { extend, trim } = $
 
 function Citation(citationText, config) {
-  if (! (this instanceof Citation)) return new Citation(citationText, config)
+  if ( !(this instanceof Citation)) return new Citation(citationText, config)
 
-  requireFields(config, `typeId`, `idPattern`, `mainCitePattern`)
+  requiredFields(config, `typeId`, `idPattern`, `mainCitePattern`)
   if ( !citationText.match(config.idPattern) ) {
     throw new Error(`"${citationText}" doesn't match ${config.typeId} type.`)
   }
@@ -29,7 +29,7 @@ function Citation(citationText, config) {
 
 Citation.from = detectType(Citation, citationTypes)
 
-module.exports = Citation
+export default Citation
 
 // mainCitePatterns match against the jump cite of the given type, with
 // everything preceding the jump cite put in a capture group. If the citation

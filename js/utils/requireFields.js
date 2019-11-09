@@ -5,7 +5,7 @@
 // lodash, which makes a much smaller bundle for users to download
 const each = $.each
 
-module.exports = function requiredFields(obj, ...fields) {
+export default function requiredFields(obj, ...fields) {
   each(fields, (_idx, f) => {
     if ( !(f in obj) ) { throw `Required field ${f} not in ${Object.keys(obj)}` }
   })

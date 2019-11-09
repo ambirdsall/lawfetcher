@@ -1,14 +1,17 @@
-const _              = require(`lodash`)
-const Source         = require(`../../js/types/source`)
-const Citation       = require(`../../js/types/citation`)
-const casetextConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Casetext`)
+import { find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType,
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const casetextConfig = find(sources, (source) => source.name === 'Casetext')
 const casetext       = new Source(casetextConfig)
-const types          = require(`../../js/data/type_list`)
-const testCases      = require(`../data/test_cases`)
-const H              = require(`./source.spec.helpers`)
-const getUrls        = H.getUrls(casetext, types)
-const replaceEach    = H.replaceEach
-const findType       = H.findType(types)
+const getUrls        = makeGetUrls(casetext, citationTypes)
+const findType       = makeFindType(citationTypes)
 const urlEncode      = window.encodeURIComponent
 
 describe(`Casetext Search`, () => {
@@ -103,7 +106,7 @@ describe(`Casetext Search`, () => {
     const citations   = testCases.federal_case.all
     const results     = getUrls(citations, `federal_case`)
     const federalCase = findType(`federal_case`)
-    const properUrls  = _.map(citations, (cite) => `${casetext.baseUrl}${urlEncode(Citation(cite, federalCase).mainCite)}`)
+    const properUrls  = map(citations, (cite) => `${casetext.baseUrl}${urlEncode(Citation(cite, federalCase).mainCite)}`)
 
     expect(casetext.canHandle(`federal_case`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -113,7 +116,7 @@ describe(`Casetext Search`, () => {
     const docketNumbers = [ `No. 13-7451`
                           , `No. 14-4321`
                           ]
-    const properUrls = _.map(docketNumbers, cite => `${casetext.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls = map(docketNumbers, cite => `${casetext.baseUrl}"${urlEncode(cite)}"`)
 
     expect(casetext.canHandle(`docket_number`)).toBe(true)
     expect(getUrls(docketNumbers, `docket_number`)).toEqual(properUrls)

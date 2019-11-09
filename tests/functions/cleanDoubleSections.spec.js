@@ -1,4 +1,4 @@
-const cleanDoubleSections = require(`../../js/functions/cleanDoubleSections`)
+import { cleanDoubleSections } from '../../js/functions'
 
 // TODO: test pilcrow handling
 describe(`cleanDoubleSections`, () => {

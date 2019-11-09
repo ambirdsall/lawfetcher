@@ -1,13 +1,12 @@
-const requireFields = require(`../utils/requireFields`)
-const after         = require(`../utils/after`)
-const extend        = require(`../utils/extend`)
-const includes      = require(`lodash/includes`)
-const genericUrl    = require(`../functions/genericUrl`)
+import { includes } from 'lodash-es'
+
+import { requiredFields, compose, extend } from '../utils'
+import { genericUrl } from '../functions'
 
 function Source(config) {
   if (! (this instanceof Source)) return new Source(config)
 
-  requireFields(config, `name`, `baseUrl`, `_deepLinkableTypes`, `$anchor`, `_cannot`)
+  requiredFields(config, `name`, `baseUrl`, `_deepLinkableTypes`, `$anchor`, `_cannot`)
   extend(this, {
       name:               config.name
     , baseUrl:            config.baseUrl
@@ -41,4 +40,4 @@ extend(Source.prototype, {
   }
 })
 
-module.exports = Source
+export default Source

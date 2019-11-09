@@ -1,12 +1,12 @@
-const resultsBaseUrl      = `${window.location.href}citation?`
-const validateInput       = require(`./functions/validateInput`)
-const urlEncode           = require(`./functions/urlHelpers`).urlEncode
-const cleanDoubleSections = require(`./functions/cleanDoubleSections`)
-const $input              = $(`#url-encoder__input`)
-const $helpText           = $(`#submit--input-validator-text`)
+import { cleanDoubleSections, urlEncode, validateInput } from './functions'
+import { handleAutoforwardPreference } from './autoforward'
+
+const resultsBaseUrl = `${window.location.href}citation`
+const $input         = $('#url-encoder__input')
+const $helpText      = $('#submit--input-validator-text')
 
 function buildUrl(citation) {
-  return `${resultsBaseUrl}${urlEncode(citation)}`
+  return `${resultsBaseUrl}#${urlEncode(citation)}`
 }
 function processForm(e) {
   e.preventDefault()
@@ -23,5 +23,7 @@ function processForm(e) {
 }
 
 // attach `processForm` to either way the button's liable to be triggered
-$(`#url-encoder__form`).submit(processForm)
-$(`#submit`).click(processForm)
+$('#url-encoder__form').submit(processForm)
+$('#submit').click(processForm)
+
+handleAutoforwardPreference()

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rollup --watch --config rollup.test.config.js --file tests/test-bundle.js & \
+karma start

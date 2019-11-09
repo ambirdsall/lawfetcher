@@ -1,5 +1,6 @@
-const Citation   = require(`../../js/types/citation`)
-const detectType = require(`../../js/functions/detectType`)(Citation)
+import { Citation } from '../../js/types'
+import makeDetectType from '../../js/functions/detectType'
+
 const mockTypes  = [
     { typeId:            `type_one`
     , idPattern:       /citation/i
@@ -14,42 +15,35 @@ const mockTypes  = [
     , mainCitePattern: /(?:(.+\d+)(?:, (?:\u00b6 ?)?\d+))|(?:([^\(]+)(?:\s*\(.\))+)/
     }
   ]
+const detectType = makeDetectType(Citation, mockTypes)
 const mockCitationText = `arbitrary citation text`
 const mockJumpCiteText = `arbitrary citation text with jump cite`
 
 describe(`The detectType function`, () => {
   it(`returns a Citation object`, () => {
-    const detectTypeReturn = detectType(mockTypes, mockCitationText)
+    const detectTypeReturn = detectType(mockCitationText)
 
     expect(detectTypeReturn).toEqual(jasmine.any(Citation))
   })
 
   it(`assigns the first type whose idPattern matches the given text`, () => {
-    const returnType = detectType(mockTypes, mockCitationText).type
+    const returnType = detectType(mockCitationText).type
 
     expect(returnType).toBe(`type_one`)
   })
 
   // The `default` type is defined in the list of type config objects, not the fn
   it(`assigns the default type if there is no match`, () => {
-    const returnType = detectType(mockTypes, `foo bar baz qux`).type
+    const returnType = detectType(`foo bar baz qux`).type
 
     expect(returnType).toBe(`default`)
   })
 
   it(`separates out the matching type's jump cite, if present`, () => {
-    const jumpCiteReturn   = detectType(mockTypes, mockJumpCiteText)
-    const noJumpCiteReturn = detectType(mockTypes, mockCitationText)
+    const jumpCiteReturn   = detectType(mockJumpCiteText)
+    const noJumpCiteReturn = detectType(mockCitationText)
 
     expect(jumpCiteReturn.jumpCite).toBe(`with jump cite`)
     expect(noJumpCiteReturn.jumpCite).toBe(``)
-  })
-
-  it(`is curried`, () => {
-    const detectMockType = detectType(mockTypes)
-    const curriedReturn  = detectMockType(mockCitationText)
-
-    expect(detectMockType).toEqual(jasmine.any(Function))
-    expect(curriedReturn).toEqual(jasmine.any(Citation))
   })
 })

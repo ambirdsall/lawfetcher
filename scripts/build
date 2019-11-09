@@ -35,11 +35,11 @@ clean_up_out_of_date_stamped_bundles() {
 }
 
 bundle_creator_js() {
-  browserify -t [ babelify --presets [ es2015 ] ] js/autoforward.js js/encode_url.js | uglifyjs -mc > dist/$creator_filename
+  rollup --config rollup.encode_url.config.js | uglifyjs -mc > dist/$creator_filename
 }
 
 bundle_sources_js() {
-  browserify -t [ babelify --presets [ es2015 ] ] js/citation/*.js | uglifyjs -mc > citation/dist/$sources_filename
+  rollup --config rollup.parse_url.config.js | uglifyjs -mc > citation/dist/$sources_filename
 }
 
 generate_creator_filename() {
@@ -48,7 +48,7 @@ generate_creator_filename() {
 }
 
 generate_creator_prefix() {
-  creator_prefix=$(browserify js/autoforward.js js/encode_url.js | ./scripts/md5)
+  creator_prefix=$(rollup --config rollup.encode_url.config.js | ./scripts/md5)
 }
 
 generate_sources_filename() {
@@ -57,7 +57,7 @@ generate_sources_filename() {
 }
 
 generate_sources_prefix() {
-  sources_prefix=$(browserify js/citation/*.js | ./scripts/md5)
+  sources_prefix=$(rollup --config rollup.parse_url.config.js | ./scripts/md5)
 }
 
 sub_stamped_creator_filename() {

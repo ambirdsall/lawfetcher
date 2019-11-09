@@ -1,26 +1,27 @@
-const each                 = require(`lodash/each`)
-const urlDecode            = require(`../functions/urlHelpers`).urlDecode
-const Clipboard            = require(`clipboard`)
-const clipboard            = new Clipboard(`.js-clipboard`)
-const Source               = require(`../types/source`)
-const Citation             = require(`../types/citation`)
-const sourceList           = require(`../data/source_list`)
+import { each } from 'lodash-es'
+import Clipboard from 'clipboard'
 
-const encodedQuery         = window.location.search.slice(1)
-const originalCitation     = urlDecode(encodedQuery)
+import { urlDecode } from '../functions'
+import { Source, Citation } from '../types'
+import { sources } from '../data'
+import { handleAutoforwardPreference } from './autoforward'
 
-const $freeSources         = $(`#source-list--free`)
-const $subscriptionSources = $(`#source-list--subscription`)
-const $title               = $("#title")
-const $permalink           = $(`#permalink__text`)
-const tooltipText          = `Copy to Clipboard`
+const clipboard        = new Clipboard(`.js-clipboard`)
+const encodedQuery     = window.location.hash.slice(1)
+const originalCitation = urlDecode(encodedQuery)
+const tooltipText      = 'Copy to Clipboard'
+
+const $freeSources         = $('#source-list--free')
+const $subscriptionSources = $('#source-list--subscription')
+const $title               = $('#title')
+const $permalink           = $('#permalink__text')
 
 // Set up the rest of the page
 $title.text(originalCitation)
 $permalink.val(window.location.href)
 
 // build links and link elements for every relevant source
-each(sourceList, (source) => {
+each(sources, (source) => {
   const currentSource = Source(source)
   const typedCite = Citation.from(originalCitation)
 
@@ -31,6 +32,9 @@ each(sourceList, (source) => {
     source.$anchor.parent().remove()
   }
 })
+
+// if autoforwarding, handle that before setting up a UI you won't use
+handleAutoforwardPreference()
 
 // If no free sources can handle (i.e. a wl_database citation), remove that section entirely
 if ( $freeSources.find(`.list-group`).children().length === 0 ) {
@@ -47,7 +51,7 @@ if ( $freeSources.find(`.list-group`).children().length === 0 ) {
 // is still potentially useful for a user who misses the (quite obvious) copy
 // button, and as a fallback for browsers like Safari that do not handle the
 // copy button.
-$permalink.mouseup(() => $(this).select() )
+$permalink.mouseup(function() { $(this).select() })
 
 if ( document.queryCommandSupported(`copy`) ) {
   // Replace permalink's static "I'm a link!" icon with tooltipped copy button

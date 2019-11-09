@@ -1,4 +1,4 @@
-module.exports = function validateInput(input) {
+export default function validateInput(input) {
   // Whitelisted characters, /as they appear in the regex/:
   //
   //   Spaces,           / \u00a0/ (note the literal space before the non-breaking space unicode)

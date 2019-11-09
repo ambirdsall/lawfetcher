@@ -1,8 +1,9 @@
 const urlEncode = window.encodeURIComponent
-const includes  = require(`lodash/includes`)
+import { includes } from 'lodash-es'
 
-// meant to be invoked as `genericUrl.call(source, cite)`
-module.exports = function genericUrl(cite) {
+// meant to be invoked as a method of with a manually-provided this object, e.g.
+// `genericUrl.call(source, cite)`
+export default function genericUrl(cite) {
   const properCitation = urlEncode(
     this.canDeepLink(cite.type)
     ? cite.fullCite

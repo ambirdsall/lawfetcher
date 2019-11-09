@@ -1,4 +1,4 @@
-const validateInput = require(`../../js/functions/validateInput`)
+import { validateInput } from '../../js/functions'
 
 describe(`validateInput()`, () => {
   describe(`whitelist`, () => {

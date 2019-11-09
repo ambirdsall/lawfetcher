@@ -1,14 +1,17 @@
-const _            = require(`lodash`)
-const Source       = require(`../../js/types/source`)
-const Citation     = require(`../../js/types/citation`)
-const justiaConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Justia`)
+import { find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType,
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const justiaConfig = find(sources, (source) => source.name === `Justia`)
 const justia       = new Source(justiaConfig)
-const types        = require(`../../js/data/type_list`)
-const testCases    = require(`../data/test_cases`)
-const H            = require(`./source.spec.helpers`)
-const getUrls      = H.getUrls(justia, types)
-const replaceEach  = H.replaceEach
-const findType     = H.findType(types)
+const getUrls      = makeGetUrls(justia, citationTypes)
+const findType     = makeFindType(citationTypes)
 const urlEncode    = window.encodeURIComponent
 
 describe(`Justia Search`, () => {
@@ -16,7 +19,7 @@ describe(`Justia Search`, () => {
     expect(justia.baseUrl).toBe(`https://www.justia.com/search?cx=004471346504245195276%3Ajieqepl7s5a&sa=Search+Justia&q=`)
   })
 
-  describe(`Unhandled citation types`, () => {
+  describe(`Unhandled citation citationTypes`, () => {
     it(`cannot handle a United States Code citation`, () => {
       expect(justia.canHandle(`usc`)).toBe(false)
     })
@@ -58,7 +61,7 @@ describe(`Justia Search`, () => {
   it(`makes the proper url for a Code of Federal Regulations citation`, () => {
     const citations  = testCases.cfr.title45part146
     const results    = getUrls(citations, `cfr`)
-    const properUrls = _.map(citations, (cite) => `http://law.justia.com/cfr/title45/45cfr146_main_02.html`)
+    const properUrls = map(citations, (cite) => `http://law.justia.com/cfr/title45/45cfr146_main_02.html`)
 
     expect(results).toEqual(properUrls)
   })
@@ -67,7 +70,7 @@ describe(`Justia Search`, () => {
     const citations               = testCases.uniform_commercial_code.all
     const results                 = getUrls(citations, `uniform_commercial_code`)
     const uniform_commercial_code = findType(`uniform_commercial_code`)
-    const properUrls              = _.map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, uniform_commercial_code).mainCite)}`)
+    const properUrls              = map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, uniform_commercial_code).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -77,7 +80,7 @@ describe(`Justia Search`, () => {
     const results    = getUrls(citations, `frap`)
     const frap       = findType(`frap`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frap).mainCite)
-    const properUrls = _.map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
+    const properUrls = map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -87,7 +90,7 @@ describe(`Justia Search`, () => {
     const results    = getUrls(citations, `frcrmp`)
     const frcrmp     = findType(`frcrmp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcrmp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
+    const properUrls = map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -97,7 +100,7 @@ describe(`Justia Search`, () => {
     const results    = getUrls(citations, `frcp`)
     const frcp       = findType(`frcp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
+    const properUrls = map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -107,7 +110,7 @@ describe(`Justia Search`, () => {
     const results    = getUrls(citations, `fre`)
     const fre        = findType(`fre`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, fre).mainCite)
-    const properUrls = _.map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
+    const properUrls = map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -117,7 +120,7 @@ describe(`Justia Search`, () => {
     const results    = getUrls(citations, `frbp`)
     const frbp       = findType(`frbp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frbp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
+    const properUrls = map(citations, (cite) => `${justia.baseUrl}${encodeMain(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -140,7 +143,7 @@ describe(`Justia Search`, () => {
     const citations    = testCases.federal_case.all
     const results      = getUrls(citations, `federal_case`)
     const federal_case = findType(`federal_case`)
-    const properUrls   = _.map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, federal_case).mainCite)}`)
+    const properUrls   = map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, federal_case).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -149,7 +152,7 @@ describe(`Justia Search`, () => {
     const citations          = testCases.state_constitution.all
     const results            = getUrls(citations, `state_constitution`)
     const state_constitution = findType(`state_constitution`)
-    const properUrls         = _.map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, state_constitution).mainCite)}`)
+    const properUrls         = map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, state_constitution).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -158,7 +161,7 @@ describe(`Justia Search`, () => {
     const citations             = testCases.law_statute_code_rule.all
     const results               = getUrls(citations, `law_statute_code_rule`)
     const law_statute_code_rule = findType(`law_statute_code_rule`)
-    const properUrls            = _.map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}`)
+    const properUrls            = map(citations, (cite) => `${justia.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -166,7 +169,7 @@ describe(`Justia Search`, () => {
   it(`makes the correct url for a docket number citation`, () => {
     const docketNumbers = testCases.docket_number.all
     const results       = getUrls(docketNumbers, `docket_number`)
-    const properUrls    = _.map(docketNumbers, cite => `${justia.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls    = map(docketNumbers, cite => `${justia.baseUrl}"${urlEncode(cite)}"`)
 
     expect(justia.canHandle(`docket_number`)).toBe(true)
     expect(results).toEqual(properUrls)

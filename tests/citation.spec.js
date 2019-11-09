@@ -1,8 +1,8 @@
-const _ = require(`lodash`)
+import { extend, head, tail } from 'lodash-es'
+import { Citation } from '../js/types'
 
 describe(`A citation`, () => {
   // takes citationText and a type object
-  const Citation    = require(`../js/types/citation`)
   const testType    = { typeId:          `test_type`
                       , idPattern:       /test/i
                       , mainCitePattern: /(.+), okay\?/
@@ -21,9 +21,9 @@ describe(`A citation`, () => {
     describe(`extending with config._subparts`, () => {
       it(`extends w/ all keys of _subparts, w/ each value equivalent to _subparts.key.call(new instance, citationText)`, () => {
         // subparts is singly-nested objects :: { name: { name: function } }
-        const subparts = { _subparts: { kay: citeText => _.head(citeText.match(/.kay./)) } }
+        const subparts = { _subparts: { kay: citeText => head(citeText.match(/.kay./)) } }
         const noInit  = Citation(validText, testType)
-        const yesInit = Citation(validText, _.extend(testType, subparts))
+        const yesInit = Citation(validText, extend(testType, subparts))
 
         expect(noInit.kay).toBeUndefined()
         expect(yesInit.kay).toEqual(`okay?`)
@@ -34,11 +34,11 @@ describe(`A citation`, () => {
                                       , mainCite: citeText => `a conflicting mainCite!`
                                       , jumpCite: citeText => `a conflicting jumpCite!`
                                       , fullCite: citeText => `a conflicting fullCite!`
-                                      , noun:     citeText => _.head(_.tail(citeText.match(/(\w+),/)))
+                                      , noun:     citeText => head(tail(citeText.match(/(\w+),/)))
                                       }
                          }
         const noInit  = Citation(validText, testType)
-        const yesInit = Citation(validText, _.extend(testType, subparts))
+        const yesInit = Citation(validText, extend(testType, subparts))
 
         expect(noInit.type).toEqual(`test_type`)
         expect(yesInit.type).toEqual(`test_type`)

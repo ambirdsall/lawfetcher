@@ -1,15 +1,19 @@
-const _                    = require(`lodash`)
-const Source               = require(`../../js/types/source`)
-const Citation             = require(`../../js/types/citation`)
-const google_scholarConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Google Scholar`)
+import { find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType,
+  getUrls as makeGetUrls,
+  getUrl as makeGetUrl,
+  replaceEach,
+} from './source.spec.helpers'
+
+const google_scholarConfig = find(sources, (source) => source.name === `Google Scholar`)
 const google_scholar       = new Source(google_scholarConfig)
-const types                = require(`../../js/data/type_list`)
-const testCases            = require(`../data/test_cases`)
-const H                    = require(`./source.spec.helpers`)
-const getUrl               = H.getUrl(google_scholar, types)
-const getUrls              = H.getUrls(google_scholar, types)
-const replaceEach          = H.replaceEach
-const findType             = H.findType(types)
+const getUrl               = makeGetUrl(google_scholar, citationTypes)
+const getUrls              = makeGetUrls(google_scholar, citationTypes)
+const findType             = makeFindType(citationTypes)
 const urlEncode            = window.encodeURIComponent
 
 describe(`Google Scholar`, () => {
@@ -91,7 +95,7 @@ describe(`Google Scholar`, () => {
     const citations  = testCases.frap.all
     const results    = getUrls(citations, `frap`)
     const frap       = findType(`frap`)
-    const properUrls = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -100,7 +104,7 @@ describe(`Google Scholar`, () => {
     const citations  = testCases.frcrmp.all
     const results    = getUrls(citations, `frcrmp`)
     const frcrmp     = findType(`frcrmp`)
-    const properUrls = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -109,7 +113,7 @@ describe(`Google Scholar`, () => {
     const citations  = testCases.frcp.all
     const results    = getUrls(citations, `frcp`)
     const frcp       = findType(`frcp`)
-    const properUrls = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -118,7 +122,7 @@ describe(`Google Scholar`, () => {
     const citations  = testCases.fre.all
     const results    = getUrls(citations, `fre`)
     const fre        = findType(`fre`)
-    const properUrls = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -127,7 +131,7 @@ describe(`Google Scholar`, () => {
     const citations  = testCases.frbp.all
     const results    = getUrls(citations, `frbp`)
     const frbp       = findType(`frbp`)
-    const properUrls = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -136,7 +140,7 @@ describe(`Google Scholar`, () => {
     const citations    = testCases.federal_case.all
     const results      = getUrls(citations, `federal_case`)
     const federal_case = findType(`federal_case`)
-    const properUrls   = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(Citation(cite, federal_case).mainCite)}"`)
+    const properUrls   = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(Citation(cite, federal_case).mainCite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -145,7 +149,7 @@ describe(`Google Scholar`, () => {
     const citations          = testCases.state_constitution.all
     const results            = getUrls(citations, `state_constitution`)
     const state_constitution = findType(`state_constitution`)
-    const properUrls         = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(Citation(cite, state_constitution).mainCite)}"`)
+    const properUrls         = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(Citation(cite, state_constitution).mainCite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -154,7 +158,7 @@ describe(`Google Scholar`, () => {
     const citations             = testCases.law_statute_code_rule.all
     const results               = getUrls(citations, `law_statute_code_rule`)
     const law_statute_code_rule = findType(`law_statute_code_rule`)
-    const properUrls            = _.map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}"`)
+    const properUrls            = map(citations, (cite) => `${google_scholar.baseUrl}"${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}"`)
 
     expect(results).toEqual(properUrls)
   })
@@ -162,7 +166,7 @@ describe(`Google Scholar`, () => {
   it(`makes the correct url for a docket number citation`, () => {
     const docketNumbers = testCases.docket_number.all
     const results       = getUrls(docketNumbers, `docket_number`)
-    const properUrls    = _.map(docketNumbers, cite => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls    = map(docketNumbers, cite => `${google_scholar.baseUrl}"${urlEncode(cite)}"`)
 
     expect(google_scholar.canHandle(`docket_number`)).toBe(true)
     expect(results).toEqual(properUrls)

@@ -1,5 +1,5 @@
-const after = require(`./after`)
+import compose from './compose'
 
-module.exports = function pipeline(...fns) {
-  return fns.reduce((acc, fn) => after(acc, fn))
+export default function pipeline(...fns) {
+  return fns.reduce((acc, fn) => compose(acc, fn))
 }
