@@ -1,6 +1,6 @@
 {
   "name": "RIO",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A web service that generates links for any US legal citation. When someone follows such a link, it parses the encoded citation and produces direct links to the source text in a range of online sources, both free and fee-charging.",
   "scripts": {
     "test": "./scripts/single-test-run",
@@ -21,9 +21,7 @@
     "browserify": "^12.0.0",
     "clipboard": "^1.5.12",
     "jquery": "^2.1.4",
-    "localforage": "^1.7.3",
-    "lodash-es": "^4.14.2",
-    "uglifyjs": "^2.4.10"
+    "lodash-es": "^4.14.2"
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.20.0",
@@ -51,6 +49,7 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "uglify-js": "^3.6.8",
     "watchify": "^3.5.0"
   }
 }
