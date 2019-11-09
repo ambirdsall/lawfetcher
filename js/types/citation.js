@@ -1,5 +1,5 @@
 import { compact } from 'lodash-es'
-import { requireFields } from '../utils'
+import { requiredFields } from '../utils'
 import { citationTypes } from '../data'
 import { detectType } from '../functions'
 
@@ -8,7 +8,7 @@ const { extend, trim } = $
 function Citation(citationText, config) {
   if ( !(this instanceof Citation)) return new Citation(citationText, config)
 
-  requireFields(config, `typeId`, `idPattern`, `mainCitePattern`)
+  requiredFields(config, `typeId`, `idPattern`, `mainCitePattern`)
   if ( !citationText.match(config.idPattern) ) {
     throw new Error(`"${citationText}" doesn't match ${config.typeId} type.`)
   }

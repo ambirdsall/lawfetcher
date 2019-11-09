@@ -1,12 +1,12 @@
 import { includes } from 'lodash-es'
 
-import { requireFields, compose, extend } from '../utils'
+import { requiredFields, compose, extend } from '../utils'
 import { genericUrl } from '../functions'
 
 function Source(config) {
   if (! (this instanceof Source)) return new Source(config)
 
-  requireFields(config, `name`, `baseUrl`, `_deepLinkableTypes`, `$anchor`, `_cannot`)
+  requiredFields(config, `name`, `baseUrl`, `_deepLinkableTypes`, `$anchor`, `_cannot`)
   extend(this, {
       name:               config.name
     , baseUrl:            config.baseUrl
