@@ -30,7 +30,7 @@
     "babelify": "^7.3.0",
     "catw": "^1.0.1",
     "entr": "0.0.0",
-    "eslint": "^3.2.2",
+    "eslint": "^4.18.2",
     "eslint-config-standard": "^5.3.5",
     "eslint-plugin-promise": "^2.0.0",
     "eslint-plugin-standard": "^2.0.0",
