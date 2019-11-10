@@ -1,4 +1,4 @@
-module.exports = function extend (consumer, ...providers) {
+export default function extend (consumer, ...providers) {
   let key
   let i
   let provider

@@ -1,4 +1,4 @@
-module.exports = function curry(fn) {
+export default function curry(fn) {
   const arity = fn.length
 
   return function f1(...args) {

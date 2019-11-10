@@ -16,8 +16,8 @@ set_script_sources_to_dev_filenames() {
 
 watch_js() {
   echo "Watching js files..."
-  watchify -t [ babelify --presets [ es2015 ] ] js/autoforward.js js/encode_url.js -o dist/creator.js -d &
-  watchify -t [ babelify --presets [ es2015 ] ] js/citation/*.js -o citation/dist/sources.js -d
+  rollup --watch --config rollup.encode_url.config.js --file dist/creator.js &
+  rollup --watch --config rollup.parse_url.config.js --file citation/dist/sources.js
 }
 
 sub_dev_creator_filename() {

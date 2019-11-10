@@ -1,11 +1,10 @@
-// {{{ functions
-const escapeRegExp = require(`../utils/escapeRegExp`)
-const urlEncode    = window.encodeURIComponent
-const difference   = require(`lodash/difference`)
-const head         = require(`lodash/head`)
-// }}}
+import { difference, head } from 'lodash-es'
 
-module.exports = [
+import { escapeRegExp } from '../utils'
+
+const urlEncode    = window.encodeURIComponent
+
+export default [
   { name: `Westlaw`//{{{
   , baseUrl: `http://a.next.westlaw.com/Link/Document/FullText?findType=Y&cite=`
   , $anchor: $(`#link--westlaw__a`)

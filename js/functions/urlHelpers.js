@@ -1,12 +1,9 @@
-let urlHelpers = {}
-const after    = require(`../utils/after`)
+import { compose } from '../utils'
 
-urlHelpers.urlEncode = after(window.encodeURIComponent, (encodedURIComponent) => {
-  return encodedURIComponent.replace(/%20/g, `_`)
+export const urlEncode = compose(window.encodeURIComponent, (encodedURIComponent) => {
+  return encodedURIComponent.replace(/%20/g, '_')
 })
 
-urlHelpers.urlDecode = after(window.decodeURIComponent, (decodedURIComponent) => {
-  return decodedURIComponent.replace(/_/g, ` `)
+export const urlDecode = compose(window.decodeURIComponent, (decodedURIComponent) => {
+  return decodedURIComponent.replace(/_/g, ' ')
 })
-
-module.exports = urlHelpers

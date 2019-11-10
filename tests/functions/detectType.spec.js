@@ -1,4 +1,6 @@
-const Citation   = require(`../../js/types/citation`)
+import { Citation } from '../../js/types'
+import makeDetectType from '../../js/functions/detectType'
+
 const mockTypes  = [
     { typeId:            `type_one`
     , idPattern:       /citation/i
@@ -13,7 +15,7 @@ const mockTypes  = [
     , mainCitePattern: /(?:(.+\d+)(?:, (?:\u00b6 ?)?\d+))|(?:([^\(]+)(?:\s*\(.\))+)/
     }
   ]
-const detectType = require(`../../js/functions/detectType`)(Citation, mockTypes)
+const detectType = makeDetectType(Citation, mockTypes)
 const mockCitationText = `arbitrary citation text`
 const mockJumpCiteText = `arbitrary citation text with jump cite`
 

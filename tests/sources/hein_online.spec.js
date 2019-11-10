@@ -1,15 +1,19 @@
-const _                = require(`lodash`)
-const Source           = require(`../../js/types/source`)
-const Citation         = require(`../../js/types/citation`)
-const heinOnlineConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `HeinOnline`)
+import { find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType,
+  getUrls as makeGetUrls,
+  getUrl as makeGetUrl,
+  replaceEach,
+} from './source.spec.helpers'
+
+const heinOnlineConfig = find(sources, (source) => source.name === `HeinOnline`)
 const heinOnline       = new Source(heinOnlineConfig)
-const types            = require(`../../js/data/type_list`)
-const testCases        = require(`../data/test_cases`)
-const H                = require(`./source.spec.helpers`)
-const getUrl           = H.getUrl(heinOnline, types)
-const getUrls          = H.getUrls(heinOnline, types)
-const replaceEach      = H.replaceEach
-const findType         = H.findType(types)
+const getUrl           = makeGetUrl(heinOnline, citationTypes)
+const getUrls          = makeGetUrls(heinOnline, citationTypes)
+const findType         = makeFindType(citationTypes)
 const urlEncode        = window.encodeURIComponent
 
 describe(`HeinOnline`, () => {
@@ -81,7 +85,7 @@ describe(`HeinOnline`, () => {
     const citations    = testCases.law_journal.all
     const results      = getUrls(citations, `law_journal`)
     const law_journal  = findType(`law_journal`)
-    const expectedUrls = _.map(citations, cite => `${heinOnline.baseUrl}${urlEncode(Citation(cite, law_journal).fullCite)}`)
+    const expectedUrls = map(citations, cite => `${heinOnline.baseUrl}${urlEncode(Citation(cite, law_journal).fullCite)}`)
 
     expect(heinOnline.canHandle(`law_journal`)).toBe(true)
     expect(results).toEqual(expectedUrls)

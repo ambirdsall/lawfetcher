@@ -1,14 +1,18 @@
-const _             = require(`lodash`)
-const Source        = require(`../../js/types/source`)
-const Citation      = require(`../../js/types/citation`)
-const westlawConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Westlaw`)
+import { difference, isFunction, find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType
+, getUrls as makeGetUrls
+, replaceEach
+, federalRuleNumber
+} from './source.spec.helpers'
+
+const westlawConfig = find(sources, (source) => source.name === `Westlaw`)
 const westlaw       = new Source(westlawConfig)
-const types         = require(`../../js/data/type_list`)
-const H             = require(`./source.spec.helpers`)
-const testCases     = require(`../data/test_cases`)
-const getUrls       = H.getUrls(westlaw, types)
-const replaceEach   = H.replaceEach
-const findType      = H.findType(types)
+const getUrls       = makeGetUrls(westlaw, citationTypes)
+const findType      = makeFindType(citationTypes)
 const urlEncode     = window.encodeURIComponent
 
 describe(`Westlaw`, () => {
@@ -17,7 +21,7 @@ describe(`Westlaw`, () => {
   })
 
   it(`has the expected _typeSpecificUrls`, () => {
-    var allTypes = types.map(function(t) { return t.name })
+    var allTypes = citationTypes.map(function(t) { return t.name })
       , expectedTSTs = [
           `frap`
         , `frcp`
@@ -25,9 +29,9 @@ describe(`Westlaw`, () => {
         , `frbp`
         , `fre`
         ]
-      , westlawTSTs = allTypes.filter(function(typeName) { westlaw.hasOwnProperty(typeName) && _.isFunction(westlaw[typeName]) })
+      , westlawTSTs = allTypes.filter(function(typeName) { westlaw.hasOwnProperty(typeName) && isFunction(westlaw[typeName]) })
 
-    expect(_.difference(westlawTSTs, expectedTSTs)).toEqual([])
+    expect(difference(westlawTSTs, expectedTSTs)).toEqual([])
   })
 
   describe(`Unhandled citation types`, () => {
@@ -40,7 +44,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.us_constitution.all
     const results    = getUrls(citations, `us_constitution`)
     const us_constitution        = findType(`us_constitution`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, us_constitution).mainCite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, us_constitution).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -49,7 +53,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.cfr.all
     const results    = getUrls(citations, `cfr`)
     const cfr        = findType(`cfr`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, cfr).mainCite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, cfr).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -58,7 +62,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.usc.all
     const results    = getUrls(citations, `usc`)
     const usc        = findType(`usc`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, usc).mainCite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, usc).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -67,7 +71,7 @@ describe(`Westlaw`, () => {
     const citations               = testCases.uniform_commercial_code.all
     const results                 = getUrls(citations, `uniform_commercial_code`)
     const uniform_commercial_code = findType(`uniform_commercial_code`)
-    const properUrls              = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, uniform_commercial_code).mainCite)}`)
+    const properUrls              = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, uniform_commercial_code).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -76,7 +80,7 @@ describe(`Westlaw`, () => {
     const citations   = testCases.wl_database.all
     const results     = getUrls(citations, `wl_database`)
     const wl_database = findType(`wl_database`)
-    const properUrls  = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, wl_database).fullCite)}`)
+    const properUrls  = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, wl_database).fullCite)}`)
 
     expect(westlaw.canHandle(`wl_database`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -86,7 +90,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.public_law.all
     const results    = getUrls(citations, `public_law`)
     const public_law = findType(`public_law`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, public_law).mainCite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, public_law).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -95,7 +99,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.statutes_at_large.all
     const results    = getUrls(citations, `statutes_at_large`)
     const statutes_at_large = findType(`statutes_at_large`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, statutes_at_large).mainCite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, statutes_at_large).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -104,7 +108,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.federal_register.all
     const results    = getUrls(citations, `federal_register`)
     const federal_register        = findType(`federal_register`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, federal_register).mainCite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, federal_register).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -113,7 +117,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.frap.all
     const results    = getUrls(citations, `frap`)
     const frap        = findType(`frap`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}frap%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frap%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -122,7 +126,7 @@ describe(`Westlaw`, () => {
     const citations  = testCases.frcrmp.all
     const results    = getUrls(citations, `frcrmp`)
     const frcrmp        = findType(`frcrmp`)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}frcrp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frcrp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -132,7 +136,7 @@ describe(`Westlaw`, () => {
     const results    = getUrls(citations, `frcp`)
     const frcp        = findType(`frcp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frcp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}frcp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frcp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -142,7 +146,7 @@ describe(`Westlaw`, () => {
     const results    = getUrls(citations, `fre`)
     const fre        = findType(`fre`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, fre).mainCite)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}fre%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}fre%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -152,7 +156,7 @@ describe(`Westlaw`, () => {
     const results    = getUrls(citations, `frbp`)
     const frbp        = findType(`frbp`)
     const encodeMain = (cite) => urlEncode(new Citation(cite, frbp).mainCite)
-    const properUrls = _.map(citations, (cite) => `${westlaw.baseUrl}frbp%20${H.federalRuleNumber(cite)}`)
+    const properUrls = map(citations, (cite) => `${westlaw.baseUrl}frbp%20${federalRuleNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -161,7 +165,7 @@ describe(`Westlaw`, () => {
     const citations    = testCases.federal_case.all
     const results      = getUrls(citations, `federal_case`)
     const federal_case = findType(`federal_case`)
-    const properUrls   = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, federal_case).mainCite)}`)
+    const properUrls   = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, federal_case).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -170,7 +174,7 @@ describe(`Westlaw`, () => {
     const citations          = testCases.state_constitution.all
     const results            = getUrls(citations, `state_constitution`)
     const state_constitution = findType(`state_constitution`)
-    const properUrls         = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, state_constitution).mainCite)}`)
+    const properUrls         = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, state_constitution).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })
@@ -179,7 +183,7 @@ describe(`Westlaw`, () => {
     const citations   = testCases.law_journal.all
     const results     = getUrls(citations, `law_journal`)
     const law_journal = findType(`law_journal`)
-    const properUrls  = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, law_journal).mainCite)}`)
+    const properUrls  = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, law_journal).mainCite)}`)
 
     expect(westlaw.canHandle(`law_journal`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -189,7 +193,7 @@ describe(`Westlaw`, () => {
     const citations             = testCases.law_statute_code_rule.all
     const results               = getUrls(citations, `law_statute_code_rule`)
     const law_statute_code_rule = findType(`law_statute_code_rule`)
-    const properUrls            = _.map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}`)
+    const properUrls            = map(citations, (cite) => `${westlaw.baseUrl}${urlEncode(Citation(cite, law_statute_code_rule).mainCite)}`)
 
     expect(results).toEqual(properUrls)
   })

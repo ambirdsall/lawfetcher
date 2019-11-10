@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   us_constitution: {
     jumpCite: [ `U.S. CONST. art. I, § 7, cl. 1`
               , `U.S. Const. amend. XIV, § 1`

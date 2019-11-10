@@ -1,24 +1,23 @@
-let H            = {}
-const _          = require(`lodash`)
-const U          = require(`../../js/utils`)
-const Citation   = require(`../../js/types/citation`)
-const Source     = require(`../../js/types/source`)
-const genericUrl = require(`../../js/functions/genericUrl`)
-const withTypeId = function withTypeId(typeName) { return (type) => type.typeId === typeName }
+import { find, head } from 'lodash-es'
+import { curry } from '../../js/utils'
+import { Citation, Source } from '../../js/types'
+import { genericUrl } from '../../js/functions'
 
-H.findType = U.curry(function findType(types, typeName) {
-  return _.find(types, withTypeId(typeName))
+function withTypeId(typeName) { return (type) => type.typeId === typeName }
+
+export const findType = curry(function findType(types, typeName) {
+  return find(types, withTypeId(typeName))
 })
 
-H.getUrl = U.curry(function getUrl(source, types, citeText, typeName) {
-  const currentType = H.findType(types, typeName)
+export const getUrl = curry(function getUrl(source, types, citeText, typeName) {
+  const currentType = findType(types, typeName)
   const citation    = Citation(citeText, currentType)
 
   return source.url(citation)
 })
 
-H.getUrls = U.curry(function getUrls(source, types, citationTexts, typeName) {
-  const currentType = H.findType(types, typeName)
+export const getUrls = curry(function getUrls(source, types, citationTexts, typeName) {
+  const currentType = findType(types, typeName)
 
   return citationTexts.map(function(citeText) {
     const citation = Citation(citeText, currentType)
@@ -27,13 +26,11 @@ H.getUrls = U.curry(function getUrls(source, types, citationTexts, typeName) {
   })
 })
 
-H.replaceEach = function replaceEach(arr, str) {
+export const replaceEach = function replaceEach(arr, str) {
   return arr.map(function() { return str })
 }
 
 // Specifically westlaw and lexis test urls
-H.federalRuleNumber = function ruleNumber(federalRuleCite) {
-  return _.head(federalRuleCite.match(/\d.*/))
+export const federalRuleNumber = function ruleNumber(federalRuleCite) {
+  return head(federalRuleCite.match(/\d.*/))
 }
-
-module.exports = H

@@ -1,13 +1,15 @@
-const _            = require(`lodash`)
-const Source       = require(`../../js/types/source`)
-const Citation     = require(`../../js/types/citation`)
-const googleConfig = _.find(require(`../../js/data/source_list`), (source) => source.name === `Google Search`)
+import { find, map, concat } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const googleConfig = find(sources, (source) => source.name === `Google Search`)
 const google       = new Source(googleConfig)
-const types        = require(`../../js/data/type_list`)
-const testCases    = require(`../data/test_cases`)
-const H            = require(`./source.spec.helpers`)
-const getUrls      = H.getUrls(google, types)
-const replaceEach  = H.replaceEach
+const getUrls      = makeGetUrls(google, citationTypes)
 const urlEncode    = window.encodeURIComponent
 
 describe(`Google Search`, () => {
@@ -22,7 +24,7 @@ describe(`Google Search`, () => {
   it(`wraps docket number citations in quotes`, () => {
     const docketNumbers = testCases.docket_number.all
     const results       = getUrls(docketNumbers, `docket_number`)
-    const properUrls    = _.map(docketNumbers, cite => `${google.baseUrl}"${urlEncode(cite)}"`)
+    const properUrls    = map(docketNumbers, cite => `${google.baseUrl}"${urlEncode(cite)}"`)
 
     expect(google.canHandle(`docket_number`)).toBe(true)
     expect(results).toEqual(properUrls)
@@ -45,7 +47,7 @@ describe(`Google Search`, () => {
         , `https://google.com/search?q=123%20U.S.C.%20%C2%A7%202000e-2(a)`
         , `https://google.com/search?q=Federal%20Rules%20of%20Appellate%20Procedure%2026.1(b)`
         ]
-      , results = _.concat(getUrls(us_consts, `us_constitution`), getUrls(uscs, `usc`), getUrls(fraps, `frap`))
+      , results = concat(getUrls(us_consts, `us_constitution`), getUrls(uscs, `usc`), getUrls(fraps, `frap`))
 
     expect(results).toEqual(urls)
   })

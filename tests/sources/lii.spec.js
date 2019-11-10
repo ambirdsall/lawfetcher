@@ -1,14 +1,17 @@
-const _           = require(`lodash`)
-const Source      = require(`../../js/types/source`)
-const Citation    = require(`../../js/types/citation`)
-const liiConfig   = _.find(require(`../../js/data/source_list`), (source) => source.name === `LII`)
+import { difference, isFunction, find, map } from 'lodash-es'
+import { Source, Citation } from '../../js/types'
+import { sources, citationTypes } from '../../js/data'
+import testCases from '../data/test_cases'
+import {
+  findType as makeFindType,
+  getUrls as makeGetUrls,
+  replaceEach,
+} from './source.spec.helpers'
+
+const liiConfig   = find(sources, (source) => source.name === `LII`)
 const lii         = new Source(liiConfig)
-const types       = require(`../../js/data/type_list`)
-const testCases   = require(`../data/test_cases`)
-const H           = require(`./source.spec.helpers`)
-const getUrls     = H.getUrls(lii, types)
-const replaceEach = H.replaceEach
-const findType    = H.findType(types)
+const getUrls     = makeGetUrls(lii, citationTypes)
+const findType    = makeFindType(citationTypes)
 const urlEncode   = window.encodeURIComponent
 
 describe(`Cornell LII`, () => {
@@ -17,7 +20,7 @@ describe(`Cornell LII`, () => {
   })
 
   it(`has the expected _typeSpecificUrls`, () => {
-    var allTypes = types.map(function(t) { return t.name })
+    var allTypes = citationTypes.map(function(t) { return t.name })
       , expectedTSTs = [
           `us_constitution`
         , `cfr`
@@ -29,9 +32,9 @@ describe(`Cornell LII`, () => {
         , `fre`
         , `scotus_us_reports`
         ]
-      , liiTSTs = allTypes.filter(function(typeName) { lii.hasOwnProperty(typeName) && _.isFunction(lii[typeName]) })
+      , liiTSTs = allTypes.filter(function(typeName) { lii.hasOwnProperty(typeName) && isFunction(lii[typeName]) })
 
-    expect(_.difference(liiTSTs, expectedTSTs)).toEqual([])
+    expect(difference(liiTSTs, expectedTSTs)).toEqual([])
   })
 
   describe(`Unhandled citation types`, () => {
@@ -122,7 +125,7 @@ describe(`Cornell LII`, () => {
     const uniform_commercial_code = findType(`uniform_commercial_code`)
     const articleNumber           = (c) => c.match(/(\d)-\d+/) && c.match(/(\d)-\d+/)[1]
     const sectionNumber           = (c) => c.match(/\d-(\d+)/) && c.match(/\d-(\d+)/)[1]
-    const properUrls              = _.map(citations, (cite) => `${lii.baseUrl}/ucc/${articleNumber(cite)}/${articleNumber(cite)}-${sectionNumber(cite)}`)
+    const properUrls              = map(citations, (cite) => `${lii.baseUrl}/ucc/${articleNumber(cite)}/${articleNumber(cite)}-${sectionNumber(cite)}`)
 
     expect(results).toEqual(properUrls)
   })
